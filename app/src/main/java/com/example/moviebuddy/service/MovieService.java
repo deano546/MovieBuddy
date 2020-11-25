@@ -1,5 +1,6 @@
 package com.example.moviebuddy.service;
 
+
 import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.User;
 

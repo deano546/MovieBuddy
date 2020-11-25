@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="resicon">
+        <item>@drawable/shawshank</item>
+        <item>@drawable/pulpfiction</item>
+        <item>@drawable/fightclub</item>
+
+
+    </array>
+    <array name="restext">
+        <item>"Shawshank Redemption"</item>
+        <item>"Pulp Fiction"</item>
+        <item>"Fight Club"</item>
+
+
+    </array>
+
+</resources>
