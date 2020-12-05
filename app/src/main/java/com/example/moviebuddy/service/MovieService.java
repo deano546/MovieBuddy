@@ -12,7 +12,7 @@ public ArrayList<Movie> getRecommendedMovies(User user) {
 
     ArrayList<Movie> recommendlist = null;
 
-    Movie movie = new Movie();
+    Movie movie = new Movie("Test1");
     movie.setTitle("Spirited Away");
     recommendlist.add(movie);
 
@@ -22,7 +22,7 @@ public ArrayList<Movie> getRecommendedMovies(User user) {
 
 
     public ArrayList<Movie> getUpcomingMovies() {
-         Movie m1 = new Movie();
+         Movie m1 = new Movie("Test2");
 
         ArrayList<Movie> upcominglist = null;
 

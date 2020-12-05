@@ -6,6 +6,25 @@ public class Movie {
     private String title;
     private String poster;
 
+    public Movie(Long id, String title, String poster) {
+        this.id = id;
+        this.title = title;
+        this.poster = poster;
+    }
+
+    public Movie(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", poster='" + poster + '\'' +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background=" #d5d8dc "
+    android:background="@android:color/background_dark"
     tools:context=".Activities.MainActivity">
 
     <ImageView
@@ -36,8 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Welcome"
+        android:text="MovieBuddy"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#70FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/tvUpcoming"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +64,7 @@
         android:layout_marginTop="20dp"
         android:text="New Releases"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,8 +111,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
+        android:shadowColor="#70FFFFFF"
         android:text="Upcoming Movie Night"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imUpcoming3" />
@@ -121,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Dark Knight"
+        android:textColor="#70FFFFFF"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -132,6 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="27th Nov 8.00pm"
+        android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMovie" />
@@ -142,6 +148,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="OG BIS Group"
+        android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />

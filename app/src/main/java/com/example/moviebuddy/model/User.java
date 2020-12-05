@@ -1,13 +1,14 @@
 package com.example.moviebuddy.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
     private Long id;
     private String username;
-    private ArrayList<Movie> watchlist;
-    private ArrayList<User> friendlist;
+    private List<Movie> watchlist;
+    private List<User> friendlist;
     private ArrayList<Group> grouplist;
 
     public Long getId() {
@@ -26,7 +27,7 @@ public class User {
         this.username = username;
     }
 
-    public ArrayList<Movie> getWatchlist() {
+    public List<Movie> getWatchlist() {
         return watchlist;
     }
 
@@ -39,7 +40,7 @@ public class User {
         watchlist.add(movie);
     }
 
-    public ArrayList<User> getFriendlist() {
+    public List<User> getFriendlist() {
         return friendlist;
     }
 

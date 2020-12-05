@@ -8,7 +8,7 @@ public class UserDataAccess {
     User getUser(long id) {
         User u1 = new User();
         u1.setUsername("George");
-        Movie m1 = new Movie();
+        Movie m1 = new Movie("Hello");
         m1.setTitle("Kill Bill");
         u1.addtoWatchlist(m1);
         return u1;

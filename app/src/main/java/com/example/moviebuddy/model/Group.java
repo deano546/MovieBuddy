@@ -1,12 +1,13 @@
 package com.example.moviebuddy.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Group {
 
     private Long id;
     private String groupname;
-    private ArrayList <User> members;
+    private List<User> members;
 
     public Long getId() {
         return id;
@@ -24,7 +25,7 @@ public class Group {
         this.groupname = groupname;
     }
 
-    public ArrayList<User> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
