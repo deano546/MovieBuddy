@@ -4,16 +4,16 @@ public class Movie {
 
     private Long id;
     private String title;
-    private String poster;
+    private String imageurl;
 
-    public Movie(Long id, String title, String poster) {
+    public Movie(Long id, String title, String imageurl) {
         this.id = id;
         this.title = title;
-        this.poster = poster;
+        this.imageurl = imageurl;
     }
 
-    public Movie(String title) {
-        this.title = title;
+    public Movie(String imageurl) {
+        this.imageurl = imageurl;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class Movie {
         return "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", poster='" + poster + '\'' +
+                ", poster='" + imageurl + '\'' +
                 '}';
     }
 
@@ -41,11 +41,11 @@ public class Movie {
         this.title = title;
     }
 
-    public String getPoster() {
-        return poster;
+    public String getImageurl() {
+        return imageurl;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 }

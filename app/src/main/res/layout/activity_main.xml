@@ -7,30 +7,6 @@
     android:background="@android:color/background_dark"
     tools:context=".Activities.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView9"
-        app:srcCompat="@drawable/ic_launcher_background" />
-
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView8"
-        app:layout_constraintTop_toTopOf="@+id/imageView8"
-        app:srcCompat="@drawable/ic_launcher_background" />
-
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
@@ -70,54 +46,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
 
-    <ImageView
-        android:id="@+id/imUpcoming1"
-        android:layout_width="102dp"
-        android:layout_height="174dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUpcoming"
-        app:layout_constraintVertical_bias="0.042"
-        app:srcCompat="@drawable/darkknight" />
-
-    <ImageView
-        android:id="@+id/imUpcoming3"
-        android:layout_width="99dp"
-        android:layout_height="170dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUpcoming"
-        app:layout_constraintVertical_bias="0.043"
-        app:srcCompat="@drawable/johnwick" />
-
-    <ImageView
-        android:id="@+id/imUpcoming2"
-        android:layout_width="100dp"
-        android:layout_height="166dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUpcoming"
-        app:layout_constraintVertical_bias="0.045"
-        app:srcCompat="@drawable/diehard" />
-
     <TextView
         android:id="@+id/tvMovieNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="9dp"
         android:shadowColor="#70FFFFFF"
         android:text="Upcoming Movie Night"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imUpcoming3" />
+        app:layout_constraintTop_toBottomOf="@+id/rvMovie" />
 
     <TextView
         android:id="@+id/tvMovie"
@@ -152,5 +92,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMovie"
+        android:layout_width="413dp"
+        android:layout_height="248dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvMovieNight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUpcoming"
+        app:layout_constraintVertical_bias="0.197" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
