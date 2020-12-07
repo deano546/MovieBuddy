@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieBuddy">
-        <activity android:name=".Activities.NotifyActivity"></activity>
+        <activity android:name=".Activities.CreateGroupActivity"></activity>
+        <activity android:name=".Activities.FriendListActivity" />
+        <activity android:name=".Activities.MovieDetailActivity" />
+        <activity android:name=".Activities.NotifyActivity" />
         <activity android:name=".Activities.MovieActivity" />
         <activity android:name=".Activities.GroupActivity" />
         <activity android:name=".Activities.WatchListActivity" />

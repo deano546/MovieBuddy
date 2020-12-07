@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.moviebuddy.Activities.MovieDetailActivity;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.model.Movie;
 
@@ -64,8 +65,12 @@ public class MovieListRecyclerAdapter extends RecyclerView.Adapter<MovieListRecy
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show movie detail screen in future, for now just toast as proof of concept
-                Toast.makeText(context, "Detail of " + movieList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                //show movie detail screen
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.putExtra("title", movieList.get(position).getTitle());
+                intent.putExtra("poster",movieList.get(position).getImageurl());
+                intent.putExtra("year",movieList.get(position).getYear());
+                context.startActivity(intent);
             }
         });
 
