@@ -5,11 +5,19 @@ public class Movie {
     private Long id;
     private String title;
     private String imageurl;
+    private int year;
 
     public Movie(Long id, String title, String imageurl) {
         this.id = id;
         this.title = title;
         this.imageurl = imageurl;
+    }
+
+    public Movie(Long id, String title, String imageurl, int year) {
+        this.id = id;
+        this.title = title;
+        this.imageurl = imageurl;
+        this.year = year;
     }
 
     public Movie(String imageurl) {
@@ -47,5 +55,13 @@ public class Movie {
 
     public void setImageurl(String imageurl) {
         this.imageurl = imageurl;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }

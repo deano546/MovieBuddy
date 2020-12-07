@@ -2,6 +2,8 @@ package com.example.moviebuddy.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,6 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.adapters.MovieListRecyclerAdapter;
+import com.example.moviebuddy.dataaccess.MovieDataAccess;
+import com.example.moviebuddy.model.Movie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -31,10 +36,31 @@ import java.util.List;
 public class MovieActivity extends AppCompatActivity {
 
 
+    RecyclerView rvMovieList;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    List<Movie> movieList = new ArrayList<Movie>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+
+
+        rvMovieList
+                = (RecyclerView)findViewById(
+                R.id.rvMovieList);
+        MovieDataAccess moviedao = new MovieDataAccess();
+        movieList = moviedao.getPopularMovies();
+        rvMovieList.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        rvMovieList.setLayoutManager(layoutManager);
+
+        mAdapter = new MovieListRecyclerAdapter(movieList,this);
+        rvMovieList.setAdapter(mAdapter);
+
 
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);

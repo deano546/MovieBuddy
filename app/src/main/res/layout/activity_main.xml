@@ -114,6 +114,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvMovie" />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGroup" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
