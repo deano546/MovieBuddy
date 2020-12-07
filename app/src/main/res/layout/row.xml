@@ -19,6 +19,7 @@
         android:id="@+id/rowTextView"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
+        android:textColor="#70FFFFFF"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

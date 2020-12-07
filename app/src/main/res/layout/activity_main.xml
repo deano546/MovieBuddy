@@ -50,7 +50,7 @@
         android:id="@+id/tvMovieNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="72dp"
         android:shadowColor="#70FFFFFF"
         android:text="Upcoming Movie Night"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -95,12 +95,25 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMovie"
-        android:layout_width="413dp"
-        android:layout_height="248dp"
+        android:layout_width="398dp"
+        android:layout_height="166dp"
         app:layout_constraintBottom_toTopOf="@+id/tvMovieNight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvUpcoming"
         app:layout_constraintVertical_bias="0.197" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tvMovieNight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvMovie" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
