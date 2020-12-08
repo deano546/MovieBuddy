@@ -17,6 +17,10 @@ import java.util.List;
 
 public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecyclerAdapter.MyViewHolder> {
 
+
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+
+
     List<Movie> movieList;
     Context context;
 

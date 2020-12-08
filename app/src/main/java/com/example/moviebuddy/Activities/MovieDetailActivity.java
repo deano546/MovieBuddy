@@ -26,6 +26,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+        //Take the extras from the intent passed from the movie activity as to display movie details here
+
         Intent intent = getIntent();
         movieTitle = intent.getStringExtra("title");
         movieYear = intent.getIntExtra("year",-1);

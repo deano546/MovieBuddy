@@ -7,6 +7,10 @@ import java.util.List;
 
 public class MovieDataAccess {
 
+
+    //This is just faking a database for now, it allows me to populate the recycler views
+
+
     public List<Movie> getMovies() {
         List<Movie> movieList = new ArrayList<>();
 

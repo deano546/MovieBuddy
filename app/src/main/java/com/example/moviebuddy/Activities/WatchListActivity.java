@@ -28,7 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-//https://www.youtube.com/watch?v=sd0YBZ73nBo&feature=emb_title - Adapted from this video - Needs to be tidied
+//https://www.youtube.com/watch?v=sd0YBZ73nBo&feature=emb_title - Adapted from this video - Still Needs to be tidied
 
 public class WatchListActivity extends AppCompatActivity {
 

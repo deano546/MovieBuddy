@@ -45,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvGroupName5" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnSuggest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvGroupName3" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnFriendList"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:text="Friend List"
@@ -103,7 +103,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSuggest" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -147,7 +147,7 @@
         android:layout_height="1dp"
         android:background="@android:color/white"
 
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/btnFriendList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -9,13 +9,14 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="128dp"
+        android:layout_width="62dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
+        tools:srcCompat="@android:mipmap/sym_def_app_icon" />
 
     <TextView
         android:id="@+id/textView5"
@@ -46,9 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:textColor="#70FFFFFF"
         android:inputType="textPersonName"
         android:text="Search users"
+        android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

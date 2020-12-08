@@ -35,7 +35,7 @@ import java.util.List;
 
 public class MovieActivity extends AppCompatActivity {
 
-
+    //Setting up recyclerview, mainly adapted from my IS4447 project
     RecyclerView rvMovieList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -47,7 +47,7 @@ public class MovieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-
+        //Displaying recyclerview, again adapted from IS4447 project
         rvMovieList
                 = (RecyclerView)findViewById(
                 R.id.rvMovieList);

@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -17,6 +20,37 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
+
+        Button btnSuggest = findViewById(R.id.btnSuggest);
+        Button btnFriendList = findViewById(R.id.btnFriendList);
+        ImageView imgAddGroup = findViewById(R.id.imgAddGroup);
+
+        //launch create group activity
+        imgAddGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupActivity.this, CreateGroupActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //launch friend list activity
+        btnFriendList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupActivity.this, FriendListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //launch movie night activity
+        btnSuggest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (GroupActivity.this, MovieNightActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
