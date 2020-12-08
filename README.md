@@ -4,6 +4,7 @@ FYP
 An application to recommend movies to groups of friends.
 
 References:
+
 Bottom Navigation 1: https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
 
 Bottom Navigation 2: https://suragch.medium.com/how-to-add-a-bottom-navigation-bar-in-android-958ed728ef6c
