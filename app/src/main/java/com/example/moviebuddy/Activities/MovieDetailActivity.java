@@ -40,7 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         tvTitle.setText(movieTitle);
         tvYear.setText(String.valueOf(movieYear));
-        Glide.with(this).load(imageurl).into(imPoster);
+        Glide.with(this).load("https://image.tmdb.org/t/p/w300/" + imageurl).into(imPoster);
         etSynopsis.setEnabled(false);
 
     }

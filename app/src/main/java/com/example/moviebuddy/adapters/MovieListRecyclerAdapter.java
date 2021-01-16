@@ -27,8 +27,8 @@ public class MovieListRecyclerAdapter extends RecyclerView.Adapter<MovieListRecy
     List<Movie> movieList;
     Context context;
 
-    public MovieListRecyclerAdapter(List<Movie> studentList, Context context) {
-        this.movieList = studentList;
+    public MovieListRecyclerAdapter(List<Movie> movieList, Context context) {
+        this.movieList = movieList;
         this.context = context;
     }
 
@@ -61,7 +61,7 @@ public class MovieListRecyclerAdapter extends RecyclerView.Adapter<MovieListRecy
 
     @Override
     public void onBindViewHolder(@NonNull MovieListRecyclerAdapter.MyViewHolder holder, int position) {
-        Glide.with(this.context).load(movieList.get(position).getImageurl()).into(holder.imMovieList);
+        Glide.with(this.context).load("https://image.tmdb.org/t/p/w300/" + movieList.get(position).getImageurl()).into(holder.imMovieList);
         holder.tvMovieListTitle.setText(movieList.get(position).getTitle());
         holder.tvMovieListYear.setText(String.valueOf(movieList.get(position).getYear()));
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {

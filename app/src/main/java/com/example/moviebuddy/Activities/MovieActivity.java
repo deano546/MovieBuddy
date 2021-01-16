@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.MovieListRecyclerAdapter;
+import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.dataaccess.MovieDataAccess;
 import com.example.moviebuddy.model.Movie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,20 +49,68 @@ public class MovieActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+        Button btnSearch = findViewById(R.id.btnSearch);
+        EditText etMovieSearch = findViewById(R.id.etMovieSearch);
+
+        Log.d("Before", ":" + movieList.toString());
 
         //Displaying recyclerview, again adapted from IS4447 project
         rvMovieList
                 = (RecyclerView)findViewById(
                 R.id.rvMovieList);
-        MovieDataAccess moviedao = new MovieDataAccess();
-        movieList = moviedao.getPopularMovies();
-        rvMovieList.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(this);
-        rvMovieList.setLayoutManager(layoutManager);
+        JSONParser jsonParser = new JSONParser();
+       jsonParser.getPopularMoviez(this, new JSONParser.VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MovieActivity.this, "Error Retrieving", Toast.LENGTH_SHORT).show();
+            }
 
-        mAdapter = new MovieListRecyclerAdapter(movieList,this);
-        rvMovieList.setAdapter(mAdapter);
+            @Override
+            public void onResponse(List<Movie> movieLists) {
+             movieList = movieLists;
+               //Log.d("Testinggggg",movieLists.toString());
+                //Log.d("After",movieList.toString());
+                rvMovieList.setHasFixedSize(true);
+
+                layoutManager = new LinearLayoutManager(MovieActivity.this);
+                rvMovieList.setLayoutManager(layoutManager);
+
+                mAdapter = new MovieListRecyclerAdapter(movieList,MovieActivity.this);
+                rvMovieList.setAdapter(mAdapter);
+            }
+        });
+
+       btnSearch.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               jsonParser.SearchMovies(MovieActivity.this, new JSONParser.SearchMovieResponseListener() {
+                   @Override
+                   public void onError(String message) {
+                       Toast.makeText(MovieActivity.this, "Search error", Toast.LENGTH_SHORT).show();
+                   }
+
+                   @Override
+                   public void onResponse(List<Movie> searchList) {
+
+                       movieList = searchList;
+                       Log.d("PrintingMovieList",movieList.toString());
+                       Log.d("PrintingMovieList2",searchList.toString());
+                       mAdapter.notifyDataSetChanged();
+                       //Log.d("Testinggggg",movieLists.toString());
+                       //Log.d("After",movieList.toString());
+                       rvMovieList.setHasFixedSize(true);
+
+                       layoutManager = new LinearLayoutManager(MovieActivity.this);
+                       rvMovieList.setLayoutManager(layoutManager);
+
+                       mAdapter = new MovieListRecyclerAdapter(movieList,MovieActivity.this);
+                       rvMovieList.setAdapter(mAdapter);
+                   }
+               },etMovieSearch.getText().toString() );
+           }
+       });
+
 
 
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview

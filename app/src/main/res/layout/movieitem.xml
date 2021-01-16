@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/onerow"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -23,7 +23,7 @@
         android:layout_marginTop="24dp"
         android:text="TextView"
         android:textColor="#70FFFFFF"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imMovieList"
         app:layout_constraintTop_toTopOf="@+id/imMovieList" />
@@ -35,7 +35,7 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="#70FFFFFF"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toEndOf="@+id/imMovieList"

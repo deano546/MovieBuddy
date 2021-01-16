@@ -46,10 +46,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/etMovieSearch" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/etMovieSearch"
         android:layout_width="0dp"
         android:layout_height="41dp"
         android:layout_marginStart="8dp"
@@ -57,7 +57,7 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Search"
+        android:hint="Search"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="#70FFFFFF"
@@ -75,5 +75,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:text="Search"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/rvMovieList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etMovieSearch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

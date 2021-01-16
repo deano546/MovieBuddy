@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.UpcomingRecyclerAdapter;
+import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.dataaccess.MovieDataAccess;
 import com.example.moviebuddy.model.Movie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -64,25 +65,42 @@ public class MainActivity extends AppCompatActivity {
                 RecyclerViewLayoutManager);
 
         // Adding items to RecyclerView.
-        MovieDataAccess moviedao = new MovieDataAccess();
-        source = moviedao.getMovies();
-        Log.d("TAGG",source.toString());
+       // MovieDataAccess moviedao = new MovieDataAccess();
+       // source = moviedao.getMovies();
 
-        // calling constructor of adapter
-        // with source list as a parameter
-        adapter = new UpcomingRecyclerAdapter(source,MainActivity.this);
+        JSONParser jsonParser = new JSONParser();
+        jsonParser.getCurrentMovies(MainActivity.this, new JSONParser.CurrentMovieResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
 
-        // Set Horizontal Layout Manager
-        // for Recycler view
-        HorizontalLayout
-                = new LinearLayoutManager(
-                MainActivity.this,
-                LinearLayoutManager.HORIZONTAL,
-                false);
-        recyclerView.setLayoutManager(HorizontalLayout);
+            @Override
+            public void onResponse(List<Movie> movieLists) {
+            source = movieLists;
 
-        // Set adapter on recycler view
-        recyclerView.setAdapter(adapter);
+                Log.d("TAGG",source.toString());
+
+                // calling constructor of adapter
+                // with source list as a parameter
+                adapter = new UpcomingRecyclerAdapter(source,MainActivity.this);
+
+                // Set Horizontal Layout Manager
+                // for Recycler view
+                HorizontalLayout
+                        = new LinearLayoutManager(
+                        MainActivity.this,
+                        LinearLayoutManager.HORIZONTAL,
+                        false);
+                recyclerView.setLayoutManager(HorizontalLayout);
+
+                // Set adapter on recycler view
+                recyclerView.setAdapter(adapter);
+
+            }
+        });
+
+
 
 
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview

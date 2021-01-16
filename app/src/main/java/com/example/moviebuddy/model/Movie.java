@@ -2,18 +2,18 @@ package com.example.moviebuddy.model;
 
 public class Movie {
 
-    private Long id;
+    private int id;
     private String title;
     private String imageurl;
     private int year;
 
-    public Movie(Long id, String title, String imageurl) {
+    public Movie(int id, String title, String imageurl) {
         this.id = id;
         this.title = title;
         this.imageurl = imageurl;
     }
 
-    public Movie(Long id, String title, String imageurl, int year) {
+    public Movie(int id, String title, String imageurl, int year) {
         this.id = id;
         this.title = title;
         this.imageurl = imageurl;
@@ -33,13 +33,7 @@ public class Movie {
                 '}';
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

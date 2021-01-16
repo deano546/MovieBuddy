@@ -42,12 +42,12 @@ public class MovieDataAccess {
     public List<Movie> getPopularMovies() {
         List<Movie> movieList = new ArrayList<>();
 
-        Movie movie1 = new Movie((long) 1,"Matrix","https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/The_Matrix_Poster.jpg/220px-The_Matrix_Poster.jpg",1999);
-        Movie movie2 = new Movie((long) 2,"John Wick", "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/John_Wick_TeaserPoster.jpg/220px-John_Wick_TeaserPoster.jpg", 2010);
-        Movie movie3 = new Movie((long) 3,"Spirited Away","https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png",2005);
-        Movie movie4 = new Movie((long) 4,"Matrix","https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/The_Matrix_Poster.jpg/220px-The_Matrix_Poster.jpg",1999);
-        Movie movie5 =  new Movie((long) 5,"John Wick", "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/John_Wick_TeaserPoster.jpg/220px-John_Wick_TeaserPoster.jpg", 2010);
-        Movie movie6 = new Movie((long) 6,"Spirited Away","https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png",2005);
+        Movie movie1 = new Movie( 1,"Matriy","https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/The_Matrix_Poster.jpg/220px-The_Matrix_Poster.jpg",1999);
+        Movie movie2 = new Movie( 2,"John Wick", "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/John_Wick_TeaserPoster.jpg/220px-John_Wick_TeaserPoster.jpg", 2010);
+        Movie movie3 = new Movie( 3,"Spirited Away","https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png",2005);
+        Movie movie4 = new Movie( 4,"Matrix","https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/The_Matrix_Poster.jpg/220px-The_Matrix_Poster.jpg",1999);
+        Movie movie5 =  new Movie( 5,"John Wick", "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/John_Wick_TeaserPoster.jpg/220px-John_Wick_TeaserPoster.jpg", 2010);
+        Movie movie6 = new Movie( 6,"Spirited Away","https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png",2005);
 
         movieList.add(movie1);
         movieList.add(movie2);
