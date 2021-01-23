@@ -11,6 +11,10 @@ public class User {
     private List<User> friendlist;
     private ArrayList<Group> grouplist;
 
+    public User(String username) {
+        this.username = username;
+    }
+
     public Long getId() {
         return id;
     }

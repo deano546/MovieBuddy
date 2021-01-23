@@ -2,6 +2,8 @@ package com.example.moviebuddy.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,21 +11,45 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.adapters.GroupListRecyclerAdapter;
+import com.example.moviebuddy.dataaccess.MovieDataAccess;
+import com.example.moviebuddy.model.GroupNight;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupActivity extends AppCompatActivity {
+
+
+
+    RecyclerView rvGroupList;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    List<GroupNight> groupList = new ArrayList<GroupNight>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
-        Button btnSuggest = findViewById(R.id.btnSuggest);
+
         Button btnFriendList = findViewById(R.id.btnFriendList);
         ImageView imgAddGroup = findViewById(R.id.imgAddGroup);
+        rvGroupList = findViewById(R.id.rvGroupList);
+
+        rvGroupList.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(GroupActivity.this);
+        rvGroupList.setLayoutManager(layoutManager);
+
+
+        MovieDataAccess dataAccess = new MovieDataAccess();
+        groupList = dataAccess.getNight();
+        mAdapter = new GroupListRecyclerAdapter(groupList, GroupActivity.this);
+        rvGroupList.setAdapter(mAdapter);
 
         //launch create group activity
         imgAddGroup.setOnClickListener(new View.OnClickListener() {
@@ -39,15 +65,6 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GroupActivity.this, FriendListActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //launch movie night activity
-        btnSuggest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (GroupActivity.this, MovieNightActivity.class);
                 startActivity(intent);
             }
         });

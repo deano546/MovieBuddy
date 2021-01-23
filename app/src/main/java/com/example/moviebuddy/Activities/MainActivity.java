@@ -10,13 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.adapters.UpcomingNightRecyclerAdapter;
 import com.example.moviebuddy.adapters.UpcomingRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.dataaccess.MovieDataAccess;
+import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,18 +31,23 @@ public class MainActivity extends AppCompatActivity {
 
     // Recycler View object
     RecyclerView recyclerView;
+    RecyclerView grouprecycler;
 
     // Array list for recycler view data source
     List<Movie> source;
+    List<GroupNight> nightsource;
 
     // Layout Manager
     RecyclerView.LayoutManager RecyclerViewLayoutManager;
+    RecyclerView.LayoutManager NightRecyclerManager;
 
     // adapter class object
     RecyclerView.Adapter adapter;
+    RecyclerView.Adapter nightadapter;
 
     // Linear Layout Manager
     LinearLayoutManager HorizontalLayout;
+    LinearLayoutManager NightHorizontalLayout;
 
     View ChildView;
     int RecyclerViewItemPosition;
@@ -50,6 +56,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        grouprecycler = findViewById(R.id.rvGroupNight);
+        NightRecyclerManager = new LinearLayoutManager(getApplicationContext());
+        grouprecycler.setLayoutManager(NightRecyclerManager);
+
+        MovieDataAccess dataAccess = new MovieDataAccess();
+        nightsource = dataAccess.getNight();
+        nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
+        NightHorizontalLayout = new LinearLayoutManager(
+                MainActivity.this,
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        grouprecycler.setLayoutManager(NightHorizontalLayout);
+        grouprecycler.setAdapter(nightadapter);
+
 
 
         // initialisation with id's
@@ -65,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 RecyclerViewLayoutManager);
 
         // Adding items to RecyclerView.
-       // MovieDataAccess moviedao = new MovieDataAccess();
-       // source = moviedao.getMovies();
 
         JSONParser jsonParser = new JSONParser();
         jsonParser.getCurrentMovies(MainActivity.this, new JSONParser.CurrentMovieResponseListener() {

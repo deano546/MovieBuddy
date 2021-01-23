@@ -7,103 +7,16 @@
     android:background="@android:color/background_dark"
     tools:context=".Activities.GroupActivity">
 
-    <TextView
-        android:id="@+id/tvGroupName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="OG BIS"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#70FFFFFF"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/tvGroupName5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#70FFFFFF"
-        android:layout_marginTop="8dp"
-        android:text="No Upcoming Movie Night"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupName4" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Suggest Movie to Group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupName5" />
-
-    <Button
-        android:id="@+id/btnSuggest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Suggest Movie to Group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupName3" />
-
     <Button
         android:id="@+id/btnFriendList"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:text="Friend List"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tvGroupName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="#70FFFFFF"
-        android:text="Dark Knight"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupName" />
-
-    <TextView
-        android:id="@+id/tvGroupName3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#70FFFFFF"
-        android:layout_marginTop="8dp"
-        android:text="26th Oct 8.00pm"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupName2" />
-
-    <TextView
-        android:id="@+id/tvGroupName4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#70FFFFFF"
-        android:layout_marginTop="16dp"
-        android:text="Ballycotton Boys"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSuggest" />
+        app:layout_constraintTop_toBottomOf="@id/view2" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -123,11 +36,12 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Groups"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#70FFFFFF"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/view5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -136,37 +50,49 @@
         android:id="@+id/imgAddGroup"
         android:layout_width="38dp"
         android:layout_height="31dp"
+        app:layout_constraintBottom_toTopOf="@+id/view5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.588"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
     <View
+        android:id="@+id/view2"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@android:color/white"
 
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="55dp"
+        android:background="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/btnFriendList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.218" />
+        app:layout_constraintTop_toBottomOf="@id/rvGroupList" />
 
     <View
+        android:id="@+id/view5"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="23dp"
 
+
+        android:layout_marginTop="16dp"
 
         android:background="@android:color/white"
-
-        app:layout_constraintBottom_toTopOf="@+id/tvGroupName"
+        app:layout_constraintBottom_toTopOf="@id/rvGroupList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGroupList"
+        android:layout_width="0dp"
+        android:layout_height="336dp"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
