@@ -53,11 +53,16 @@ public class JSONParser {
                                 Log.d("***********", String.valueOf(response));
                                 Log.d("title",title);
                                 String poster = movie.getString("poster_path");
-                                Log.d("Poster",poster);
-                                int year = Integer.parseInt(movie.getString("release_date").substring(0,4));
-                                Log.d("Description", String.valueOf(year));
 
-                                Movie movie1 = new Movie(i,title,poster,year);
+                                if((movie.getString("release_date")).length() < 4) {
+                                    year = 0;
+                                }
+                                else {
+                                    year = Integer.parseInt(movie.getString("release_date").substring(0,4));
+                                }
+
+                                int id = Integer.parseInt(movie.getString("id"));
+                                Movie movie1 = new Movie(id,title,poster,year);
                                 Log.d("Movie",movie1.toString());
                                 popularmovieList.add(movie1);
                                 Log.d("MovieList1",popularmovieList.toString());
@@ -105,10 +110,16 @@ public class JSONParser {
                                 Log.d("title",title);
                                 String poster = movie.getString("poster_path");
                                 Log.d("Poster",poster);
-                                int year = Integer.parseInt(movie.getString("release_date").substring(0,4));
+                                if((movie.getString("release_date")).length() < 4) {
+                                    year = 0;
+                                }
+                                else {
+                                    year = Integer.parseInt(movie.getString("release_date").substring(0,4));
+                                }
                                 Log.d("Description", String.valueOf(year));
+                                int id = Integer.parseInt(movie.getString("id"));
 
-                                Movie movie1 = new Movie(i,title,poster,year);
+                                Movie movie1 = new Movie(id,title,poster,year);
                                 Log.d("Movie",movie1.toString());
                                 currentmovieList.add(movie1);
                                 Log.d("MovieList1",currentmovieList.toString());
@@ -167,9 +178,10 @@ public class JSONParser {
                                     year = Integer.parseInt(movie.getString("release_date").substring(0,4));
                                 }
 
+                                int id = Integer.parseInt(movie.getString("id"));
                                 Log.d("Description", String.valueOf(year));
 
-                                Movie movie1 = new Movie(i,title,poster,year);
+                                Movie movie1 = new Movie(id,title,poster,year);
                                 Log.d("Movie",movie1.toString());
                                 searchmovieList.add(movie1);
                                 Log.d("MovieList1",searchmovieList.toString());
@@ -188,6 +200,64 @@ public class JSONParser {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 searchMovieResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface SelectedMovieResponseListener {
+        void onError(String message);
+
+        void onResponse(Movie movie);
+    }
+
+    public void getMoviebyID(Context context, SelectedMovieResponseListener selectedMovieResponseListener, int movieid) {
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String movieurl = "https://api.themoviedb.org/3/movie/" + movieid + "?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, movieurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+
+                            String title = response.getString("title");
+                            String poster = response.getString("poster_path");
+                            String overview = response.getString("overview");
+                            String runtime = response.getString("runtime") + " mins";
+
+
+                            if((response.getString("release_date")).length() < 4) {
+                                year = 0;
+                            }
+                            else {
+                                year = Integer.parseInt(response.getString("release_date").substring(0,4));
+                            }
+
+
+                            Movie movie1 = new Movie(movieid,title,poster,runtime,overview,year);
+                            Log.d("Movie",movie1.toString());
+
+
+                            selectedMovieResponseListener.onResponse(movie1);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                            Log.d("SearchError", movieurl);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                selectedMovieResponseListener.onError("Error");
                 Log.d("****", String.valueOf(error));
             }
         });

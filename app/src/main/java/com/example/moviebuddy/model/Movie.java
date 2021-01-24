@@ -5,18 +5,17 @@ public class Movie {
     private int id;
     private String title;
     private String imageurl;
+    private String runtime;
+    private String overview;
     private int year;
 
-    public Movie(int id, String title, String imageurl) {
-        this.id = id;
-        this.title = title;
-        this.imageurl = imageurl;
-    }
 
-    public Movie(int id, String title, String imageurl, int year) {
+    public Movie(int id, String title, String imageurl, String runtime, String overview, int year) {
         this.id = id;
         this.title = title;
         this.imageurl = imageurl;
+        this.runtime = runtime;
+        this.overview = overview;
         this.year = year;
     }
 
@@ -29,11 +28,43 @@ public class Movie {
         return "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", poster='" + imageurl + '\'' +
+                ", imageurl='" + imageurl + '\'' +
+                ", runtime='" + runtime + '\'' +
+                ", overview='" + overview + '\'' +
+                ", year=" + year +
                 '}';
     }
 
+    public Movie(int id, String title, String imageurl, int year) {
+        this.id = id;
+        this.title = title;
+        this.imageurl = imageurl;
+        this.year = year;
+    }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
 
     public String getTitle() {
         return title;

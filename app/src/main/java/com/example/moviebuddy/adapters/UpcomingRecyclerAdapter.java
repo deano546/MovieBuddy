@@ -65,9 +65,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.putExtra("title", movieList.get(position).getTitle());
-                intent.putExtra("poster",movieList.get(position).getImageurl());
-                intent.putExtra("year",movieList.get(position).getYear());
+                intent.putExtra("id", movieList.get(position).getId());
                 context.startActivity(intent);
             }
         });

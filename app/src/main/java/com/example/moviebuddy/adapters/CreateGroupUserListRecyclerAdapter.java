@@ -1,6 +1,7 @@
 package com.example.moviebuddy.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,7 +18,6 @@ import java.util.List;
 
 public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<CreateGroupUserListRecyclerAdapter.MyViewHolder> {
 
-//TODO
     List<User> userList;
     Context context;
 
@@ -27,14 +27,13 @@ public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<Cre
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
+        CheckBox chUser;
         TextView tvUsername;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            //btnAdd = itemView.findViewById(R.id.btnAddFriend);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-
+            chUser = itemView.findViewById(R.id.checkBox);
+            tvUsername = itemView.findViewById(R.id.tvCreateGroupUsername);
 
 
         }
@@ -43,16 +42,19 @@ public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<Cre
     @NonNull
     @Override
     public CreateGroupUserListRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.creategroupitem,parent,false);
+        CreateGroupUserListRecyclerAdapter.MyViewHolder holder = new CreateGroupUserListRecyclerAdapter.MyViewHolder(view);
+
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull CreateGroupUserListRecyclerAdapter.MyViewHolder holder, int position) {
-
+        holder.tvUsername.setText(userList.get(position).getUsername());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return userList.size();
     }
 }
