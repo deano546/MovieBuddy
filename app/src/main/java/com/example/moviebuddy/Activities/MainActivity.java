@@ -1,6 +1,7 @@
 package com.example.moviebuddy.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager NightRecyclerManager;
 
     // adapter class object
-    RecyclerView.Adapter adapter;
-    RecyclerView.Adapter nightadapter;
+    RecyclerView.Adapter adapter, nightadapter;
 
     // Linear Layout Manager
     LinearLayoutManager HorizontalLayout;
@@ -61,15 +61,35 @@ public class MainActivity extends AppCompatActivity {
         NightRecyclerManager = new LinearLayoutManager(getApplicationContext());
         grouprecycler.setLayoutManager(NightRecyclerManager);
 
-        MovieDataAccess dataAccess = new MovieDataAccess();
-        nightsource = dataAccess.getNight();
-        nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
-        NightHorizontalLayout = new LinearLayoutManager(
-                MainActivity.this,
-                LinearLayoutManager.HORIZONTAL,
-                false);
-        grouprecycler.setLayoutManager(NightHorizontalLayout);
-        grouprecycler.setAdapter(nightadapter);
+        JSONParser jsonParser = new JSONParser();
+
+
+
+
+        jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
+            @Override
+            public void onError(String message) {
+                Log.d("error",message);
+            }
+
+            @Override
+            public void onResponse(List<GroupNight> groupNight) {
+                nightsource = groupNight;
+                Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
+                nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
+                NightHorizontalLayout = new LinearLayoutManager(
+                        MainActivity.this,
+                        LinearLayoutManager.HORIZONTAL,
+                        false);
+                grouprecycler.setLayoutManager(NightHorizontalLayout);
+                grouprecycler.setAdapter(nightadapter);
+
+
+            }
+        },1);
+
+        //MovieDataAccess dataAccess = new MovieDataAccess();
+        //nightsource = dataAccess.getNight();
 
 
 
@@ -87,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Adding items to RecyclerView.
 
-        JSONParser jsonParser = new JSONParser();
+
         jsonParser.getCurrentMovies(MainActivity.this, new JSONParser.CurrentMovieResponseListener() {
             @Override
             public void onError(String message) {

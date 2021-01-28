@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -38,17 +39,17 @@ public class WatchListActivity extends AppCompatActivity {
 
         rvMovieList = findViewById(R.id.rvWatchlist);
         JSONParser jsonParser = new JSONParser();
-        jsonParser.getPopularMoviez(this, new JSONParser.VolleyResponseListener() {
+        jsonParser.getWatchlistbyID(WatchListActivity.this, new JSONParser.WatchListResponseListener() {
             @Override
             public void onError(String message) {
-                Toast.makeText(WatchListActivity.this, "Error Retrieving", Toast.LENGTH_SHORT).show();
+                Log.d("TAG",message);
+
             }
 
             @Override
-            public void onResponse(List<Movie> movieLists) {
-                movieList = movieLists;
-                //Log.d("Testinggggg",movieLists.toString());
-                //Log.d("After",movieList.toString());
+            public void onResponse(List<Movie> movies) {
+                movieList = movies;
+
                 rvMovieList.setHasFixedSize(true);
 
                 layoutManager = new LinearLayoutManager(WatchListActivity.this);
@@ -57,7 +58,9 @@ public class WatchListActivity extends AppCompatActivity {
                 mAdapter = new WatchListRecyclerAdapter(movieList, WatchListActivity.this);
                 rvMovieList.setAdapter(mAdapter);
             }
-        });
+        },1);
+
+
 
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);

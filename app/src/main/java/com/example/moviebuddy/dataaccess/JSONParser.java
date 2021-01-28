@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 
 import org.json.JSONArray;
@@ -23,6 +24,8 @@ public class JSONParser {
     private List<Movie> popularmovieList = new ArrayList<Movie>();
     private List<Movie> currentmovieList = new ArrayList<Movie>();
     private List<Movie> searchmovieList = new ArrayList<Movie>();
+    private List<GroupNight> groupnightList = new ArrayList<>();
+    private List<Movie> watchlist = new ArrayList<>();
     int year;
 
     private String popularurl = "https://api.themoviedb.org/3/movie/popular?api_key=641b5efff7ea9e0f5b33575963cf62ec";
@@ -165,18 +168,24 @@ public class JSONParser {
                             JSONArray jsonArray = response.getJSONArray("results");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject movie = jsonArray.getJSONObject(i);
-                                String title = movie.getString("original_title");
+                                String title = movie.getString("title");
                                 Log.d("***********", String.valueOf(response));
                                 Log.d("title",title);
                                 String poster = movie.getString("poster_path");
                                 Log.d("Poster",poster);
 
-                                if((movie.getString("release_date")).length() < 4) {
-                                    year = 0;
+                                if (movie.has("release_date")) {
+                                    if((movie.getString("release_date")).length() < 4   || movie.getString("release_date") == null) {
+                                        year = 0;
+                                    }
+                                    else {
+                                        year = Integer.parseInt(movie.getString("release_date").substring(0,4));
+                                    }
                                 }
                                 else {
-                                    year = Integer.parseInt(movie.getString("release_date").substring(0,4));
+                                    year = 0;
                                 }
+
 
                                 int id = Integer.parseInt(movie.getString("id"));
                                 Log.d("Description", String.valueOf(year));
@@ -267,6 +276,163 @@ public class JSONParser {
     }
 
 
+    public interface MovieNightResponseListener {
+        void onError(String message);
 
+        void onResponse(List<GroupNight> groupNight);
+    }
+
+    public void getMovieNightsbyID(Context context, MovieNightResponseListener selectedMovieResponseListener, int userid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String movienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmovienightbyuserid/" + userid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, movienighturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("items");
+                            Log.d("JSONARRAY",jsonArray.length() + "");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject groupnight = jsonArray.getJSONObject(i);
+                                String date = groupnight.getString("groupnightdate");
+                                Log.d("MOVIEDATE",date);
+                                Log.d("***********", String.valueOf(response));
+                                String time = groupnight.getString("groupnighttime");
+                                Log.d("MOVIETIME",time);
+                                String groupname = groupnight.getString("groupname");
+                                Log.d("GROUPNAME",groupname);
+
+
+                                int id = Integer.parseInt(groupnight.getString("movieid"));
+                                Log.d("GROUPID",id + "");
+
+
+
+                                getMoviebyID(context, new SelectedMovieResponseListener() {
+                                    @Override
+                                    public void onError(String message) {
+                                        Log.d("TAG",message);
+                                    }
+
+                                    @Override
+                                    public void onResponse(Movie movie) {
+                                        String title = movie.getTitle();
+                                        Log.d("TitleNIGHT",title);
+                                        GroupNight groupNight = new GroupNight(title,date,groupname);
+                                        Log.d("NIGHTTOSTRING",groupNight.toString());
+                                        groupnightList.add(groupNight);
+                                        if(groupnightList.size() == jsonArray.length()) {
+                                            selectedMovieResponseListener.onResponse(groupnightList);
+                                            Log.d("CHECKINGIF",groupnightList.toString());
+                                        }
+
+
+
+                                    }
+                                },id);
+
+                            }
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                selectedMovieResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+    }
+
+
+    public interface WatchListResponseListener {
+        void onError(String message);
+
+        void onResponse(List<Movie> movies);
+    }
+
+public void getWatchlistbyID(Context context, WatchListResponseListener watchListResponseListener, int userid) {
+    RequestQueue mQueue = Volley.newRequestQueue(context);
+
+    String watchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getwatchlistbyid/" + userid;
+
+    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, watchlisturl, null,
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+
+                        JSONArray jsonArray = response.getJSONArray("items");
+                        Log.d("JSONARRAY",jsonArray.length() + "");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject movie = jsonArray.getJSONObject(i);
+
+
+                            int id = Integer.parseInt(movie.getString("movieid"));
+                            Log.d("MOVIEID",id + "");
+
+
+
+                            getMoviebyID(context, new SelectedMovieResponseListener() {
+                                @Override
+                                public void onError(String message) {
+                                    Log.d("TAG",message);
+                                }
+
+                                @Override
+                                public void onResponse(Movie movie) {
+                                    String title = movie.getTitle();
+                                    String poster = movie.getImageurl();
+
+                                    Movie movie2 = new Movie(id,title,poster,2020);
+
+                                    watchlist.add(movie2);
+                                    if(watchlist.size() == jsonArray.length()) {
+                                        watchListResponseListener.onResponse(watchlist);
+
+                                    }
+
+
+
+                                }
+                            },id);
+
+                        }
+
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.d("****", String.valueOf(e));
+
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.printStackTrace();
+            watchListResponseListener.onError("Error");
+            Log.d("****", String.valueOf(error));
+        }
+    });
+    mQueue.add(request);
+
+
+}
 
 }
