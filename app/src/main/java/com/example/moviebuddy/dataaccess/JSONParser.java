@@ -3,10 +3,13 @@ package com.example.moviebuddy.dataaccess;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.moviebuddy.model.GroupNight;
@@ -16,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -321,7 +325,7 @@ public class JSONParser {
                                     public void onResponse(Movie movie) {
                                         String title = movie.getTitle();
                                         Log.d("TitleNIGHT",title);
-                                        GroupNight groupNight = new GroupNight(title,date,groupname);
+                                        GroupNight groupNight = new GroupNight(title,date,groupname,time);
                                         Log.d("NIGHTTOSTRING",groupNight.toString());
                                         groupnightList.add(groupNight);
                                         if(groupnightList.size() == jsonArray.length()) {
@@ -426,7 +430,7 @@ public void getWatchlistbyID(Context context, WatchListResponseListener watchLis
         @Override
         public void onErrorResponse(VolleyError error) {
             error.printStackTrace();
-            watchListResponseListener.onError("Error");
+            watchListResponseListener.onError(error + "");
             Log.d("****", String.valueOf(error));
         }
     });
@@ -434,5 +438,36 @@ public void getWatchlistbyID(Context context, WatchListResponseListener watchLis
 
 
 }
+
+//Returns an error but works, possible solution here but not quite sure how to implement it https://stackoverflow.com/a/32105391
+public void markAsWatched(Context context, MarkWatchedResponseListener markWatchedResponseListener, int userid, int movieid, int rating) {
+    RequestQueue mQueue = Volley.newRequestQueue(context);
+
+    String markwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updatewatchlist/" + userid + "?movieid=" + movieid + "&rating=" + rating ;
+    Log.d("CHECKURL",markwatchlisturl);
+
+    JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, markwatchlisturl, null,
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    markWatchedResponseListener.onResponse(response + "");
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.printStackTrace();
+            markWatchedResponseListener.onError(error + "");
+            Log.d("****", String.valueOf(error));
+        }
+    });
+    mQueue.add(request);
+
+}
+
+    public interface MarkWatchedResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
 
 }

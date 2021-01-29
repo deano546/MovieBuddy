@@ -50,13 +50,7 @@ public class WatchListActivity extends AppCompatActivity {
             public void onResponse(List<Movie> movies) {
                 movieList = movies;
 
-                rvMovieList.setHasFixedSize(true);
-
-                layoutManager = new LinearLayoutManager(WatchListActivity.this);
-                rvMovieList.setLayoutManager(layoutManager);
-
-                mAdapter = new WatchListRecyclerAdapter(movieList, WatchListActivity.this);
-                rvMovieList.setAdapter(mAdapter);
+               updateRecycler();
             }
         },1);
 
@@ -99,4 +93,15 @@ public class WatchListActivity extends AppCompatActivity {
 
 
     }
+
+    public void updateRecycler() {
+        rvMovieList.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(WatchListActivity.this);
+        rvMovieList.setLayoutManager(layoutManager);
+
+        mAdapter = new WatchListRecyclerAdapter(movieList, WatchListActivity.this);
+        rvMovieList.setAdapter(mAdapter);
+    }
+
 }

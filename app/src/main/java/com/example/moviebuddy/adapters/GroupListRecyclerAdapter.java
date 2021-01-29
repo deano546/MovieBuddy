@@ -61,7 +61,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     public void onBindViewHolder(@NonNull GroupListRecyclerAdapter.MyViewHolder holder, int position) {
 
         holder.tvTitle.setText(groupNightList.get(position).getMovieTitle());
-        holder.tvDateAndTime.setText(String.valueOf(groupNightList.get(position).getDateAndTime()));
+        holder.tvDateAndTime.setText(String.valueOf(groupNightList.get(position).getDate()));
         holder.tvGroupName.setText(String.valueOf(groupNightList.get(position).getGroupName()));
         holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
             @Override

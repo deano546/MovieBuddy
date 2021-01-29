@@ -24,12 +24,11 @@
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#70FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btnMarkWatched"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintBottom_toTopOf="@id/rbWatchlist"
         app:layout_constraintStart_toEndOf="@+id/imWatchlistPoster"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.549" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnMarkWatched"
@@ -39,8 +38,8 @@
         app:layout_constraintBottom_toTopOf="@+id/view3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.746"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvWatchlistTitle" />
+        app:layout_constraintTop_toBottomOf="@id/rbWatchlist"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
         android:id="@+id/view3"
@@ -53,5 +52,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imWatchlistPoster" />
+
+    <RatingBar
+        android:id="@+id/rbWatchlist"
+        android:layout_width="227dp"
+        android:layout_height="51dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnMarkWatched"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imWatchlistPoster"
+        app:layout_constraintTop_toBottomOf="@+id/tvWatchlistTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

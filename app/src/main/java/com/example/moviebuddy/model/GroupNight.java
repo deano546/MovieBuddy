@@ -3,15 +3,31 @@ package com.example.moviebuddy.model;
 public class GroupNight {
 
     private String MovieTitle;
-    private String DateAndTime;
+    private String Date;
     private String GroupName;
+    private String time;
 
     public GroupNight() {
     }
 
-    public GroupNight(String movieTitle, String dateAndTime, String groupName) {
+    public String getTime() {
+        return time;
+    }
+
+    public GroupNight(String movieTitle, String date, String groupName, String time) {
         MovieTitle = movieTitle;
-        DateAndTime = dateAndTime;
+        Date = date;
+        GroupName = groupName;
+        this.time = time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public GroupNight(String movieTitle, String date, String groupName) {
+        MovieTitle = movieTitle;
+        Date = date;
         GroupName = groupName;
     }
 
@@ -19,7 +35,7 @@ public class GroupNight {
     public String toString() {
         return "GroupNight{" +
                 "MovieTitle='" + MovieTitle + '\'' +
-                ", DateAndTime='" + DateAndTime + '\'' +
+                ", DateAndTime='" + Date + '\'' +
                 ", GroupName='" + GroupName + '\'' +
                 '}';
     }
@@ -32,12 +48,12 @@ public class GroupNight {
         MovieTitle = movieTitle;
     }
 
-    public String getDateAndTime() {
-        return DateAndTime;
+    public String getDate() {
+        return Date;
     }
 
-    public void setDateAndTime(String dateAndTime) {
-        DateAndTime = dateAndTime;
+    public void setDate(String date) {
+        Date = date;
     }
 
     public String getGroupName() {

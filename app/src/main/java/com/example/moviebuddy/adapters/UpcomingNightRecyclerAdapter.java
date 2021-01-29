@@ -60,7 +60,7 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
     public void onBindViewHolder(@NonNull UpcomingNightRecyclerAdapter.MyViewHolder holder, int position) {
 
         holder.tvTitle.setText(groupNightList.get(position).getMovieTitle());
-        holder.tvDateAndTime.setText(String.valueOf(groupNightList.get(position).getDateAndTime()));
+        holder.tvDateAndTime.setText(String.valueOf(groupNightList.get(position).getDate()) + " " + groupNightList.get(position).getTime());
         holder.tvGroup.setText(String.valueOf(groupNightList.get(position).getGroupName()));
 
 
