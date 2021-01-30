@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<CreateGroupUserListRecyclerAdapter.MyViewHolder> {
 
     List<User> userList;
+    List<User> selecteduserList;
     Context context;
 
     public CreateGroupUserListRecyclerAdapter(List<User> userList, Context context) {
@@ -34,8 +36,7 @@ public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<Cre
             super(itemView);
             chUser = itemView.findViewById(R.id.checkBox);
             tvUsername = itemView.findViewById(R.id.tvCreateGroupUsername);
-
-
+            selecteduserList = new ArrayList<>();
         }
     }
 
@@ -51,10 +52,25 @@ public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<Cre
     @Override
     public void onBindViewHolder(@NonNull CreateGroupUserListRecyclerAdapter.MyViewHolder holder, int position) {
         holder.tvUsername.setText(userList.get(position).getUsername());
+
+        //Allows me to capture what users are selected, adapted from https://github.com/lingamworks/recyclerview-Multiselect-Checkboxes
+        holder.chUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.chUser.isChecked()) {
+                    selecteduserList.add(userList.get(position));
+                }
+                else {
+                    selecteduserList.remove(userList.get(position));
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return userList.size();
     }
+
+    public List<User> getSelectedUsers() { return selecteduserList;}
 }

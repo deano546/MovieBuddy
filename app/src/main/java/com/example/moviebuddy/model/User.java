@@ -1,11 +1,12 @@
 package com.example.moviebuddy.model;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
 
-    private Long id;
+    private int id;
     private String username;
     private List<Movie> watchlist;
     private List<User> friendlist;
@@ -15,11 +16,28 @@ public class User {
         this.username = username;
     }
 
-    public Long getId() {
+    public User() {
+    }
+
+    public User(int id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                '}';
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -59,6 +77,23 @@ public class User {
 
     public ArrayList<Group> getGrouplist() {
         return grouplist;
+    }
+
+    //Overriding equals method so I can compare User objects via ID
+    //https://stackoverflow.com/questions/17003427/is-it-proper-for-equals-to-depend-only-on-an-id
+    @Override
+    public boolean equals(Object ob) {
+        if (ob == null) {
+            return false;
+        }
+        if (this == ob) {
+            return true;
+        }
+        if (ob instanceof User) {
+            User other = (User) ob;
+            return this.id == (other.getId());
+        }
+        return false;
     }
 
     public void setGrouplist(ArrayList<Group> grouplist) {

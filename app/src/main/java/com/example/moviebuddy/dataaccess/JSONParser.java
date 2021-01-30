@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
+import com.example.moviebuddy.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +31,8 @@ public class JSONParser {
     private List<Movie> searchmovieList = new ArrayList<Movie>();
     private List<GroupNight> groupnightList = new ArrayList<>();
     private List<Movie> watchlist = new ArrayList<>();
+    private List<User> friendlist = new ArrayList<>();
+    private List<User> searchuserlist = new ArrayList<>();
     int year;
 
     private String popularurl = "https://api.themoviedb.org/3/movie/popular?api_key=641b5efff7ea9e0f5b33575963cf62ec";
@@ -469,5 +472,223 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
 
         void onResponse(String message);
     }
+
+
+
+    public void getFriendsbyID(Context context, GetFriendsResponseListener getfriendsResponseListener, int userid) {
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String url = "https://apex.oracle.com/pls/apex/gdeane545/gr/getfriendsbyid/" + userid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject user = jsonArray.getJSONObject(i);
+                                String username = user.getString("username");
+                                int id = Integer.parseInt(user.getString("userid"));
+
+
+
+                                User user1 = new User(id,username);
+
+                                friendlist.add(user1);
+
+                            }
+                            getfriendsResponseListener.onResponse(friendlist);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getfriendsResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+
+    public interface GetFriendsResponseListener {
+        void onError(String message);
+
+        void onResponse(List<User> userList);
+    }
+
+    public void SearchUsers(Context context, SearchUsersResponseListener searchusersResponseListener, String searchquery, int userid) {
+        searchuserlist.clear();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String searchuserurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getallusers/" + userid + "?username=" + searchquery;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, searchuserurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject user = jsonArray.getJSONObject(i);
+                                String username = user.getString("username");
+                                int id = Integer.parseInt(user.getString("userid"));
+
+
+
+                                User user1 = new User(id,username);
+                                searchuserlist.add(user1);
+
+                            }
+                            searchusersResponseListener.onResponse(searchuserlist);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                            Log.d("SearchError", searchuserurl);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                searchusersResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface SearchUsersResponseListener {
+        void onError(String message);
+
+        void onResponse(List<User> userlist);
+    }
+
+
+    public void createGroup(Context context, CreateGroupResponseListener creategroupResponseListener, String groupname) {
+        searchuserlist.clear();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String creategroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/creategroup/" + groupname;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, creategroupurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        creategroupResponseListener.onResponse(groupname);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                creategroupResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface CreateGroupResponseListener {
+        void onError(String message);
+
+        void onResponse(String groupname);
+    }
+
+    public interface getGroupIDResponseListener {
+        void onError (String message);
+
+        void onResponse(int groupid);
+    }
+
+    public void getGroup(Context context, getGroupIDResponseListener getgroupidResponseListener, String groupname) {
+        searchuserlist.clear();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getgroupidbyname/" + groupname;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                                 JSONArray jsonArray = response.getJSONArray("items");
+
+                                JSONObject group = jsonArray.getJSONObject(0);
+                                int id = Integer.parseInt(group.getString("groupid"));
+
+                            getgroupidResponseListener.onResponse(id);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupidResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+
+    public void createUserGroup(Context context, CreateUserGroupResponseListener createusergroupResponseListener, int groupid, int id) {
+        searchuserlist.clear();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String createusergroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/addusergroup/" + id + "?passedgroupid=" + groupid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createusergroupurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        createusergroupResponseListener.onResponse(response + "");
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                createusergroupResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface CreateUserGroupResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
+
 
 }
