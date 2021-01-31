@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.User;
+import com.example.moviebuddy.model.UserMovie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +34,7 @@ public class JSONParser {
     private List<Movie> watchlist = new ArrayList<>();
     private List<User> friendlist = new ArrayList<>();
     private List<User> searchuserlist = new ArrayList<>();
+    private List<UserMovie> usermovielist = new ArrayList<>();
     int year;
 
     private String popularurl = "https://api.themoviedb.org/3/movie/popular?api_key=641b5efff7ea9e0f5b33575963cf62ec";
@@ -687,6 +689,164 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
 
         void onResponse(String message);
     }
+
+
+
+    public void getUserMovie(Context context, GetUserMovieResponseListener getusermovieResponseListener, int userid, int movieid) {
+        usermovielist.clear();
+        UserMovie usermovie1 = new UserMovie();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String getusermovieurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getusermovie/" + userid + "?movieid=" + movieid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getusermovieurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+                            if(jsonArray != null && jsonArray.length() > 0 ){
+                                JSONObject usermovie = jsonArray.getJSONObject(0);
+
+                                usermovie1.setKnown(true);
+
+                                if(usermovie.has("rating")) {
+                                    if(usermovie.isNull("rating")) {
+                                        int rating = 0;
+                                        usermovie1.setRating(rating);
+                                    }
+                                    else {
+                                        int rating = Integer.parseInt(usermovie.getString("rating"));
+                                        usermovie1.setRating(rating);
+                                    }
+
+                                }
+                                else {
+                                    int rating = 0;
+                                    usermovie1.setRating(rating);
+                                }
+
+                                if(usermovie.has("onwatchlist")) {
+                                    String onwatchlist = usermovie.getString("onwatchlist");
+                                    usermovie1.setOnWatchlist(onwatchlist);
+                                }
+                                else {
+                                    String onwatchlist = "No";
+                                    usermovie1.setOnWatchlist(onwatchlist);
+                                }
+
+                            }
+
+                            else {
+                                boolean known = false;
+                                usermovie1.setRating(0);
+                                usermovie1.setOnWatchlist("No");
+                                usermovie1.setKnown(false);
+                            }
+
+                            getusermovieResponseListener.onResponse(usermovie1);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getusermovieResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+
+    public interface GetUserMovieResponseListener {
+        void onError(String message);
+
+        void onResponse(UserMovie usermovie);
+    }
+
+
+
+    public void createMovieRating(Context context, CreateMovieRatingResponseListener createmovieratingResponseListener, int userid, int movieid,int rating) {
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String createratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newrating/" + userid + "?passedmovieid=" + movieid + "&passedrating=" + rating;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createratingurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        createmovieratingResponseListener.onResponse(response + "");
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                createmovieratingResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface CreateMovieRatingResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
+    public void updateMovieRating(Context context, UpdateMovieRatingResponseListener updatemovieratingResponseListener, int userid, int movieid,int rating) {
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String updateratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updaterating/" + userid + "?rating=" + rating + "&passedmovieid=" + movieid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, updateratingurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        updatemovieratingResponseListener.onResponse(response + "");
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                updatemovieratingResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface UpdateMovieRatingResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
+
+
 
 
 
