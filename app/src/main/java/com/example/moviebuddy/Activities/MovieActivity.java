@@ -29,7 +29,7 @@ public class MovieActivity extends AppCompatActivity {
     RecyclerView rvMovieList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-    List<Movie> movieList = new ArrayList<Movie>();
+    List<Movie> movieList = new ArrayList<>();
 
 
     @Override
@@ -47,6 +47,8 @@ public class MovieActivity extends AppCompatActivity {
                 R.id.rvMovieList);
 
         JSONParser jsonParser = new JSONParser();
+
+        //Retrieves a list of popular movies from the movie database API
        jsonParser.getPopularMoviez(this, new JSONParser.VolleyResponseListener() {
             @Override
             public void onError(String message) {
@@ -55,46 +57,46 @@ public class MovieActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(List<Movie> movieLists) {
-             movieList = movieLists;
-               //Log.d("Testinggggg",movieLists.toString());
-                //Log.d("After",movieList.toString());
+                //Once list is retrieved, it is displayed in the recycler view
+                movieList = movieLists;
                 rvMovieList.setHasFixedSize(true);
-
                 layoutManager = new LinearLayoutManager(MovieActivity.this);
                 rvMovieList.setLayoutManager(layoutManager);
-
                 mAdapter = new MovieListRecyclerAdapter(movieList,MovieActivity.this);
                 rvMovieList.setAdapter(mAdapter);
             }
         });
 
+        //Clicking this search button calls a search on the API
        btnSearch.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               jsonParser.SearchMovies(MovieActivity.this, new JSONParser.SearchMovieResponseListener() {
-                   @Override
-                   public void onError(String message) {
-                       Toast.makeText(MovieActivity.this, "Search error", Toast.LENGTH_SHORT).show();
-                   }
+               if(etMovieSearch.getText().toString().trim().length() > 0) {
+                   jsonParser.SearchMovies(MovieActivity.this, new JSONParser.SearchMovieResponseListener() {
+                       @Override
+                       public void onError(String message) {
+                           Toast.makeText(MovieActivity.this, "Search error", Toast.LENGTH_SHORT).show();
+                       }
 
-                   @Override
-                   public void onResponse(List<Movie> searchList) {
+                       @Override
+                       public void onResponse(List<Movie> searchList) {
+                           //Display retrieved search results in recycler
+                           movieList = searchList;
+                           Log.d("PrintingMovieList",movieList.toString());
+                           Log.d("PrintingMovieList2",searchList.toString());
+                           mAdapter.notifyDataSetChanged();
+                           rvMovieList.setHasFixedSize(true);
+                           layoutManager = new LinearLayoutManager(MovieActivity.this);
+                           rvMovieList.setLayoutManager(layoutManager);
+                           mAdapter = new MovieListRecyclerAdapter(movieList,MovieActivity.this);
+                           rvMovieList.setAdapter(mAdapter);
+                       }
+                   },etMovieSearch.getText().toString());
+               }
+               else {
+                   Toast.makeText(MovieActivity.this, "Please enter a search", Toast.LENGTH_SHORT).show();
+               }
 
-                       movieList = searchList;
-                       Log.d("PrintingMovieList",movieList.toString());
-                       Log.d("PrintingMovieList2",searchList.toString());
-                       mAdapter.notifyDataSetChanged();
-                       //Log.d("Testinggggg",movieLists.toString());
-                       //Log.d("After",movieList.toString());
-                       rvMovieList.setHasFixedSize(true);
-
-                       layoutManager = new LinearLayoutManager(MovieActivity.this);
-                       rvMovieList.setLayoutManager(layoutManager);
-
-                       mAdapter = new MovieListRecyclerAdapter(movieList,MovieActivity.this);
-                       rvMovieList.setAdapter(mAdapter);
-                   }
-               },etMovieSearch.getText().toString() );
            }
        });
 

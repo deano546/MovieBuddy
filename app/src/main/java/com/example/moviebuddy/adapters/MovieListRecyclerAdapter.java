@@ -23,6 +23,7 @@ import java.util.List;
 public class MovieListRecyclerAdapter extends RecyclerView.Adapter<MovieListRecyclerAdapter.MyViewHolder> {
 
     //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+    //This is the adapter used in the movie activity, it displays search results
 
     List<Movie> movieList;
     Context context;
@@ -67,7 +68,7 @@ public class MovieListRecyclerAdapter extends RecyclerView.Adapter<MovieListRecy
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show movie detail screen
+                //show movie detail screen when the user clicks on an item
                 Intent intent = new Intent(context, MovieDetailActivity.class);
                 intent.putExtra("id", movieList.get(position).getId());
                 context.startActivity(intent);

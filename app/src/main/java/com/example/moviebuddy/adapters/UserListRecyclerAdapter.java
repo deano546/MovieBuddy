@@ -21,6 +21,8 @@ import java.util.List;
 
 public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecyclerAdapter.MyViewHolder> {
 
+    //This is used in the friend list activity
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
     List<User> userList;
     Context context;
@@ -38,9 +40,6 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
             super(itemView);
             btnAdd = itemView.findViewById(R.id.btnAddFriend);
             tvUsername = itemView.findViewById(R.id.tvUsername);
-
-
-
         }
     }
 

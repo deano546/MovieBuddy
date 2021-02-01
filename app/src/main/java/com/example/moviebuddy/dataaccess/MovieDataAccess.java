@@ -9,7 +9,7 @@ import java.util.List;
 public class MovieDataAccess {
 
 
-    //This is just faking a database for now, it allows me to populate the recycler views
+    //This is just faking a database, it allows me to populate the recycler views
 
     public List<GroupNight> getNight() {
         List<GroupNight> groupNightList = new ArrayList<>();

@@ -49,23 +49,19 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager HorizontalLayout;
     LinearLayoutManager NightHorizontalLayout;
 
-    View ChildView;
-    int RecyclerViewItemPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Assignments
         grouprecycler = findViewById(R.id.rvGroupNight);
         NightRecyclerManager = new LinearLayoutManager(getApplicationContext());
         grouprecycler.setLayoutManager(NightRecyclerManager);
 
         JSONParser jsonParser = new JSONParser();
 
-
-
-
+        //This retrieves any upcoming user nights for the user by passing their ID
         jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
             @Override
             public void onError(String message) {
@@ -74,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(List<GroupNight> groupNight) {
+                //Once the data is retrieved, the recycler view is populated
                 nightsource = groupNight;
                 Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
                 nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
@@ -88,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
         },1);
 
-        //MovieDataAccess dataAccess = new MovieDataAccess();
-        //nightsource = dataAccess.getNight();
+
 
 
 
@@ -105,9 +101,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(
                 RecyclerViewLayoutManager);
 
-        // Adding items to RecyclerView.
-
-
+        //This displays the posters across the upper half, it calls the Movie DB API I have linked the application to
         jsonParser.getCurrentMovies(MainActivity.this, new JSONParser.CurrentMovieResponseListener() {
             @Override
             public void onError(String message) {

@@ -23,6 +23,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
 
 
     //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+    //This is displayed in the main activity, it shows the movie posters going across the top half of the screen
 
 
     List<Movie> movieList;
@@ -50,7 +51,6 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcomingitem,parent,false);
         MyViewHolder holder = new MyViewHolder(view);
 
@@ -59,11 +59,11 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
         Glide.with(this.context).load("https://image.tmdb.org/t/p/w300/" + movieList.get(position).getImageurl()).into(holder.imMovie);
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Clicking a poster brings it to the detail activity, the ID is passed so the API cna be called to get the rest of the movie details
                 Intent intent = new Intent(context, MovieDetailActivity.class);
                 intent.putExtra("id", movieList.get(position).getId());
                 context.startActivity(intent);

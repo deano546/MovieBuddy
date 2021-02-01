@@ -79,6 +79,10 @@ public class User {
         return grouplist;
     }
 
+    public void setGrouplist(ArrayList<Group> grouplist) {
+        this.grouplist = grouplist;
+    }
+
     //Overriding equals method so I can compare User objects via ID
     //https://stackoverflow.com/questions/17003427/is-it-proper-for-equals-to-depend-only-on-an-id
     @Override
@@ -96,7 +100,5 @@ public class User {
         return false;
     }
 
-    public void setGrouplist(ArrayList<Group> grouplist) {
-        this.grouplist = grouplist;
-    }
+
 }

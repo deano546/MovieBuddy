@@ -22,6 +22,7 @@ import java.util.Calendar;
 
 public class MovieNightActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
+    //Declarations
     Button btnTime;
     Button btnDate;
 
@@ -30,6 +31,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_night);
 
+        //Assignments
         btnTime = findViewById(R.id.btnSelectTime);
         btnDate = findViewById(R.id.btnSelectDate);
 

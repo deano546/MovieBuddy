@@ -30,7 +30,7 @@ public class WatchListActivity extends AppCompatActivity {
     RecyclerView rvMovieList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-    List<Movie> movieList = new ArrayList<Movie>();
+    List<Movie> movieList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,10 @@ public class WatchListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_watch_list);
 
         rvMovieList = findViewById(R.id.rvWatchlist);
+
         JSONParser jsonParser = new JSONParser();
+
+        //This gets the watchlist of the current user by using their ID
         jsonParser.getWatchlistbyID(WatchListActivity.this, new JSONParser.WatchListResponseListener() {
             @Override
             public void onError(String message) {
@@ -48,19 +51,19 @@ public class WatchListActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(List<Movie> movies) {
+                //Once list is retrieved, it is displayed in the recycler
                 movieList = movies;
-
-               updateRecycler();
+                updateRecycler();
             }
         },1);
 
 
-
+        //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        //bottomNavigationView.setOnNavigationItemSelectedListener(myNavigationItemListener);
         bottomNavigationView.setSelectedItemId(R.id.page_2);
 
+        //Setting up navigation to correct activity, adapted from https://suragch.medium.com/how-to-add-a-bottom-navigation-bar-in-android-958ed728ef6c
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

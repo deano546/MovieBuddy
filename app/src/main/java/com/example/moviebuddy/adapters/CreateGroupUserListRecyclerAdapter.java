@@ -19,6 +19,10 @@ import java.util.List;
 
 public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<CreateGroupUserListRecyclerAdapter.MyViewHolder> {
 
+    //This adapter displays the user's current friends so they can create a group
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+
+
     List<User> userList;
     List<User> selecteduserList;
     Context context;
@@ -72,5 +76,6 @@ public class CreateGroupUserListRecyclerAdapter extends RecyclerView.Adapter<Cre
         return userList.size();
     }
 
+    //Method used to capture what users are selected, adapted from https://github.com/lingamworks/recyclerview-Multiselect-Checkboxes
     public List<User> getSelectedUsers() { return selecteduserList;}
 }

@@ -24,28 +24,26 @@ import java.util.List;
 public class GroupActivity extends AppCompatActivity {
 
 
-
+    //Declarations
     RecyclerView rvGroupList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-    List<GroupNight> groupList = new ArrayList<GroupNight>();
+    List<GroupNight> groupList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
-
+        //Assignments
         Button btnFriendList = findViewById(R.id.btnFriendList);
         ImageView imgAddGroup = findViewById(R.id.imgAddGroup);
+
+        //Recycler view display code
         rvGroupList = findViewById(R.id.rvGroupList);
-
         rvGroupList.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(GroupActivity.this);
         rvGroupList.setLayoutManager(layoutManager);
-
-
         MovieDataAccess dataAccess = new MovieDataAccess();
         groupList = dataAccess.getNight();
         mAdapter = new GroupListRecyclerAdapter(groupList, GroupActivity.this);

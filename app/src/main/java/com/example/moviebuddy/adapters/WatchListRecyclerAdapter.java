@@ -31,6 +31,9 @@ import static java.lang.Boolean.TRUE;
 
 public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecyclerAdapter.MyViewHolder> {
 
+    //This adapter is used in the watch list activity
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+
     List<Movie> movieList;
     Context context;
 
@@ -53,10 +56,8 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
             btnMark = itemView.findViewById(R.id.btnMarkWatched);
             rbWatchlist = itemView.findViewById(R.id.rbWatchlist);
             parentLayout = itemView.findViewById(R.id.onewatchrow);
-
         }
     }
-
 
 
     @NonNull
@@ -103,6 +104,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
 
     }
 
+    //This method allows a movie to be removed from the watchlist when the user marks it as watched
     public void removeItem(int position, int rating) {
 
         JSONParser jsonParser = new JSONParser();

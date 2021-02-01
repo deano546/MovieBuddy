@@ -18,6 +18,10 @@ import java.util.List;
 
 public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecyclerAdapter.MyViewHolder> {
 
+    //This adapter shows all the groups the user is a part of, and whether they have any upcoming movie night
+    //(This adapter is not yet connected to a database, it is called in the GroupActivity)
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+
     List<GroupNight> groupNightList;
     Context context;
 

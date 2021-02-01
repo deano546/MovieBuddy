@@ -27,9 +27,10 @@ import java.util.List;
 
 public class JSONParser {
 
-    private List<Movie> popularmovieList = new ArrayList<Movie>();
-    private List<Movie> currentmovieList = new ArrayList<Movie>();
-    private List<Movie> searchmovieList = new ArrayList<Movie>();
+    //Lists to use with methods
+    private List<Movie> popularmovieList = new ArrayList<>();
+    private List<Movie> currentmovieList = new ArrayList<>();
+    private List<Movie> searchmovieList = new ArrayList<>();
     private List<GroupNight> groupnightList = new ArrayList<>();
     private List<Movie> watchlist = new ArrayList<>();
     private List<User> friendlist = new ArrayList<>();
@@ -37,8 +38,12 @@ public class JSONParser {
     private List<UserMovie> usermovielist = new ArrayList<>();
     int year;
 
-    private String popularurl = "https://api.themoviedb.org/3/movie/popular?api_key=641b5efff7ea9e0f5b33575963cf62ec";
-    private String currenturl = "https://api.themoviedb.org/3/movie/upcoming?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US&page=1";
+    //These are all methods that interface with my database (through rest services created with oracle apex)
+    //or with the movie database API I am accessing, I use the Volley library to simplify the process
+    //some code was adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+
+
+
 
 
     //https://stackoverflow.com/questions/33535435/how-to-create-a-proper-volley-listener-for-cross-class-volley-method-calling
@@ -48,10 +53,13 @@ public class JSONParser {
         void onResponse(List<Movie> movieList);
     }
 
-
+    //Gets popular movies from the API
+    //A list of movies is retrieved and inserted into an array list
+    //The array list is returned using the Response Listener
     public void getPopularMoviez(Context context, VolleyResponseListener volleyResponseListener) {
         RequestQueue mQueue = Volley.newRequestQueue(context);
         Log.d("hello","something");
+        String popularurl = "https://api.themoviedb.org/3/movie/popular?api_key=641b5efff7ea9e0f5b33575963cf62ec";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, popularurl, null,
                 new Response.Listener<JSONObject>() {
@@ -106,8 +114,11 @@ public class JSONParser {
         void onResponse(List<Movie> movieList);
     }
 
+    //Similar to last method, this gets a different list from the API, listed in their documentation as "Upcoming"
     public void getCurrentMovies(Context context,CurrentMovieResponseListener currentMovieResponseListener) {
         RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String currenturl = "https://api.themoviedb.org/3/movie/upcoming?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US&page=1";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, currenturl, null,
                 new Response.Listener<JSONObject>() {
@@ -164,6 +175,7 @@ public class JSONParser {
         void onResponse(List<Movie> movieList);
     }
 
+    //Calling the search on the movie database API, and return the resulting list
     public void SearchMovies(Context context, SearchMovieResponseListener searchMovieResponseListener, String searchquery) {
         searchmovieList.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -183,6 +195,8 @@ public class JSONParser {
                                 String poster = movie.getString("poster_path");
                                 Log.d("Poster",poster);
 
+                                //Some movies in thir lists have no release date, so I have this validation to account for that
+                                //I take out the year portion of the release date if they do have one
                                 if (movie.has("release_date")) {
                                     if((movie.getString("release_date")).length() < 4   || movie.getString("release_date") == null) {
                                         year = 0;
@@ -195,12 +209,11 @@ public class JSONParser {
                                     year = 0;
                                 }
 
-
                                 int id = Integer.parseInt(movie.getString("id"));
                                 Log.d("Description", String.valueOf(year));
-
                                 Movie movie1 = new Movie(id,title,poster,year);
                                 Log.d("Movie",movie1.toString());
+
                                 searchmovieList.add(movie1);
                                 Log.d("MovieList1",searchmovieList.toString());
 
@@ -232,6 +245,7 @@ public class JSONParser {
         void onResponse(Movie movie);
     }
 
+    //Retrive a single movie form the API using the movieid
     public void getMoviebyID(Context context, SelectedMovieResponseListener selectedMovieResponseListener, int movieid) {
 
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -291,6 +305,8 @@ public class JSONParser {
         void onResponse(List<GroupNight> groupNight);
     }
 
+    //This gets any upcoming movie nights for the current user, using their userid
+    //I call the get movie by ID method in this so I can also retrieve the movie details from the API
     public void getMovieNightsbyID(Context context, MovieNightResponseListener selectedMovieResponseListener, int userid) {
         RequestQueue mQueue = Volley.newRequestQueue(context);
 
@@ -373,12 +389,15 @@ public class JSONParser {
         void onResponse(List<Movie> movies);
     }
 
-public void getWatchlistbyID(Context context, WatchListResponseListener watchListResponseListener, int userid) {
-    RequestQueue mQueue = Volley.newRequestQueue(context);
+    //gets the watchlist for the current user
+    //it also calls the get movie by id method so the details of the movies can be displayed also
+    public void getWatchlistbyID(Context context, WatchListResponseListener watchListResponseListener, int userid) {
 
-    String watchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getwatchlistbyid/" + userid;
+        RequestQueue mQueue = Volley.newRequestQueue(context);
 
-    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, watchlisturl, null,
+        String watchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getwatchlistbyid/" + userid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, watchlisturl, null,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -388,12 +407,8 @@ public void getWatchlistbyID(Context context, WatchListResponseListener watchLis
                         Log.d("JSONARRAY",jsonArray.length() + "");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject movie = jsonArray.getJSONObject(i);
-
-
                             int id = Integer.parseInt(movie.getString("movieid"));
                             Log.d("MOVIEID",id + "");
-
-
 
                             getMoviebyID(context, new SelectedMovieResponseListener() {
                                 @Override
@@ -405,10 +420,10 @@ public void getWatchlistbyID(Context context, WatchListResponseListener watchLis
                                 public void onResponse(Movie movie) {
                                     String title = movie.getTitle();
                                     String poster = movie.getImageurl();
-
                                     Movie movie2 = new Movie(id,title,poster,2020);
-
                                     watchlist.add(movie2);
+
+                                    //This ensures each movie has been looped through before the response listener is called
                                     if(watchlist.size() == jsonArray.length()) {
                                         watchListResponseListener.onResponse(watchlist);
 
@@ -440,18 +455,16 @@ public void getWatchlistbyID(Context context, WatchListResponseListener watchLis
         }
     });
     mQueue.add(request);
-
-
 }
+    //This marks a movie on a user's watchlist as watched
+    //Returns an error but works, possible solution here but not quite sure how to implement it https://stackoverflow.com/a/32105391
+    public void markAsWatched(Context context, MarkWatchedResponseListener markWatchedResponseListener, int userid, int movieid, int rating) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
 
-//Returns an error but works, possible solution here but not quite sure how to implement it https://stackoverflow.com/a/32105391
-public void markAsWatched(Context context, MarkWatchedResponseListener markWatchedResponseListener, int userid, int movieid, int rating) {
-    RequestQueue mQueue = Volley.newRequestQueue(context);
+        String markwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updatewatchlist/" + userid + "?movieid=" + movieid + "&rating=" + rating ;
+        Log.d("CHECKURL",markwatchlisturl);
 
-    String markwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updatewatchlist/" + userid + "?movieid=" + movieid + "&rating=" + rating ;
-    Log.d("CHECKURL",markwatchlisturl);
-
-    JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, markwatchlisturl, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, markwatchlisturl, null,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -466,7 +479,6 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
         }
     });
     mQueue.add(request);
-
 }
 
     public interface MarkWatchedResponseListener {
@@ -476,7 +488,7 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
     }
 
 
-
+    //Gets the current user's friend list
     public void getFriendsbyID(Context context, GetFriendsResponseListener getfriendsResponseListener, int userid) {
 
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -492,21 +504,15 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                                 JSONObject user = jsonArray.getJSONObject(i);
                                 String username = user.getString("username");
                                 int id = Integer.parseInt(user.getString("userid"));
-
-
-
                                 User user1 = new User(id,username);
 
                                 friendlist.add(user1);
-
                             }
                             getfriendsResponseListener.onResponse(friendlist);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d("****", String.valueOf(e));
-
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -517,8 +523,6 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
             }
         });
         mQueue.add(request);
-
-
     }
 
 
@@ -528,6 +532,8 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
         void onResponse(List<User> userList);
     }
 
+    //This searches through all users on the database
+    //I pass the id of the user performing the search so they can be excluded
     public void SearchUsers(Context context, SearchUsersResponseListener searchusersResponseListener, String searchquery, int userid) {
         searchuserlist.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -543,9 +549,6 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                                 JSONObject user = jsonArray.getJSONObject(i);
                                 String username = user.getString("username");
                                 int id = Integer.parseInt(user.getString("userid"));
-
-
-
                                 User user1 = new User(id,username);
                                 searchuserlist.add(user1);
 
@@ -577,7 +580,7 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
         void onResponse(List<User> userlist);
     }
 
-
+    //This creates a new group
     public void createGroup(Context context, CreateGroupResponseListener creategroupResponseListener, String groupname) {
         searchuserlist.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -587,10 +590,7 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
-
                         creategroupResponseListener.onResponse(groupname);
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -617,6 +617,8 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
         void onResponse(int groupid);
     }
 
+    //This retrieves a group ID by using the group name
+    //I need to validate each groups name is unique
     public void getGroup(Context context, getGroupIDResponseListener getgroupidResponseListener, String groupname) {
         searchuserlist.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -628,11 +630,9 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                     public void onResponse(JSONObject response) {
 
                         try {
-
-                                 JSONArray jsonArray = response.getJSONArray("items");
-
-                                JSONObject group = jsonArray.getJSONObject(0);
-                                int id = Integer.parseInt(group.getString("groupid"));
+                            JSONArray jsonArray = response.getJSONArray("items");
+                            JSONObject group = jsonArray.getJSONObject(0);
+                            int id = Integer.parseInt(group.getString("groupid"));
 
                             getgroupidResponseListener.onResponse(id);
 
@@ -656,7 +656,7 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
 
     }
 
-
+    //This adds records to the UserGroup table of the user and group ids
     public void createUserGroup(Context context, CreateUserGroupResponseListener createusergroupResponseListener, int groupid, int id) {
         searchuserlist.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -666,10 +666,7 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
-
                         createusergroupResponseListener.onResponse(response + "");
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -691,7 +688,8 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
     }
 
 
-
+    //This retrieves records from the user movie table
+    //It allows me to know whether they have rated or watched the movie
     public void getUserMovie(Context context, GetUserMovieResponseListener getusermovieResponseListener, int userid, int movieid) {
         usermovielist.clear();
         UserMovie usermovie1 = new UserMovie();
@@ -706,12 +704,12 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                         try {
 
                             JSONArray jsonArray = response.getJSONArray("items");
-
+                            //Validation, as it is possible the user has never interacted (rated or watched) the movie before
                             if(jsonArray != null && jsonArray.length() > 0 ){
                                 JSONObject usermovie = jsonArray.getJSONObject(0);
-
                                 usermovie1.setKnown(true);
 
+                                //If the user has not rated the movie, I automatically set it to 0
                                 if(usermovie.has("rating")) {
                                     if(usermovie.isNull("rating")) {
                                         int rating = 0;
@@ -738,14 +736,13 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                                 }
 
                             }
-
+                            //If no record was found, known is set to false, so I know what controls to enable on the movie detail activity
                             else {
                                 boolean known = false;
                                 usermovie1.setRating(0);
                                 usermovie1.setOnWatchlist("No");
                                 usermovie1.setKnown(false);
                             }
-
                             getusermovieResponseListener.onResponse(usermovie1);
 
                         } catch (JSONException e) {
@@ -768,7 +765,6 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
 
     }
 
-
     public interface GetUserMovieResponseListener {
         void onError(String message);
 
@@ -776,9 +772,8 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
     }
 
 
-
+    //Creates a record in the usermovie table and adds a rating
     public void createMovieRating(Context context, CreateMovieRatingResponseListener createmovieratingResponseListener, int userid, int movieid,int rating) {
-
         RequestQueue mQueue = Volley.newRequestQueue(context);
         String createratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newrating/" + userid + "?passedmovieid=" + movieid + "&passedrating=" + rating;
 
@@ -800,8 +795,6 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
             }
         });
         mQueue.add(request);
-
-
     }
 
     public interface CreateMovieRatingResponseListener {
@@ -810,9 +803,8 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
         void onResponse(String message);
     }
 
-
+    //Updates a record in the user movie table and adds a rating
     public void updateMovieRating(Context context, UpdateMovieRatingResponseListener updatemovieratingResponseListener, int userid, int movieid,int rating) {
-
         RequestQueue mQueue = Volley.newRequestQueue(context);
         String updateratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updaterating/" + userid + "?rating=" + rating + "&passedmovieid=" + movieid;
 
@@ -820,10 +812,7 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
-
                         updatemovieratingResponseListener.onResponse(response + "");
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -845,7 +834,33 @@ public void markAsWatched(Context context, MarkWatchedResponseListener markWatch
     }
 
 
+    //This adds a movie to a users watchlist
+    public void addtoWatchlist(Context context, addtoWatchlistResponseListener addtowatchlistResponseListener, int userid, int movieid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String addwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newwatchlist/" + userid + "?passedmovieid=" + movieid;
 
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, addwatchlisturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        addtowatchlistResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                addtowatchlistResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+    }
+
+    public interface addtoWatchlistResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
 
 
 
