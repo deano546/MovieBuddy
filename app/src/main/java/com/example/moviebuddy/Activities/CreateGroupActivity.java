@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -66,57 +67,80 @@ public class CreateGroupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedfriends = mAdapter.getSelectedUsers();
                 Log.d("TESTSELECTEDUSER",selectedfriends.toString());
+                Log.d("TAG$",etGroupName.getText().toString().toUpperCase());
 
                 //Validation
                 if(etGroupName.getText().toString().trim().length() > 0 && selectedfriends.size() > 0) {
-                    groupname = etGroupName.getText().toString();
+                    groupname = etGroupName.getText().toString().toUpperCase();
+                    Log.d("TAG$",groupname);
                     User currentuser = new User(1,"deano");
                     selectedfriends.add(currentuser);
 
-                    jsonParser.createGroup(CreateGroupActivity.this, new JSONParser.CreateGroupResponseListener() {
+                    jsonParser.verifyUniqueGroup(CreateGroupActivity.this, new JSONParser.verifyUniqueGroupResponseListener() {
                         @Override
                         public void onError(String message) {
-                            Log.d("TAG",message);
-
-                            jsonParser.getGroup(CreateGroupActivity.this, new JSONParser.getGroupIDResponseListener() {
-                                @Override
-                                public void onError(String message) {
-
-                                }
-
-                                @Override
-                                public void onResponse(int groupid) {
-
-                                    for (int i=0; i<selectedfriends.size(); i++)
-                                    {
-
-                                        jsonParser.createUserGroup(CreateGroupActivity.this, new JSONParser.CreateUserGroupResponseListener() {
-                                            @Override
-                                            public void onError(String message) {
-                                                Log.d("TAG",message);
-                                            }
-
-                                            @Override
-                                            public void onResponse(String message) {
-                                                Log.d("TAG",message);
-                                            }
-                                        },groupid,selectedfriends.get(i).getId());
-                                    }
-                                    etGroupName.getText().clear();
-                                    Toast.makeText(CreateGroupActivity.this, "Group Created!", Toast.LENGTH_SHORT).show();
-
-                                }
-                            },groupname);
-
-
-
+                            Toast.makeText(CreateGroupActivity.this, "Verify Error", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onResponse(String message) {
-                            Log.d("TAG",message);
+                            Log.d("WANNASEE",message);
+                            switch (message) {
+                                case "Not Unique":
+                                    Toast.makeText(CreateGroupActivity.this, "This group name is already taken", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "Unique":
+                                    jsonParser.createGroup(CreateGroupActivity.this, new JSONParser.CreateGroupResponseListener() {
+                                        @Override
+                                        public void onError(String message) {
+                                            Log.d("TAG",message);
+
+                                            jsonParser.getGroup(CreateGroupActivity.this, new JSONParser.getGroupIDResponseListener() {
+                                                @Override
+                                                public void onError(String message) {
+
+                                                }
+
+                                                @Override
+                                                public void onResponse(int groupid) {
+
+                                                    for (int i=0; i<selectedfriends.size(); i++)
+                                                    {
+
+                                                        jsonParser.createUserGroup(CreateGroupActivity.this, new JSONParser.CreateUserGroupResponseListener() {
+                                                            @Override
+                                                            public void onError(String message) {
+                                                                Log.d("TAG",message);
+                                                            }
+
+                                                            @Override
+                                                            public void onResponse(String message) {
+                                                                Log.d("TAG",message);
+                                                            }
+                                                        },groupid,selectedfriends.get(i).getId());
+                                                    }
+                                                    etGroupName.getText().clear();
+                                                    Toast.makeText(CreateGroupActivity.this, "Group Created!", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            },groupname.toUpperCase());
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onResponse(String message) {
+                                            Log.d("TAG",message);
+                                        }
+                                    },groupname.toUpperCase());
+                                    break;
+                            }
+
                         }
-                    },groupname);
+                    },groupname.toUpperCase());
+
+
 
                 }
                 else {

@@ -862,7 +862,52 @@ public class JSONParser {
         void onResponse(String message);
     }
 
+public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener verifyuniquegroupresponselistener, String groupname) {
+    RequestQueue mQueue = Volley.newRequestQueue(context);
+    String checkuniqueurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/checkgroupname/" + groupname;
 
+    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, checkuniqueurl, null,
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("items");
+
+                        if (jsonArray.length() > 0) {
+                            verifyuniquegroupresponselistener.onResponse("Not Unique");
+                        }
+                        else {
+                            verifyuniquegroupresponselistener.onResponse("Unique");
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.printStackTrace();
+            verifyuniquegroupresponselistener.onError(error + "");
+            Log.d("****", String.valueOf(error));
+        }
+    });
+    mQueue.add(request);
+
+
+
+}
+
+    public interface verifyUniqueGroupResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
 
 
 
