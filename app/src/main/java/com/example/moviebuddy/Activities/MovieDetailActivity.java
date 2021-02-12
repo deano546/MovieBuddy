@@ -191,7 +191,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                         jsonParser.addtoWatchlist(MovieDetailActivity.this, new JSONParser.addtoWatchlistResponseListener() {
                             @Override
                             public void onError(String message) {
-                                Toast.makeText(MovieDetailActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MovieDetailActivity.this, "Added to watchlist", Toast.LENGTH_SHORT).show();
                                 btnAddtoWatchlist.setText("Added to Watchlist");
                             }
 
