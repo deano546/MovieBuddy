@@ -3,6 +3,7 @@ package com.example.moviebuddy.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.service.controls.templates.TemperatureControlTemplate;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,14 +16,25 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.moviebuddy.Activities.MainActivity;
 import com.example.moviebuddy.Activities.MovieDetailActivity;
 import com.example.moviebuddy.Activities.WatchListActivity;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
+import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -36,6 +48,9 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
 
     List<Movie> movieList;
     Context context;
+    String SQLID;
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
 
     public WatchListRecyclerAdapter(List<Movie> movieList, Context context) {
         this.movieList = movieList;
@@ -71,6 +86,26 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
 
     @Override
     public void onBindViewHolder(@NonNull WatchListRecyclerAdapter.MyViewHolder holder, int position) {
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        String ID = auth.getCurrentUser().getUid();
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        SQLID = document.get("id").toString();
+                    }
+                }
+            }
+        });
+
+
+
+
         Glide.with(this.context).load("https://image.tmdb.org/t/p/w300/" + movieList.get(position).getImageurl()).into(holder.imMovieList);
         holder.tvMovieListTitle.setText(movieList.get(position).getTitle());
 
@@ -97,7 +132,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
         holder.btnMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItem(position,holder.rbWatchlist.getNumStars());
+                removeItem(position,holder.rbWatchlist.getNumStars(),Integer.parseInt(SQLID));
 
             }
         });
@@ -105,7 +140,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
     }
 
     //This method allows a movie to be removed from the watchlist when the user marks it as watched
-    public void removeItem(int position, int rating) {
+    public void removeItem(int position, int rating, int id) {
 
         JSONParser jsonParser = new JSONParser();
         jsonParser.markAsWatched(context, new JSONParser.MarkWatchedResponseListener() {
@@ -123,7 +158,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
             public void onResponse(String message) {
                 Toast.makeText(context, "Marked as watched", Toast.LENGTH_SHORT).show();
             }
-        },1,movieList.get(position).getId(),rating);
+        },id,movieList.get(position).getId(),rating);
     }
 
     @Override

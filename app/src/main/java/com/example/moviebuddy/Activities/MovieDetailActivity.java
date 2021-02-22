@@ -1,6 +1,8 @@
 package com.example.moviebuddy.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +17,21 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.adapters.UpcomingNightRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
+import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.UserMovie;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static android.view.View.INVISIBLE;
 
@@ -37,11 +51,17 @@ public class MovieDetailActivity extends AppCompatActivity {
     int userrating;
     boolean onWatchlist;
     boolean known;
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
+    String SQLID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        String ID = auth.getCurrentUser().getUid();
 
         //Take the extras from the intent passed from the movie activity as to display movie details here
         Intent intent = getIntent();
@@ -79,40 +99,139 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         },movieid);
 
-        //This allows me to determine if the user has either previously rated or watched the movie, or have it on their watchlist
-        //The activity is edited depending on the result
-        jsonParser.getUserMovie(MovieDetailActivity.this, new JSONParser.GetUserMovieResponseListener() {
+
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onError(String message) {
-                Log.d("Tag",message);
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        SQLID = document.get("id").toString();
+
+                        //This allows me to determine if the user has either previously rated or watched the movie, or have it on their watchlist
+                        //The activity is edited depending on the result
+                        jsonParser.getUserMovie(MovieDetailActivity.this, new JSONParser.GetUserMovieResponseListener() {
+                            @Override
+                            public void onError(String message) {
+                                Log.d("Tag",message);
+                            }
+
+                            @Override
+                            public void onResponse(UserMovie usermovie) {
+                                Log.d("UMSTRING",usermovie.toString());
+                                userrating = usermovie.getRating();
+                                rbRateMovie.setRating(userrating);
+                                String test = usermovie.getOnWatchlist();
+                                if(test.equals("Yes")) {
+                                    //If the user has the movie on their watchlist, I change the text (and function) of the
+                                    onWatchlist = true;
+                                    btnAddtoWatchlist.setText("Mark as Watched");
+                                    btnRate.setVisibility(INVISIBLE);
+
+                                }
+                                else {
+                                    onWatchlist = false;
+                                }
+                                known = usermovie.isKnown();
+                                if(known && !onWatchlist) {
+                                    //If the user has previously watched the movie, the watchlist button is greyed out
+                                    btnAddtoWatchlist.setAlpha(.5f);
+                                    btnAddtoWatchlist.setClickable(false);
+                                    btnAddtoWatchlist.setText("Already Watched!");
+                                }
+
+                            }
+                        },Integer.parseInt(SQLID),movieid);
+
+                        //This allows me to determine if the user has either previously rated or watched the movie, or have it on their watchlist
+                        //The activity is edited depending on the result
+                        jsonParser.getUserMovie(MovieDetailActivity.this, new JSONParser.GetUserMovieResponseListener() {
+                            @Override
+                            public void onError(String message) {
+                                Log.d("Tag",message);
+                            }
+
+                            @Override
+                            public void onResponse(UserMovie usermovie) {
+                                Log.d("UMSTRING",usermovie.toString());
+                                userrating = usermovie.getRating();
+                                rbRateMovie.setRating(userrating);
+                                String test = usermovie.getOnWatchlist();
+                                if(test.equals("Yes")) {
+                                    //If the user has the movie on their watchlist, I change the text (and function) of the
+                                    onWatchlist = true;
+                                    btnAddtoWatchlist.setText("Mark as Watched");
+                                    btnRate.setVisibility(INVISIBLE);
+
+                                }
+                                else {
+                                    onWatchlist = false;
+                                }
+                                known = usermovie.isKnown();
+                                if(known && !onWatchlist) {
+                                    //If the user has previously watched the movie, the watchlist button is greyed out
+                                    btnAddtoWatchlist.setAlpha(.5f);
+                                    btnAddtoWatchlist.setClickable(false);
+                                    btnAddtoWatchlist.setText("Already Watched!");
+                                }
+
+                            }
+                        },Integer.parseInt(SQLID),movieid);
+
+                    }
+                }
             }
+        });
 
+        //This button changes function depending on the user's relationship with the movie
+        //If its on their watchlist, it allows them to mark it as watched
+        //If they have not previously watched or rated it, it allows them to add the movie to their watchlist
+        btnAddtoWatchlist.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(UserMovie usermovie) {
-                Log.d("UMSTRING",usermovie.toString());
-                userrating = usermovie.getRating();
-                rbRateMovie.setRating(userrating);
-                String test = usermovie.getOnWatchlist();
-                if(test.equals("Yes")) {
-                    //If the user has the movie on their watchlist, I change the text (and function) of the
-                    onWatchlist = true;
-                    btnAddtoWatchlist.setText("Mark as Watched");
-                    btnRate.setVisibility(INVISIBLE);
+            public void onClick(View v) {
+                if (onWatchlist) {
+                    //This makes sure the user has given a rating to the movie they are marking as watched
+                    if(rbRateMovie.getRating() != 0) {
 
+                        jsonParser.markAsWatched(MovieDetailActivity.this, new JSONParser.MarkWatchedResponseListener() {
+                            @Override
+                            public void onError(String message) {
+                                btnAddtoWatchlist.setText("Watched!");
+                                btnAddtoWatchlist.setAlpha(.5f);
+                                btnAddtoWatchlist.setClickable(false);
+                            }
+
+                            @Override
+                            public void onResponse(String message) {
+                            }
+                        },Integer.parseInt(SQLID),movieid,Math.round(rbRateMovie.getRating()));
+                    }
+                    else {
+                        Toast.makeText(MovieDetailActivity.this, "Please rate the movie", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    onWatchlist = false;
-                }
-                known = usermovie.isKnown();
-                if(known && !onWatchlist) {
-                    //If the user has previously watched the movie, the watchlist button is greyed out
-                    btnAddtoWatchlist.setAlpha(.5f);
-                    btnAddtoWatchlist.setClickable(false);
-                    btnAddtoWatchlist.setText("Already Watched!");
-                }
+                    //Adding the movie to their watchlist
+                    if(!known) {
+                        jsonParser.addtoWatchlist(MovieDetailActivity.this, new JSONParser.addtoWatchlistResponseListener() {
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(MovieDetailActivity.this, "Added to watchlist", Toast.LENGTH_SHORT).show();
+                                btnAddtoWatchlist.setText("Added to Watchlist");
+                            }
 
+                            @Override
+                            public void onResponse(String message) {
+                            }
+                        },Integer.parseInt(SQLID),movieid);
+                    }
+                }
             }
-        },1,movieid);
+        });
+
+
 
 
 
@@ -134,7 +253,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             public void onResponse(String message) {
 
                             }
-                        },1,movieid,Math.round(rbRateMovie.getRating()));
+                        },Integer.parseInt(SQLID),movieid,Math.round(rbRateMovie.getRating()));
                     }
 
                 }
@@ -150,7 +269,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             public void onResponse(String message) {
 
                             }
-                        },1,movieid,Math.round(rbRateMovie.getRating()));
+                        },Integer.parseInt(SQLID),movieid,Math.round(rbRateMovie.getRating()));
                     }
 
                 }
@@ -179,7 +298,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String message) {
                             }
-                        },1,movieid,Math.round(rbRateMovie.getRating()));
+                        },Integer.parseInt(SQLID),movieid,Math.round(rbRateMovie.getRating()));
                     }
                     else {
                         Toast.makeText(MovieDetailActivity.this, "Please rate the movie", Toast.LENGTH_SHORT).show();
@@ -198,7 +317,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String message) {
                             }
-                        },1,movieid);
+                        },Integer.parseInt(SQLID),movieid);
                     }
                 }
             }

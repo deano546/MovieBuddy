@@ -909,6 +909,38 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
         void onResponse(String message);
     }
 
+    //This creates a new group
+    public void createUser(Context context, CreateUserResponseListener createuserResponseListener, String email, String username) {
+        ;
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String createuserurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/createuser/" + email + "?username=" + username;
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createuserurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        createuserResponseListener.onResponse(username);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                createuserResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface CreateUserResponseListener {
+        void onError(String message);
+
+        void onResponse(String username);
+    }
+
 
 
 }

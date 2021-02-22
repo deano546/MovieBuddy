@@ -1,5 +1,6 @@
 package com.example.moviebuddy.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,9 +13,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.adapters.UpcomingNightRecyclerAdapter;
 import com.example.moviebuddy.adapters.UserListRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
+import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +40,9 @@ public class FriendListActivity extends AppCompatActivity {
     Button btnSearch;
    List<User> userList = new ArrayList<>();
     List<User> friendlist = new ArrayList<>();
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
+    String SQLID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +53,28 @@ public class FriendListActivity extends AppCompatActivity {
         etUserSearch = findViewById(R.id.etUserSearch);
         btnSearch = findViewById(R.id.btnSearchUser);
 
+
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
+        String ID = auth.getCurrentUser().getUid();
+
         JSONParser jsonParser = new JSONParser();
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        SQLID = document.get("id").toString();
+                    }
+                }
+            }
+        });
+
+
 
         //Clicking this button will retrieve a list of usernames matching the inputted search, and will exclude any users who the current user is already friends with
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +112,14 @@ public class FriendListActivity extends AppCompatActivity {
                                 Log.d("CHECKINGLIST",bList.toString());
 
                                 setupRecycler(bList);
+                                Log.d("CHECKID",SQLID);
 
                             }
                         },etUserSearch.getText().toString(),1);
 
 
                     }
-                },1);
+                },Integer.parseInt(SQLID));
             }
 
             });
@@ -92,8 +128,6 @@ public class FriendListActivity extends AppCompatActivity {
 
         setupRecycler(userList);
         }
-
-
 
 
 

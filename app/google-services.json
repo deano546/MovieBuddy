@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "22945244371",
+    "project_id": "moviebuddy-84946",
+    "storage_bucket": "moviebuddy-84946.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22945244371:android:e3923057200cf6ddda6026",
+        "android_client_info": {
+          "package_name": "com.example.moviebuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22945244371-nm0vugq512qiuhetrrkigtk0f28c6bd2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2RKg9ro8oVjsteKLMrGtFNOKQCuSX-C4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22945244371-nm0vugq512qiuhetrrkigtk0f28c6bd2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

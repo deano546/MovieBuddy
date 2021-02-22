@@ -1,5 +1,6 @@
 package com.example.moviebuddy.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,12 @@ import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.CreateGroupUserListRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,10 @@ public class CreateGroupActivity extends AppCompatActivity {
     String groupname;
     List<User> userList = new ArrayList<>();
     List<User> selectedfriends = new ArrayList<>();
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
+    String SQLID;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +54,48 @@ public class CreateGroupActivity extends AppCompatActivity {
         etGroupName = findViewById(R.id.etNewGroup);
 
 
-
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         JSONParser jsonParser = new JSONParser();
 
-        //This method retrieves all the users friends, so they can be displayed in the recycler view
-        jsonParser.getFriendsbyID(CreateGroupActivity.this, new JSONParser.GetFriendsResponseListener() {
+
+        String ID = auth.getCurrentUser().getUid();
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onError(String message) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        SQLID = document.get("id").toString();
+                        username = document.get("username").toString();
+
+                        //This method retrieves all the users friends, so they can be displayed in the recycler view
+                        jsonParser.getFriendsbyID(CreateGroupActivity.this, new JSONParser.GetFriendsResponseListener() {
+                            @Override
+                            public void onError(String message) {
+
+                            }
+
+                            @Override
+                            public void onResponse(List<User> userlist) {
+                                userList = userlist;
+                                setUpRecycler();
+                            }
+                        },Integer.parseInt(SQLID));
+
+                    }
+                }
 
             }
+        });
 
-            @Override
-            public void onResponse(List<User> userlist) {
-                userList = userlist;
-                setUpRecycler();
-            }
-        },1);
+
+
+
+
 
         //This button calls 3 methods. The first creates a group in my group table, then, it retrieves the ID of the newly created group, lastly, it takes that ID and each of the selected users and inserts them
         //into my usergroup table
@@ -73,7 +110,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 if(etGroupName.getText().toString().trim().length() > 0 && selectedfriends.size() > 0) {
                     groupname = etGroupName.getText().toString().toUpperCase();
                     Log.d("TAG$",groupname);
-                    User currentuser = new User(1,"deano");
+                    User currentuser = new User(Integer.parseInt(SQLID),"deano");
                     selectedfriends.add(currentuser);
 
                     jsonParser.verifyUniqueGroup(CreateGroupActivity.this, new JSONParser.verifyUniqueGroupResponseListener() {

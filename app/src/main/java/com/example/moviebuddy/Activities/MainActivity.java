@@ -20,7 +20,15 @@ import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.dataaccess.MovieDataAccess;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -37,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     // Array list for recycler view data source
     List<Movie> source;
     List<GroupNight> nightsource;
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
 
     // Layout Manager
     RecyclerView.LayoutManager RecyclerViewLayoutManager;
@@ -48,42 +58,66 @@ public class MainActivity extends AppCompatActivity {
     // Linear Layout Manager
     LinearLayoutManager HorizontalLayout;
     LinearLayoutManager NightHorizontalLayout;
+    String SQLID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        JSONParser jsonParser = new JSONParser();
+
+        String ID = auth.getCurrentUser().getUid();
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                         SQLID = document.get("id").toString();
+                        Toast.makeText(MainActivity.this, SQLID, Toast.LENGTH_SHORT).show();
+
+                        //This retrieves any upcoming user nights for the user by passing their ID
+                        jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
+                            @Override
+                            public void onError(String message) {
+                                Log.d("error",message);
+                            }
+
+                            @Override
+                            public void onResponse(List<GroupNight> groupNight) {
+                                //Once the data is retrieved, the recycler view is populated
+                                nightsource = groupNight;
+                                Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
+                                nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
+                                NightHorizontalLayout = new LinearLayoutManager(
+                                        MainActivity.this,
+                                        LinearLayoutManager.HORIZONTAL,
+                                        false);
+                                grouprecycler.setLayoutManager(NightHorizontalLayout);
+                                grouprecycler.setAdapter(nightadapter);
+
+
+                            }
+                        },Integer.parseInt(SQLID));
+
+                    }
+                }
+            }
+        });
+
         //Assignments
         grouprecycler = findViewById(R.id.rvGroupNight);
         NightRecyclerManager = new LinearLayoutManager(getApplicationContext());
         grouprecycler.setLayoutManager(NightRecyclerManager);
 
-        JSONParser jsonParser = new JSONParser();
-
-        //This retrieves any upcoming user nights for the user by passing their ID
-        jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
-            @Override
-            public void onError(String message) {
-                Log.d("error",message);
-            }
-
-            @Override
-            public void onResponse(List<GroupNight> groupNight) {
-                //Once the data is retrieved, the recycler view is populated
-                nightsource = groupNight;
-                Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
-                nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
-                NightHorizontalLayout = new LinearLayoutManager(
-                        MainActivity.this,
-                        LinearLayoutManager.HORIZONTAL,
-                        false);
-                grouprecycler.setLayoutManager(NightHorizontalLayout);
-                grouprecycler.setAdapter(nightadapter);
 
 
-            }
-        },1);
+
 
 
 
