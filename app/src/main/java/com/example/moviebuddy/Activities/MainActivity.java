@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager HorizontalLayout;
     LinearLayoutManager NightHorizontalLayout;
     String SQLID;
+
+    Button btnLogOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

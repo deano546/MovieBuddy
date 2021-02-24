@@ -14,9 +14,7 @@ import com.example.moviebuddy.model.GroupNight;
 
 import java.util.List;
 
-public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingNightRecyclerAdapter.MyViewHolder> {
-
-    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
+public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingNightRecyclerAdapter.MyViewHolder> {//Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
     //This is displayed on the main activity, and shows any upcoming movie nights for the current user
 
     List<GroupNight> groupNightList;
@@ -59,6 +57,11 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
         holder.tvTitle.setText(groupNightList.get(position).getMovieTitle());
         holder.tvDateAndTime.setText(groupNightList.get(position).getDate() + " " + groupNightList.get(position).getTime());
         holder.tvGroup.setText(String.valueOf(groupNightList.get(position).getGroupName()));
+
+        if(groupNightList.size() == 0) {
+            holder.tvTitle.setText("No upcoming movie nights!");
+        }
+
     }
 
     @Override

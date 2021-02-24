@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     //This activity allows a user to register
     //Based on https://github.com/bikashthapa01/firebase-authentication-android/blob/master/app/src/main/java/net/smallacademy/authenticatorapp/Register.java
 
-    Button btnRegister;
+    Button btnRegister, btnLogin;
     EditText etEmail, etName, etPassword;
     FirebaseAuth auth;
     FirebaseFirestore fStore;
@@ -50,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         btnRegister = findViewById(R.id.btnRegisterNew);
+        btnLogin = findViewById(R.id.btngotoLogIn);
         etEmail = findViewById(R.id.etregisteremail);
         etName = findViewById(R.id.etName);
         etPassword = findViewById(R.id.etregisterpassword);
@@ -78,6 +79,14 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
         }
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this,LogInActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         btnRegister.setOnClickListener(new View.OnClickListener() {

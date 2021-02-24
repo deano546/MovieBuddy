@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +15,19 @@ import android.widget.ImageView;
 
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.GroupListRecyclerAdapter;
+import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.dataaccess.MovieDataAccess;
+import com.example.moviebuddy.model.Group;
 import com.example.moviebuddy.model.GroupNight;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,26 +39,64 @@ public class GroupActivity extends AppCompatActivity {
     RecyclerView rvGroupList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-    List<GroupNight> groupList = new ArrayList<>();
+    List<Group> groupList1 = new ArrayList<>();
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
+    String SQLID, movieid, movietitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        String ID = auth.getCurrentUser().getUid();
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            movieid = String.valueOf(extras.getInt("MOVIEID"));
+            movietitle = extras.getString("MOVIETITLE");
+            // and get whatever type user account id is
+        }
+
+
         //Assignments
         Button btnFriendList = findViewById(R.id.btnFriendList);
         ImageView imgAddGroup = findViewById(R.id.imgAddGroup);
-
-        //Recycler view display code
         rvGroupList = findViewById(R.id.rvGroupList);
-        rvGroupList.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(GroupActivity.this);
-        rvGroupList.setLayoutManager(layoutManager);
-        MovieDataAccess dataAccess = new MovieDataAccess();
-        groupList = dataAccess.getNight();
-        mAdapter = new GroupListRecyclerAdapter(groupList, GroupActivity.this);
-        rvGroupList.setAdapter(mAdapter);
+        JSONParser jsonParser = new JSONParser();
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        SQLID = document.get("id").toString();
+
+                        jsonParser.getGroupbyUser(GroupActivity.this, new JSONParser.getGroupResponseListener() {
+                            @Override
+                            public void onError(String message) {
+
+                            }
+
+                            @Override
+                            public void onResponse(List<Group> groupList) {
+                                Log.d("CHECKGROUP",groupList.toString());
+                                groupList1 = groupList;
+                                setUpRecycler();
+                            }
+                        },SQLID);
+
+                    }
+                }
+            }
+        });
+
+
 
         //launch create group activity
         imgAddGroup.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +115,8 @@ public class GroupActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -97,5 +148,13 @@ public class GroupActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void setUpRecycler() {
+        rvGroupList.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(GroupActivity.this);
+        rvGroupList.setLayoutManager(layoutManager);
+        mAdapter = new GroupListRecyclerAdapter(groupList1, GroupActivity.this,movieid,movietitle);
+        rvGroupList.setAdapter(mAdapter);
     }
 }

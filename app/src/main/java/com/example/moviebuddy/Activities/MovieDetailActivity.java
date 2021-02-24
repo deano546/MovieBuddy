@@ -48,6 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     Button btnRate;
     RatingBar rbRateMovie;
     Button btnAddtoWatchlist;
+    Button btnDetailSuggest;
     int userrating;
     boolean onWatchlist;
     boolean known;
@@ -77,6 +78,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         btnAddtoWatchlist = findViewById(R.id.btnDetailWatchlist);
         rbRateMovie = findViewById(R.id.rbRateMovie);
         tvDetailLength = findViewById(R.id.tvDetailLength);
+        btnDetailSuggest = findViewById(R.id.btnDetailSuggest);
 
         JSONParser jsonParser = new JSONParser();
 
@@ -182,6 +184,19 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                     }
                 }
+            }
+        });
+
+
+        btnDetailSuggest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MovieDetailActivity.this, "Select a Group!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MovieDetailActivity.this,GroupActivity.class);
+                Log.d("MDETAILID",String.valueOf(movieid));
+                intent.putExtra("MOVIEID",movieid);
+                intent.putExtra("MOVIETITLE",currentmovie.getTitle());
+                startActivity(intent);
             }
         });
 

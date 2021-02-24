@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.moviebuddy.model.Group;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.User;
@@ -37,6 +38,10 @@ public class JSONParser {
     private List<User> searchuserlist = new ArrayList<>();
     private List<UserMovie> usermovielist = new ArrayList<>();
     int year;
+    int Movieid;
+    private List<Group> groupList = new ArrayList<>();
+    private List<GroupNight> groupnightListbygroup = new ArrayList<>();
+    GroupNight groupNight1;
 
     //These are all methods that interface with my database (through rest services created with oracle apex)
     //or with the movie database API I am accessing, I use the Volley library to simplify the process
@@ -940,6 +945,192 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
         void onResponse(String username);
     }
+
+    public interface getGroupResponseListener {
+        void onError (String message);
+
+        void onResponse(List<Group> groupList);
+    }
+
+    //This retrieves a group ID by using the group name
+    //I need to validate each groups name is unique
+    public void getGroupbyUser(Context context, getGroupResponseListener getgroupResponseListener, String id) {
+        groupList.clear();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getgroupnamebyuserid/" + id;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+                            if (jsonArray.length() == 0)  {
+                                Group group1 = new Group();
+                                group1.setGroupname("No Groups Yet!");
+                                groupList.add(group1);
+                                getgroupResponseListener.onResponse(groupList);
+                            }
+                            else {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+
+                                    JSONObject group = jsonArray.getJSONObject(i);
+                                    String groupname = group.getString("groupname");
+                                    String groupid = group.getString("groupid");
+
+                                    Group group1 = new Group();
+                                    group1.setGroupname(groupname);
+                                    group1.setId(Long.parseLong(groupid));
+                                    groupList.add(group1);
+                                }
+                                getgroupResponseListener.onResponse(groupList);
+
+                            }
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public void getMovienightbyGroupid(Context context, getMovieNightbyGroupIDResponseListener getmovienightbygroupidResponseListener, String id) {
+        groupnightListbygroup.clear();
+        Log.d("Checking group id", id);
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String movienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmovienightbygroupid/" + id;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, movienighturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+                            if (jsonArray.length() == 0)  {
+                                GroupNight group1 = new GroupNight();
+                                group1.setGroupName("No Movie Night Yet!");
+                                getmovienightbygroupidResponseListener.onResponse(group1);
+                            }
+
+                            else {
+                                Log.d("JSONARRAY",jsonArray.length() + "");
+                                for (int i = 0; i < 1; i++) {
+                                    JSONObject groupnight = jsonArray.getJSONObject(i);
+                                    groupNight1 = new GroupNight();
+                                    groupNight1.setGroupName("Doesn't matter");
+                                    String date = groupnight.getString("groupnightdate");
+                                    Log.d("MOVIEDATE",date);
+                                    groupNight1.setDate(date);
+
+                                    String time = groupnight.getString("groupnighttime");
+                                    groupNight1.setTime(time);
+                                    Log.d("MOVIETIME",time);
+
+                                    Movieid = Integer.parseInt(groupnight.getString("movieid"));
+                                    Log.d("MOVIEID",Movieid + "");
+
+
+                                    getMoviebyID(context, new SelectedMovieResponseListener() {
+                                        @Override
+                                        public void onError(String message) {
+                                            Log.d("TAG",message);
+                                        }
+
+                                        @Override
+                                        public void onResponse(Movie movie) {
+                                            String title = movie.getTitle();
+                                            Log.d("TitleNIGHT",title);
+
+                                            groupNight1.setMovieTitle(title);
+
+                                            Log.d("CHECKINGgroupnight",groupNight1.toString());
+
+                                            getmovienightbygroupidResponseListener.onResponse(groupNight1);
+
+                                        }
+                                    },Movieid);
+
+                                }
+
+                            }
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getmovienightbygroupidResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getMovieNightbyGroupIDResponseListener {
+        void onError (String message);
+
+        void onResponse(GroupNight groupNight);
+    }
+
+    //This creates a new group
+    public void createMovieNight(Context context, CreateMovieNightResponseListener createmovienightResponseListener, String groupid, String movieid, String date, String time) {
+        ;
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/addmovienight/" + groupid + "?movieid=" + movieid + "&passeddate=" + date + "&passedtime=" + time;
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createmovienighturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        createmovienightResponseListener.onResponse("yay");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                createmovienightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface CreateMovieNightResponseListener {
+        void onError(String message);
+
+        void onResponse(String username);
+    }
+
+
+
+
+
 
 
 

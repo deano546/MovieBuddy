@@ -8,7 +8,7 @@
     tools:context=".Activities.MovieNightActivity">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvCurrentGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -30,7 +30,7 @@
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCurrentGroup" />
 
     <TextView
         android:id="@+id/textView10"
@@ -52,7 +52,7 @@
         android:layout_marginTop="24dp"
         android:text="Select Date"
         app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCurrentGroup" />
 
     <Button
         android:id="@+id/btnSelectTime"
@@ -65,21 +65,21 @@
         app:layout_constraintTop_toBottomOf="@+id/btnSelectDate" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName5"
+        android:id="@+id/etSelectedMovieforNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Selected Movie"
+        android:hint="Selected Movie"
         android:textColor="#70FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/btnSelectTime" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/btnAutoSuggest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -88,30 +88,85 @@
         android:text="Auto-Suggest"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName5" />
-
-    <EditText
-        android:id="@+id/editTextTextMultiLine"
-        android:layout_width="268dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:text="Movie: \n\n Date: \n\n Time:"
-        android:textColor="#70FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
+        app:layout_constraintTop_toBottomOf="@+id/etSelectedMovieforNight" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/btnCreateNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="Create Movie Night"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectedTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSelectedMovieLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:text="Movie"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvSelectedDateLabel"
+        app:layout_constraintEnd_toEndOf="@+id/tvSelectedDateLabel"
+        app:layout_constraintTop_toBottomOf="@id/textView10" />
+
+    <TextView
+        android:id="@+id/tvSelectedDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvSelectedTimeLabel"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectedMovieLabel"
+        app:layout_constraintEnd_toEndOf="@+id/tvSelectedTimeLabel" />
+
+    <TextView
+        android:id="@+id/tvSelectedTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Time"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/button8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectedDateLabel" />
+
+    <TextView
+        android:id="@+id/tvSelectedMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+        app:layout_constraintTop_toTopOf="@+id/tvSelectedMovieLabel" />
+
+    <TextView
+        android:id="@+id/tvSelectedDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvSelectedTime"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectedMovie" />
+
+    <TextView
+        android:id="@+id/tvSelectedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectedDate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Search users"
+        android:hint="Search Users"
         android:textColor="#70FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/rvUsers"
         app:layout_constraintEnd_toStartOf="@+id/btnSearchUser"

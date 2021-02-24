@@ -1,6 +1,8 @@
 package com.example.moviebuddy.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moviebuddy.Activities.MovieNightActivity;
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.dataaccess.JSONParser;
+import com.example.moviebuddy.model.Group;
 import com.example.moviebuddy.model.GroupNight;
 
 import java.util.List;
@@ -22,12 +27,17 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     //(This adapter is not yet connected to a database, it is called in the GroupActivity)
     //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
-    List<GroupNight> groupNightList;
+    List<Group> groupList;
     Context context;
+    GroupNight groupNight1;
+    String passedmovieid1, passedmovietitle1;
 
-    public GroupListRecyclerAdapter(List<GroupNight> groupNightList, Context context) {
-        this.groupNightList = groupNightList;
+    public GroupListRecyclerAdapter(List<Group> groupList, Context context, String passedmovieid, String passedmovietitle) {
+        this.groupList = groupList;
         this.context = context;
+        passedmovieid1 = passedmovieid;
+        passedmovietitle1 = passedmovietitle;
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -64,13 +74,55 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     @Override
     public void onBindViewHolder(@NonNull GroupListRecyclerAdapter.MyViewHolder holder, int position) {
 
-        holder.tvTitle.setText(groupNightList.get(position).getMovieTitle());
-        holder.tvDateAndTime.setText(String.valueOf(groupNightList.get(position).getDate()));
-        holder.tvGroupName.setText(String.valueOf(groupNightList.get(position).getGroupName()));
+        JSONParser jsonParser = new JSONParser();
+
+        jsonParser.getMovienightbyGroupid(context, new JSONParser.getMovieNightbyGroupIDResponseListener() {
+            @Override
+            public void onError(String message) {
+
+            }
+
+            @Override
+            public void onResponse(GroupNight groupNight) {
+                groupNight1 = groupNight;
+
+
+
+                if(groupNight1.getGroupName().equals("No Movie Night Yet!")) {
+                    holder.tvTitle.setText("No Movie Night Yet!");
+                }
+
+                else {
+                    holder.tvDateAndTime.setText(groupNight1.getDate() + " " + groupNight1.getTime());
+
+
+
+
+                    holder.tvTitle.setText((groupNight1.getMovieTitle()));
+                    holder.btnSuggest.setVisibility(View.INVISIBLE);
+                }
+
+
+            }
+        },String.valueOf(groupList.get(position).getId()));
+
+
+        holder.tvGroupName.setText(String.valueOf(groupList.get(position).getGroupname()));
+
+        if(groupList.get(position).getGroupname().equals("No Groups Yet!")) {
+            holder.btnSuggest.setVisibility(View.INVISIBLE);
+        }
+
         holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, groupNightList.get(position).getMovieTitle() + "", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, groupNightList.get(position).getMovieTitle() + "", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, MovieNightActivity.class);
+                intent.putExtra("GROUPID",groupList.get(position).getId());
+                intent.putExtra("GROUPNAME",groupList.get(position).getGroupname());
+                intent.putExtra("MOVIEID",passedmovieid1);
+                intent.putExtra("MOVIETITLE",passedmovietitle1);
+                context.startActivity(intent);
             }
         });
 
@@ -80,7 +132,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
 
     @Override
     public int getItemCount() {
-        return groupNightList.size();
+        return groupList.size();
     }
 
 }
