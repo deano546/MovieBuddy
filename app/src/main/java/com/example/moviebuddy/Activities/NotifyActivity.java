@@ -2,20 +2,83 @@ package com.example.moviebuddy.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.moviebuddy.R;
+import com.example.moviebuddy.adapters.FriendRequestListRecyclerAdapter;
+import com.example.moviebuddy.adapters.GroupListRecyclerAdapter;
+import com.example.moviebuddy.dataaccess.JSONParser;
+import com.example.moviebuddy.model.Group;
+import com.example.moviebuddy.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotifyActivity extends AppCompatActivity {
+
+
+    //Declarations
+    RecyclerView rvRequestList;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    List<User> userList1 = new ArrayList<>();
+    FirebaseAuth auth;
+    FirebaseFirestore fStore;
+    String SQLID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
+
+        rvRequestList = findViewById(R.id.rvFriendRequests);
+
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        String ID = auth.getCurrentUser().getUid();
+        JSONParser jsonParser = new JSONParser();
+
+        DocumentReference docRef = fStore.collection("Users").document(ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        SQLID = document.get("id").toString();
+
+                        jsonParser.getFriendRequests(NotifyActivity.this, new JSONParser.getFriendRequestsResponseListener() {
+                            @Override
+                            public void onError(String message) {
+
+                            }
+
+                            @Override
+                            public void onResponse(List<User> userlist) {
+                                userList1 = userlist;
+                                setUpRecycler();
+                            }
+                        },SQLID);
+
+                    }
+                }
+            }
+        });
 
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -48,5 +111,13 @@ public class NotifyActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public void setUpRecycler() {
+        rvRequestList.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(NotifyActivity.this);
+        rvRequestList.setLayoutManager(layoutManager);
+        mAdapter = new FriendRequestListRecyclerAdapter(userList1, NotifyActivity.this,SQLID);
+        rvRequestList.setAdapter(mAdapter);
     }
 }

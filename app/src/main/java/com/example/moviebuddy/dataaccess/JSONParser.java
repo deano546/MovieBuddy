@@ -36,6 +36,7 @@ public class JSONParser {
     private List<Movie> watchlist = new ArrayList<>();
     private List<User> friendlist = new ArrayList<>();
     private List<User> searchuserlist = new ArrayList<>();
+    private List<User> friendrequestlist = new ArrayList<>();
     private List<UserMovie> usermovielist = new ArrayList<>();
     int year;
     int Movieid;
@@ -313,6 +314,7 @@ public class JSONParser {
     //This gets any upcoming movie nights for the current user, using their userid
     //I call the get movie by ID method in this so I can also retrieve the movie details from the API
     public void getMovieNightsbyID(Context context, MovieNightResponseListener selectedMovieResponseListener, int userid) {
+        groupnightList.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmovienightbyuserid/" + userid;
@@ -324,7 +326,16 @@ public class JSONParser {
                         try {
 
                             JSONArray jsonArray = response.getJSONArray("items");
-                            Log.d("JSONARRAY",jsonArray.length() + "");
+                            Log.d("JSONARRAY11",jsonArray.length() + "");
+
+                            if(jsonArray.length() == 0) {
+                                Log.d("CHECKTHISIF","Hi");
+                                GroupNight groupNight = new GroupNight();
+                                groupNight.setMovieTitle("No Upcoming Nights!");
+                                groupnightList.add(groupNight);
+                                selectedMovieResponseListener.onResponse(groupnightList);
+                            }
+
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject groupnight = jsonArray.getJSONObject(i);
                                 String date = groupnight.getString("groupnightdate");
@@ -1126,6 +1137,164 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
         void onResponse(String username);
     }
+
+    //This sends a friend request
+    public void sendFriendRequest(Context context, sendFriendRequestResponseListener sendfriendrequestResponseListener, String senderid, String receiverid) {
+        ;
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/sendfriendrequest/" + senderid + "?passedrequest=" + receiverid;
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createmovienighturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        sendfriendrequestResponseListener.onResponse("yay");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                sendfriendrequestResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface sendFriendRequestResponseListener {
+        void onError(String message);
+
+        void onResponse(String friendRequest);
+    }
+
+    public void getFriendRequests(Context context, getFriendRequestsResponseListener getfriendsrequestsResponseListener, String id) {
+        friendrequestlist.clear();
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String friendrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getfriendrequests/" + id;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, friendrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                                Log.d("JSONARRAY",jsonArray.length() + "");
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+
+                                    User user1 = new User();
+
+                                    JSONObject friendrequest = jsonArray.getJSONObject(i);
+
+                                    String user1id = friendrequest.getString("user1id");
+
+                                    user1.setId(Integer.parseInt(user1id));
+
+                                    String username = friendrequest.getString("username");
+                                    user1.setUsername(username);
+
+                                    friendrequestlist.add(user1);
+
+                                }
+
+                                 getfriendsrequestsResponseListener.onResponse(friendrequestlist);
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getfriendsrequestsResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getFriendRequestsResponseListener {
+        void onError (String message);
+
+        void onResponse(List<User> userlist);
+    }
+
+    //Updates a record in the user movie table and adds a rating
+    public void acceptFriendRequest(Context context, acceptFriendRequestResponseListener acceptfriendrequestResponseListener, int userid, int senderid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/acceptfriendrequest/" + userid + "?senderid=" + senderid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        acceptfriendrequestResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                acceptfriendrequestResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface acceptFriendRequestResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
+    //Updates a record in the user movie table and adds a rating
+    public void rejectFriendRequest(Context context, rejectFriendRequestResponseListener rejectfriendrequestResponseListener, int userid, int senderid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String rejectrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/rejectfriendrequest/" + userid + "?senderid=" + senderid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, rejectrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        rejectfriendrequestResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                rejectfriendrequestResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface rejectFriendRequestResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
 
 
 

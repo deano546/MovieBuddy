@@ -21,7 +21,9 @@ import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.dataaccess.MovieDataAccess;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnLogOut = findViewById(R.id.btnLogOut);
+
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         JSONParser jsonParser = new JSONParser();
@@ -82,13 +86,12 @@ public class MainActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                          SQLID = document.get("id").toString();
-                        Toast.makeText(MainActivity.this, SQLID, Toast.LENGTH_SHORT).show();
 
                         //This retrieves any upcoming user nights for the user by passing their ID
                         jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
                             @Override
                             public void onError(String message) {
-                                Log.d("error",message);
+                                Log.d("error1234",message);
                             }
 
                             @Override
@@ -117,6 +120,28 @@ public class MainActivity extends AppCompatActivity {
         grouprecycler = findViewById(R.id.rvGroupNight);
         NightRecyclerManager = new LinearLayoutManager(getApplicationContext());
         grouprecycler.setLayoutManager(NightRecyclerManager);
+
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AuthUI.getInstance()
+                        .signOut(MainActivity.this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                Intent intent = new Intent(MainActivity.this,RegisterActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Sign Out Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
 
 
 

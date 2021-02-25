@@ -6,7 +6,7 @@
     android:background="@android:color/background_dark">
 
     <TextView
-        android:id="@+id/tvMovieNight"
+        android:id="@+id/tvMovieNightUpcoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
@@ -28,7 +28,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvMovieNight" />
+        app:layout_constraintTop_toBottomOf="@+id/tvMovieNightUpcoming" />
 
     <TextView
         android:id="@+id/tvDateTimeGroupList"

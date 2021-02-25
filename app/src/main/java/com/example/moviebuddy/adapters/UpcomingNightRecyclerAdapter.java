@@ -1,6 +1,7 @@
 package com.example.moviebuddy.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,14 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
         TextView tvTitle;
         TextView tvDateAndTime;
         TextView tvGroup;
+        TextView tvMovieNight;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvMovieGroupList);
             tvDateAndTime = itemView.findViewById(R.id.tvDateTimeGroupList);
             tvGroup = itemView.findViewById(R.id.tvGroupName);
+            tvMovieNight = itemView.findViewById(R.id.tvMovieNightUpcoming);
 
 
         }
@@ -54,13 +57,26 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
 
     @Override
     public void onBindViewHolder(@NonNull UpcomingNightRecyclerAdapter.MyViewHolder holder, int position) {
-        holder.tvTitle.setText(groupNightList.get(position).getMovieTitle());
-        holder.tvDateAndTime.setText(groupNightList.get(position).getDate() + " " + groupNightList.get(position).getTime());
-        holder.tvGroup.setText(String.valueOf(groupNightList.get(position).getGroupName()));
+        Log.d("CHECKLISTSIZE1234",groupNightList.size() + "");
 
-        if(groupNightList.size() == 0) {
-            holder.tvTitle.setText("No upcoming movie nights!");
+        if(groupNightList.get(0).getMovieTitle().equals("No Upcoming Nights!")) {
+            Log.d("Letscheckthis12","Hello");
+            holder.tvTitle.setText("");
+            holder.tvDateAndTime.setText("");
+            holder.tvGroup.setText((""));
+            holder.tvMovieNight.setText(groupNightList.get(position).getMovieTitle());
         }
+        else {
+            holder.tvTitle.setText(groupNightList.get(position).getMovieTitle());
+            holder.tvDateAndTime.setText(groupNightList.get(position).getDate() + " " + groupNightList.get(position).getTime());
+            holder.tvGroup.setText(String.valueOf(groupNightList.get(position).getGroupName()));
+        }
+
+
+
+
+
+
 
     }
 

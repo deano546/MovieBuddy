@@ -131,7 +131,6 @@
         android:text="Time"
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSelectedDateLabel" />
 

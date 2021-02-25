@@ -125,7 +125,6 @@ public class FriendListActivity extends AppCompatActivity {
             });
 
 
-
         setupRecycler(userList);
         }
 
@@ -141,7 +140,7 @@ public class FriendListActivity extends AppCompatActivity {
         rvUserList.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(FriendListActivity.this);
         rvUserList.setLayoutManager(layoutManager);
-        mAdapter = new UserListRecyclerAdapter(displaylist,FriendListActivity.this);
+        mAdapter = new UserListRecyclerAdapter(displaylist,FriendListActivity.this,SQLID);
         rvUserList.setAdapter(mAdapter);
     }
 
