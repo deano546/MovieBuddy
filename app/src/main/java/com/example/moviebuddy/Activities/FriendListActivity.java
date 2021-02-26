@@ -102,7 +102,7 @@ public class FriendListActivity extends AppCompatActivity {
                                 //Comparing list of users returned in search vs current friend list, this allows me to exclude current friends
                                 List<User> bList = new ArrayList<>();
                                 List<User> aList = new ArrayList<>();
-                                List<User> finalResult = new ArrayList<>();
+
                                 bList = userlist;
                                 Log.d("**CHECKB",bList.toString());
                                 aList = friendlist;
@@ -115,7 +115,7 @@ public class FriendListActivity extends AppCompatActivity {
                                 Log.d("CHECKID",SQLID);
 
                             }
-                        },etUserSearch.getText().toString(),1);
+                        },etUserSearch.getText().toString(),Integer.parseInt(SQLID));
 
 
                     }

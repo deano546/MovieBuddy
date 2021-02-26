@@ -166,12 +166,15 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(c.getTime());
+
+        //Adding a 0 before the returned number if its less than 10
         if(dayOfMonth < 10) {
             returneddate = "0" + dayOfMonth;
         }
         else{
             returneddate = String.valueOf(dayOfMonth);
         }
+        //Also have to add one onto the month value due to the index starting at 0
         if(month < 10) {
             month += 1;
             returnedmonth = "0" + month;
@@ -180,6 +183,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             month +=1;
             returnedmonth = String.valueOf(month);
         }
+        //Show only the last two digits of the year, eg 2021 is shown as 21
         String returnedyear = String.valueOf(year).substring(2,4);
         tvSelectedDate.setText(returneddate + "/" + returnedmonth + "/" + returnedyear);
     }

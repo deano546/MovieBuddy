@@ -67,8 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
 
-
-                        //This determines whether the user is sent to the regular section or the admin section
                         Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
                         startActivity(intent);
                     }
