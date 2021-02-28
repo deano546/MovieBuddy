@@ -37,11 +37,14 @@ public class JSONParser {
     private List<User> friendlist = new ArrayList<>();
     private List<User> searchuserlist = new ArrayList<>();
     private List<User> friendrequestlist = new ArrayList<>();
+    private List<User> groupMemberList = new ArrayList<>();
     private List<UserMovie> usermovielist = new ArrayList<>();
+    private List <String> approvalList = new ArrayList<>();
     int year;
     int Movieid;
     private List<Group> groupList = new ArrayList<>();
     private List<GroupNight> groupnightListbygroup = new ArrayList<>();
+    private List<GroupNight> nightstoapprove = new ArrayList<>();
     GroupNight groupNight1;
 
     //These are all methods that interface with my database (through rest services created with oracle apex)
@@ -1107,10 +1110,10 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     //This creates a new group
-    public void createMovieNight(Context context, CreateMovieNightResponseListener createmovienightResponseListener, String groupid, String movieid, String date, String time) {
+    public void createMovieNight(Context context, CreateMovieNightResponseListener createmovienightResponseListener, String groupid, String movieid, String date, String time, String userid) {
         ;
         RequestQueue mQueue = Volley.newRequestQueue(context);
-        String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/addmovienight/" + groupid + "?movieid=" + movieid + "&passeddate=" + date + "&passedtime=" + time;
+        String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/addmovienight/" + groupid + "?movieid=" + movieid + "&passeddate=" + date + "&passedtime=" + time + "&passeduserid=" + userid;
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createmovienighturl, null,
@@ -1290,6 +1293,401 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public interface rejectFriendRequestResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public void getGroupMembers(Context context, getGroupMembersResponseListener getgroupmembersResponseListener, String groupid) {
+        groupMemberList.clear();
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmembersbygroupid/" + groupid;
+
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYGMEMBERS",jsonArray.length() + "");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                User user1 = new User();
+
+                                JSONObject groupMember = jsonArray.getJSONObject(i);
+
+                                String user1id = groupMember.getString("userid");
+
+                                Log.d("12USERIDFROMGROUP",user1id);
+
+                                user1.setId(Integer.parseInt(user1id));
+
+
+                                groupMemberList.add(user1);
+
+                            }
+
+                            getgroupmembersResponseListener.onResponse(groupMemberList);
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupmembersResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getGroupMembersResponseListener {
+        void onError (String message);
+
+        void onResponse(List<User> userlist);
+    }
+
+
+
+
+    public void insertGroupApproval(Context context, insertGroupApprovalResponseListener insertgroupapprovalResponseListener, String groupnightid, String userid) {
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/insertintogroupnightapproval/" + groupnightid + "?userid=" + userid;
+
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createmovienighturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        insertgroupapprovalResponseListener.onResponse("yay");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                insertgroupapprovalResponseListener.onError(error + "");
+                Log.d("Inserted", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface insertGroupApprovalResponseListener {
+        void onError(String message);
+
+        void onResponse(String friendRequest);
+    }
+
+
+
+
+    public void approveGroupNight(Context context, approveGroupNightResponseListener approvegroupnightResponseListener, String userid, String groupnightid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/approvemovienight/" + userid + "?passedgroupid=" + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        approvegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                approvegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface approveGroupNightResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
+    public void getGroupNightApproval(Context context, getGroupNightApprovalResponseListener getgroupnightapprovalResponseListener, String groupnightid) {
+        approvalList.clear();
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getgroupapproval/" + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYcheckapprove",jsonArray.length() + "");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                JSONObject groupMember = jsonArray.getJSONObject(i);
+
+                                String user1id = groupMember.getString("approval");
+
+                                approvalList.add(user1id);
+
+                            }
+                            getgroupnightapprovalResponseListener.onResponse(approvalList);
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupnightapprovalResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getGroupNightApprovalResponseListener {
+        void onError (String message);
+
+        void onResponse(List<String> approvallist);
+    }
+
+    public void rejectGroupNight(Context context, rejectGroupNightResponseListener rejectgroupnightResponseListener, String userid, String groupnightid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        //TODO No rest done for this yet
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/approvemovienight/" + userid + "?passedgroupid=" + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        rejectgroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                rejectgroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface rejectGroupNightResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
+    public void getUnapprovedNights(Context context, getUnapprovedNightsResponseListener getunapprovednightsResponseListener, String userid) {
+
+        nightstoapprove.clear();
+
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getunapprovednights/" + userid;
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYcheckapprove",jsonArray.length() + "");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject groupnight = jsonArray.getJSONObject(i);
+                                String date = groupnight.getString("groupnightdate");
+                                Log.d("MOVIEDATE", date);
+                                Log.d("***********", String.valueOf(response));
+                                String time = groupnight.getString("groupnighttime");
+                                Log.d("MOVIETIME", time);
+                                String groupname = groupnight.getString("groupname");
+                                Log.d("GROUPNAME", groupname);
+                                String groupnightid = groupnight.getString("groupnightid");
+
+
+                                int id = Integer.parseInt(groupnight.getString("movieid"));
+                                Log.d("GROUPID", id + "");
+
+
+                                getMoviebyID(context, new SelectedMovieResponseListener() {
+                                    @Override
+                                    public void onError(String message) {
+                                        Log.d("TAG", message);
+                                    }
+
+                                    @Override
+                                    public void onResponse(Movie movie) {
+                                        String title = movie.getTitle();
+                                        Log.d("TitleNIGHT", title);
+                                        GroupNight groupNight = new GroupNight(groupnightid, title, date, groupname, time);
+                                        Log.d("NIGHTTOSTRING", groupNight.toString());
+                                        nightstoapprove.add(groupNight);
+                                        if (nightstoapprove.size() == jsonArray.length()) {
+                                            getunapprovednightsResponseListener.onResponse(nightstoapprove);
+                                            Log.d("CHECKINGIF", nightstoapprove.toString());
+                                        }
+
+                                    }
+                                }, id);
+                            }
+
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getunapprovednightsResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getUnapprovedNightsResponseListener {
+        void onError (String message);
+
+        void onResponse(List<GroupNight> approvallist);
+    }
+
+
+
+    public void getSpecificNight(Context context, getSpecificNightResponseListener getspecificnightResponseListener, String groupid, String movieid) {
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getspecificgroupnight/" + groupid + "?movieid=" + movieid;
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYcheckapprove",jsonArray.length() + "");
+
+
+                                JSONObject groupMember = jsonArray.getJSONObject(0);
+                                String id = groupMember.getString("groupnightid");
+
+
+                            getspecificnightResponseListener.onResponse(id);
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getspecificnightResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getSpecificNightResponseListener {
+        void onError (String message);
+
+        void onResponse(String id);
+    }
+
+    public void fullyApproveGroupNight(Context context, fullyApproveGroupNightResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/fullyapprovenight/" + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        fullyapprovegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                fullyapprovegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface fullyApproveGroupNightResponseListener {
         void onError(String message);
 
         void onResponse(String message);

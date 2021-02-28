@@ -2,6 +2,7 @@ package com.example.moviebuddy.model;
 
 public class GroupNight {
 
+    private String id;
     private String MovieTitle;
     private String Date;
     private String GroupName;
@@ -31,6 +32,14 @@ public class GroupNight {
         GroupName = groupName;
     }
 
+    public GroupNight(String id, String movieTitle, String date, String groupName, String time) {
+        this.id = id;
+        MovieTitle = movieTitle;
+        Date = date;
+        GroupName = groupName;
+        this.time = time;
+    }
+
     @Override
     public String toString() {
         return "GroupNight{" +
@@ -38,6 +47,14 @@ public class GroupNight {
                 ", DateAndTime='" + Date + '\'' +
                 ", GroupName='" + GroupName + '\'' +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMovieTitle() {

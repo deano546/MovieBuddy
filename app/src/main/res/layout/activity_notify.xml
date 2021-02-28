@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Friend Requests"
+        android:text="Requests"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#70FFFFFF"
         android:textSize="24sp"
@@ -38,9 +38,20 @@
         android:id="@+id/rvFriendRequests"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="350dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNotifications" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMovieNights"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvFriendRequests" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

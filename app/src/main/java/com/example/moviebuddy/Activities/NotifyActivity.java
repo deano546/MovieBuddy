@@ -13,8 +13,10 @@ import android.view.MenuItem;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.FriendRequestListRecyclerAdapter;
 import com.example.moviebuddy.adapters.GroupListRecyclerAdapter;
+import com.example.moviebuddy.adapters.UnApprovedGroupNightRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.Group;
+import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +38,11 @@ public class NotifyActivity extends AppCompatActivity {
     RecyclerView rvRequestList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
+    RecyclerView rvMovieNights;
+    RecyclerView.Adapter mAdapterNights;
+    RecyclerView.LayoutManager layoutNights;
     List<User> userList1 = new ArrayList<>();
+    List<GroupNight> groupNights = new ArrayList<>();
     FirebaseAuth auth;
     FirebaseFirestore fStore;
     String SQLID;
@@ -47,6 +53,7 @@ public class NotifyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notify);
 
         rvRequestList = findViewById(R.id.rvFriendRequests);
+        rvMovieNights = findViewById(R.id.rvMovieNights);
 
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -72,6 +79,20 @@ public class NotifyActivity extends AppCompatActivity {
                             public void onResponse(List<User> userlist) {
                                 userList1 = userlist;
                                 setUpRecycler();
+                            }
+                        },SQLID);
+
+                        jsonParser.getUnapprovedNights(NotifyActivity.this, new JSONParser.getUnapprovedNightsResponseListener() {
+                            @Override
+                            public void onError(String message) {
+
+                            }
+
+                            @Override
+                            public void onResponse(List<GroupNight> approvallist) {
+                                groupNights = approvallist;
+                                Log.d("56CheckGroupString",groupNights.toString());
+                                setUpSecondRecycler();
                             }
                         },SQLID);
 
@@ -119,5 +140,13 @@ public class NotifyActivity extends AppCompatActivity {
         rvRequestList.setLayoutManager(layoutManager);
         mAdapter = new FriendRequestListRecyclerAdapter(userList1, NotifyActivity.this,SQLID);
         rvRequestList.setAdapter(mAdapter);
+    }
+
+    public void setUpSecondRecycler() {
+        rvMovieNights.setHasFixedSize(true);
+        layoutNights = new LinearLayoutManager(NotifyActivity.this);
+        rvMovieNights.setLayoutManager(layoutNights);
+        mAdapterNights = new UnApprovedGroupNightRecyclerAdapter(groupNights,NotifyActivity.this,SQLID);
+        rvMovieNights.setAdapter(mAdapterNights);
     }
 }
