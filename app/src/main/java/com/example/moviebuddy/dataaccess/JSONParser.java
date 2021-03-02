@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.moviebuddy.model.Group;
 import com.example.moviebuddy.model.GroupNight;
+import com.example.moviebuddy.model.GroupsRatings;
 import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.User;
 import com.example.moviebuddy.model.UserMovie;
@@ -24,7 +25,9 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JSONParser {
 
@@ -42,10 +45,19 @@ public class JSONParser {
     private List <String> approvalList = new ArrayList<>();
     int year;
     int Movieid;
+    private List <String> genresList = new ArrayList<>();
+    private List<String> newgenresList = new ArrayList<>();
     private List<Group> groupList = new ArrayList<>();
     private List<GroupNight> groupnightListbygroup = new ArrayList<>();
     private List<GroupNight> nightstoapprove = new ArrayList<>();
+    private List<GroupsRatings> ratingsList = new ArrayList<>();
     GroupNight groupNight1;
+    GroupsRatings rating;
+    List <String> genre;
+    private String moviegenre;
+    private String checkifwatched;
+    private boolean breaknow = false;
+
 
     //These are all methods that interface with my database (through rest services created with oracle apex)
     //or with the movie database API I am accessing, I use the Volley library to simplify the process
@@ -257,6 +269,8 @@ public class JSONParser {
     //Retrive a single movie form the API using the movieid
     public void getMoviebyID(Context context, SelectedMovieResponseListener selectedMovieResponseListener, int movieid) {
 
+
+
         RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movieurl = "https://api.themoviedb.org/3/movie/" + movieid + "?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US";
@@ -281,8 +295,18 @@ public class JSONParser {
                                 year = Integer.parseInt(response.getString("release_date").substring(0,4));
                             }
 
+                            JSONArray genres = response.getJSONArray("genres");
+                            Log.d("Check getting the array",genres.toString());
 
-                            Movie movie1 = new Movie(movieid,title,poster,runtime,overview,year);
+
+                                JSONObject jsongenre = genres.getJSONObject(0);
+                                String moviegenre = jsongenre.getString("name");
+
+                                Log.d("Lets Check Genre",moviegenre);
+
+
+
+                            Movie movie1 = new Movie(movieid,title,poster,runtime,overview,year,moviegenre);
                             Log.d("Movie",movie1.toString());
 
 
@@ -306,6 +330,7 @@ public class JSONParser {
 
 
     }
+
 
 
     public interface MovieNightResponseListener {
@@ -792,9 +817,9 @@ public class JSONParser {
 
 
     //Creates a record in the usermovie table and adds a rating
-    public void createMovieRating(Context context, CreateMovieRatingResponseListener createmovieratingResponseListener, int userid, int movieid,int rating) {
+    public void createMovieRating(Context context, CreateMovieRatingResponseListener createmovieratingResponseListener, int userid, int movieid,int rating, String genre) {
         RequestQueue mQueue = Volley.newRequestQueue(context);
-        String createratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newrating/" + userid + "?passedmovieid=" + movieid + "&passedrating=" + rating;
+        String createratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newrating/" + userid + "?passedmovieid=" + movieid + "&passedrating=" + rating + "&passedgenre=" + genre;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createratingurl, null,
                 new Response.Listener<JSONObject>() {
@@ -854,9 +879,9 @@ public class JSONParser {
 
 
     //This adds a movie to a users watchlist
-    public void addtoWatchlist(Context context, addtoWatchlistResponseListener addtowatchlistResponseListener, int userid, int movieid) {
+    public void addtoWatchlist(Context context, addtoWatchlistResponseListener addtowatchlistResponseListener, int userid, int movieid, String genre) {
         RequestQueue mQueue = Volley.newRequestQueue(context);
-        String addwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newwatchlist/" + userid + "?passedmovieid=" + movieid;
+        String addwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newwatchlist/" + userid + "?passedmovieid=" + movieid + "&passedgenre=" + genre;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, addwatchlisturl, null,
                 new Response.Listener<JSONObject>() {
@@ -1692,6 +1717,284 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
         void onResponse(String message);
     }
+
+    public void getGroupRatings(Context context, getGroupRatingsResponseListener getgroupratingsResponseListener, String groupid) {
+        ratingsList.clear();
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/groupsusermovies/" + groupid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYGMEMBERS",jsonArray.length() + "");
+
+
+                            List<String> newratinglist = new ArrayList<>();
+                            List<List<String>> newgenrelist = new ArrayList<>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject groupRating = jsonArray.getJSONObject(i);
+
+                                //genre.clear();
+                                //GroupsRatings rating;
+
+                                String strRating = groupRating.getString("rating");
+                                newratinglist.add(strRating);
+                                Log.d("FORLOOPRATING",strRating);
+                                String strgenre = groupRating.getString("genre");
+                                GroupsRatings groupsRatings = new GroupsRatings();
+                                groupsRatings.setRating(strRating);
+                                groupsRatings.setGenre(strgenre);
+                                ratingsList.add(groupsRatings);
+
+                                String movieid = groupRating.getString("movieid");
+                                Log.d("FORLOOPMOVIE",movieid);
+
+
+                                int counter = i;
+
+                            }
+                            Log.d("LETSTEST",ratingsList.toString());
+                            getgroupratingsResponseListener.onResponse(ratingsList);
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupratingsResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getGroupRatingsResponseListener {
+        void onError (String message);
+
+        void onResponse(List<GroupsRatings> ratinglist);
+    }
+
+
+    public interface SuggestedMovieResponseListener {
+        void onError(String message);
+
+        void onResponse(Movie movie);
+    }
+
+    //Retrive a single movie form the API using the movieid
+    public void getSuggestedMovie(Context context, SuggestedMovieResponseListener suggestedMovieResponseListener, String genre, String groupid, int passednumber) {
+
+        int genreid = 0;
+
+        switch(genre) {
+            case "Action":
+                genreid = 28;
+                break;
+            case "Adventure":
+                genreid = 12;
+                break;
+            case "Animation":
+                genreid = 16;
+                break;
+            case "Comedy":
+                genreid = 35;
+                break;
+            case "Crime":
+                genreid = 80;
+                break;
+            case "Documentary":
+                genreid = 99;
+                break;
+            case "Drama":
+                genreid = 18;
+                break;
+            case "Family":
+                genreid = 10751;
+                break;
+            case "Fantasy":
+                genreid = 14;
+                break;
+            case "History":
+                genreid = 36;
+                break;
+            case "Horror":
+                genreid = 27;
+                break;
+            case "Music":
+                genreid = 10402;
+                break;
+            case "Mystery":
+                genreid = 9648;
+                break;
+            case "Romance":
+                genreid = 10749;
+                break;
+            case "Science Fiction":
+                genreid = 878;
+                break;
+            case "Thriller":
+                genreid = 53;
+                break;
+            case "TV Movie":
+                genreid = 10770;
+                break;
+            case "War":
+                genreid = 10752;
+                break;
+            case "Western":
+                genreid = 37;
+                break;
+            default:
+                // code block
+        }
+
+
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String movieurl = "https://api.themoviedb.org/3/discover/movie?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=" + genreid ;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, movieurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("results");
+
+                                JSONObject movie = jsonArray.getJSONObject(passednumber);
+
+
+                                String title = movie.getString("title");
+                                String poster = movie.getString("poster_path");
+                                String overview = movie.getString("overview");
+                                //String runtime = movie.getString("runtime") + " mins";
+                                String id = movie.getString("id");
+                                String runtime = "120 mins";
+
+
+                                if ((movie.getString("release_date")).length() < 4) {
+                                    year = 0;
+                                } else {
+                                    year = Integer.parseInt(movie.getString("release_date").substring(0, 4));
+                                }
+
+                                //JSONArray genres = movie.getJSONArray("genres");
+                                //Log.d("Check getting the array", genres.toString());
+
+
+                                //JSONObject jsongenre = genres.getJSONObject(0);
+                                //String moviegenre = jsongenre.getString("name");
+
+                                //Log.d("Lets Check Genre", moviegenre);
+                                Movie movie1 = new Movie(Integer.parseInt(id),title,poster,runtime,overview,year);
+
+                                suggestedMovieResponseListener.onResponse(movie1);
+
+
+
+
+
+
+
+
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                            Log.d("SearchError", movieurl);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                suggestedMovieResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+
+    public void checkifGroupWatched(Context context, checkifGroupWatchedResponseListener checkifgroupwatchedResponseListener, String groupid, String movieid) {
+        ratingsList.clear();
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/checkifwatchedbygroup/" + groupid +  "?movieid=" + movieid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYGMEMBERS",jsonArray.length() + "");
+
+                            if(jsonArray.length() == 0) {
+                                String message = "No";
+                                checkifgroupwatchedResponseListener.onResponse(message);
+                            }
+                            else {
+                                String message = "Yes";
+                                checkifgroupwatchedResponseListener.onResponse(message);
+                            }
+
+
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                checkifgroupwatchedResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface checkifGroupWatchedResponseListener {
+        void onError (String message);
+
+        void onResponse(String message);
+    }
+
 
 
 

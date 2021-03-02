@@ -45,6 +45,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     EditText etSynopsis;
     Movie currentmovie;
     TextView tvDetailLength;
+    TextView tvGenre;
     Button btnRate;
     RatingBar rbRateMovie;
     Button btnAddtoWatchlist;
@@ -55,6 +56,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore fStore;
     String SQLID;
+    String currentgenre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         rbRateMovie = findViewById(R.id.rbRateMovie);
         tvDetailLength = findViewById(R.id.tvDetailLength);
         btnDetailSuggest = findViewById(R.id.btnDetailSuggest);
+        tvGenre = findViewById(R.id.tvDetailGenre);
 
         JSONParser jsonParser = new JSONParser();
 
@@ -98,6 +101,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Glide.with(MovieDetailActivity.this).load("https://image.tmdb.org/t/p/w300/" + currentmovie.getImageurl()).into(imPoster);
                 etSynopsis.setText(currentmovie.getOverview());
                 tvDetailLength.setText(currentmovie.getRuntime());
+                tvGenre.setText(movie.getGenre());
+                currentgenre = movie.getGenre();
             }
         },movieid);
 
@@ -240,7 +245,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String message) {
                             }
-                        },Integer.parseInt(SQLID),movieid);
+                        },Integer.parseInt(SQLID),movieid,currentgenre);
                     }
                 }
             }
@@ -268,7 +273,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             public void onResponse(String message) {
 
                             }
-                        },Integer.parseInt(SQLID),movieid,Math.round(rbRateMovie.getRating()));
+                        },Integer.parseInt(SQLID),movieid,Math.round(rbRateMovie.getRating()),currentgenre);
                     }
 
                 }
@@ -332,7 +337,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String message) {
                             }
-                        },Integer.parseInt(SQLID),movieid);
+                        },Integer.parseInt(SQLID),movieid,currentgenre);
                     }
                 }
             }

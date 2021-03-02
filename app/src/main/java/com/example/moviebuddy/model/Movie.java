@@ -1,5 +1,7 @@
 package com.example.moviebuddy.model;
 
+import java.util.List;
+
 public class Movie {
 
     private int id;
@@ -8,7 +10,10 @@ public class Movie {
     private String runtime;
     private String overview;
     private int year;
+    private String genre;
 
+    public Movie() {
+    }
 
     public Movie(int id, String title, String imageurl, String runtime, String overview, int year) {
         this.id = id;
@@ -17,6 +22,24 @@ public class Movie {
         this.runtime = runtime;
         this.overview = overview;
         this.year = year;
+    }
+
+    public Movie(int id, String title, String imageurl, String runtime, String overview, int year, String genre) {
+        this.id = id;
+        this.title = title;
+        this.imageurl = imageurl;
+        this.runtime = runtime;
+        this.overview = overview;
+        this.year = year;
+        this.genre = genre;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public Movie(String imageurl) {
@@ -32,6 +55,7 @@ public class Movie {
                 ", runtime='" + runtime + '\'' +
                 ", overview='" + overview + '\'' +
                 ", year=" + year +
+                ", genre=" + genre +
                 '}';
     }
 
