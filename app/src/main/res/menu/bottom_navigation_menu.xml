@@ -25,5 +25,5 @@
             android:id="@+id/page_5"
             android:enabled="true"
             android:icon="@drawable/notification"
-            android:title="Notifications"/>
+            android:title="Requests"/>
     </menu>

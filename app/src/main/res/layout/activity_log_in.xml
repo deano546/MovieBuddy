@@ -82,9 +82,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Sign In"
+        app:layout_constraintBottom_toTopOf="@id/btngotoRegister"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btngotoRegister"
         app:layout_constraintTop_toBottomOf="@+id/etsigninpassword" />
 
     <Button
@@ -93,6 +93,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="Register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignin" />
+
+    <TextView
+        android:id="@+id/tvforgotPW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgotpassword"
+        android:textColor="#70FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/btngotoRegister"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSignin" />

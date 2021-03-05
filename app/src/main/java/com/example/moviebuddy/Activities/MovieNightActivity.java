@@ -153,6 +153,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             public void onClick(View v) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "date picker");
+
             }
         });
 
@@ -425,25 +426,32 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(c.getTime());
 
-        //Adding a 0 before the returned number if its less than 10
-        if(dayOfMonth < 10) {
-            returneddate = "0" + dayOfMonth;
-        }
-        else{
-            returneddate = String.valueOf(dayOfMonth);
-        }
-        //Also have to add one onto the month value due to the index starting at 0
-        if(month < 10) {
-            month += 1;
-            returnedmonth = "0" + month;
+        if(c.getTimeInMillis() < System.currentTimeMillis() - 10000) {
+            Toast.makeText(this, "Please don't choose a past date", Toast.LENGTH_SHORT).show();
         }
         else {
-            month +=1;
-            returnedmonth = String.valueOf(month);
+            //Adding a 0 before the returned number if its less than 10
+            if(dayOfMonth < 10) {
+                returneddate = "0" + dayOfMonth;
+            }
+            else{
+                returneddate = String.valueOf(dayOfMonth);
+            }
+            //Also have to add one onto the month value due to the index starting at 0
+            if(month < 10) {
+                month += 1;
+                returnedmonth = "0" + month;
+            }
+            else {
+                month +=1;
+                returnedmonth = String.valueOf(month);
+            }
+            //Show only the last two digits of the year, eg 2021 is shown as 21
+            String returnedyear = String.valueOf(year).substring(2,4);
+            tvSelectedDate.setText(returneddate + "/" + returnedmonth + "/" + returnedyear);
         }
-        //Show only the last two digits of the year, eg 2021 is shown as 21
-        String returnedyear = String.valueOf(year).substring(2,4);
-        tvSelectedDate.setText(returneddate + "/" + returnedmonth + "/" + returnedyear);
+
+
     }
 
 public double getAverage(String genre, List<GroupsRatings> Ratings) {

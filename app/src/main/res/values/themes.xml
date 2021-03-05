@@ -14,4 +14,11 @@
         <!-- Customize your theme here. -->
         <item name="android:textColorHint">#70FFFFFF</item>
     </style>
+
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/black</item>
+    </style>
+
+
 </resources>

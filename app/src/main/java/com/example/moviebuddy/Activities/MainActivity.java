@@ -37,8 +37,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     //Code for setting up horizontal recycler view adapted from https://www.geeksforgeeks.org/android-horizontal-recyclerview-with-examples/
 
     // Recycler View object

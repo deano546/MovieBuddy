@@ -8,6 +8,8 @@ import android.widget.DatePicker;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.moviebuddy.Activities.MovieNightActivity;
+
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment {
@@ -23,6 +25,9 @@ public class DatePickerFragment extends DialogFragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
         return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        //DatePickerDialog dialog = new DatePickerDialog(getActivity(),(MovieNightActivity) , year, month,day);
+        //dialog.getDatePicker().setMinDate();
+        //return dialog;
     }
 
 

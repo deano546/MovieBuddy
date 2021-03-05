@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MovieBuddy</string>
+    <string name="forgotpassword"><u>Forgot your password?</u></string>
 </resources>
