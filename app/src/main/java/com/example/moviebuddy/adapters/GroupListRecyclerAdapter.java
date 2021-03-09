@@ -3,6 +3,7 @@ package com.example.moviebuddy.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviebuddy.Activities.MovieNightActivity;
+import com.example.moviebuddy.Activities.PendingNightActivity;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.Group;
 import com.example.moviebuddy.model.GroupNight;
+import com.example.moviebuddy.model.Movie;
 
 import java.util.List;
 
@@ -27,12 +30,12 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     //(This adapter is not yet connected to a database, it is called in the GroupActivity)
     //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
-    List<Group> groupList;
+    List<GroupNight> groupList;
     Context context;
     GroupNight groupNight1;
     String passedmovieid1, passedmovietitle1;
 
-    public GroupListRecyclerAdapter(List<Group> groupList, Context context, String passedmovieid, String passedmovietitle) {
+    public GroupListRecyclerAdapter(List<GroupNight> groupList, Context context, String passedmovieid, String passedmovietitle) {
         this.groupList = groupList;
         this.context = context;
         passedmovieid1 = passedmovieid;
@@ -46,6 +49,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
         TextView tvDateAndTime;
         TextView tvTitle;
         Button btnSuggest;
+        Button btnTest;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,8 +57,6 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
             tvDateAndTime = itemView.findViewById(R.id.tvDateTimeGroupList);
             tvTitle = itemView.findViewById(R.id.tvMovieTitleGroupList);
             btnSuggest = itemView.findViewById(R.id.btnSuggest);
-
-
         }
     }
 
@@ -62,7 +64,6 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     @NonNull
     @Override
     public GroupListRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grouplistitem,parent,false);
         GroupListRecyclerAdapter.MyViewHolder holder = new GroupListRecyclerAdapter.MyViewHolder(view);
 
@@ -74,57 +75,83 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     @Override
     public void onBindViewHolder(@NonNull GroupListRecyclerAdapter.MyViewHolder holder, int position) {
 
-        JSONParser jsonParser = new JSONParser();
 
-        jsonParser.getMovienightbyGroupid(context, new JSONParser.getMovieNightbyGroupIDResponseListener() {
-            @Override
-            public void onError(String message) {
+                JSONParser jsonParser = new JSONParser();
 
-            }
+                holder.tvGroupName.setText(String.valueOf(groupList.get(position).getGroupName()));
 
-            @Override
-            public void onResponse(GroupNight groupNight) {
-                groupNight1 = groupNight;
-
-
-
-                if(groupNight1.getGroupName().equals("No Movie Night Yet!")) {
+                if(groupList.get(position).getApproval().equals("Nope")) {
                     holder.tvTitle.setText("No Movie Night Yet!");
+                    holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Toast.makeText(context, groupNightList.get(position).getMovieTitle() + "", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(context, MovieNightActivity.class);
+                            intent.putExtra("GROUPID", groupList.get(position).getId());
+                            intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
+                            intent.putExtra("MOVIEID", passedmovieid1);
+                            intent.putExtra("MOVIETITLE", passedmovietitle1);
+                            context.startActivity(intent);
+                        }
+                    });
                 }
 
                 else {
-                    holder.tvDateAndTime.setText(groupNight1.getDate() + " " + groupNight1.getTime());
+
+                    jsonParser.getMoviebyID(context, new JSONParser.SelectedMovieResponseListener() {
+                        @Override
+                        public void onError(String message) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Movie movie) {
+                            String title = movie.getTitle();
+                            if (groupList.get(position).getApproval().equals("True")) {
+                                holder.tvDateAndTime.setText(groupList.get(position).getDate() + " " + groupList.get(position).getTime());
+                                holder.tvTitle.setText(movie.getTitle());
+                                holder.btnSuggest.setVisibility(View.INVISIBLE);
+
+                            } else if (groupList.get(position).getApproval().equals("False")) {
+                                holder.tvDateAndTime.setText(groupList.get(position).getDate() + " " + groupList.get(position).getTime());
+                                holder.tvTitle.setText(movie.getTitle());
+                                holder.btnSuggest.setText("View Pending Night");
+                                holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(context, PendingNightActivity.class);
+                                        //intent.putExtra("PENDING",groupNight1.getApproval());
+                                        //Log.d("CHECKBUTTONEXTRAS1",groupNight1.getApproval());
+                                        intent.putExtra("GROUPID", groupList.get(position).getId());
+                                        Log.d("CHECKBUTTONEXTRAS2", groupList.get(position).getId() + "");
+                                        intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
+                                        Log.d("CHECKBUTTONEXTRAS3", groupList.get(position).getGroupName());
+                                        intent.putExtra("MOVIEIDP", groupList.get(position).getMovieid());
+                                        Log.d("CHECKBUTTONEXTRAS4", groupList.get(position).getMovieid());
+                                        intent.putExtra("MOVIETITLE", title);
+                                        Log.d("CHECKBUTTONEXTRAS5", title);
+                                        intent.putExtra("DATE", groupList.get(position).getDate());
+                                        intent.putExtra("TIME", groupList.get(position).getTime());
+                                        context.startActivity(intent);
+                                    }
+                                });
+                            }
+                        }
+                    },Integer.parseInt(groupList.get(position).getMovieid()));
 
 
 
 
-                    holder.tvTitle.setText((groupNight1.getMovieTitle()));
-                    holder.btnSuggest.setVisibility(View.INVISIBLE);
                 }
 
 
-            }
-        },String.valueOf(groupList.get(position).getId()));
 
 
-        holder.tvGroupName.setText(String.valueOf(groupList.get(position).getGroupname()));
-
-        if(groupList.get(position).getGroupname().equals("No Groups Yet!")) {
+        if(groupList.get(position).getGroupName().equals("No Groups Yet!")) {
             holder.btnSuggest.setVisibility(View.INVISIBLE);
         }
 
-        holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(context, groupNightList.get(position).getMovieTitle() + "", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, MovieNightActivity.class);
-                intent.putExtra("GROUPID",groupList.get(position).getId());
-                intent.putExtra("GROUPNAME",groupList.get(position).getGroupname());
-                intent.putExtra("MOVIEID",passedmovieid1);
-                intent.putExtra("MOVIETITLE",passedmovietitle1);
-                context.startActivity(intent);
-            }
-        });
+
 
 
 

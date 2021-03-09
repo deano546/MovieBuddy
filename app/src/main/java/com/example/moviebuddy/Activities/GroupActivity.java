@@ -39,7 +39,7 @@ public class GroupActivity extends AppCompatActivity {
     RecyclerView rvGroupList;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-    List<Group> groupList1 = new ArrayList<>();
+    List<GroupNight> groupList1 = new ArrayList<>();
     FirebaseAuth auth;
     FirebaseFirestore fStore;
     String SQLID, movieid, movietitle;
@@ -77,17 +77,17 @@ public class GroupActivity extends AppCompatActivity {
                     if(document.exists()) {
                         SQLID = document.get("id").toString();
 
-                        jsonParser.getGroupbyUser(GroupActivity.this, new JSONParser.getGroupResponseListener() {
+                        jsonParser.getUltramovienightbyuserid(GroupActivity.this, new JSONParser.getUltraGroupResponseListener() {
                             @Override
                             public void onError(String message) {
 
                             }
 
                             @Override
-                            public void onResponse(List<Group> groupList) {
-                                Log.d("CHECKGROUP",groupList.toString());
+                            public void onResponse(List<GroupNight> groupList) {
                                 groupList1 = groupList;
                                 setUpRecycler();
+
                             }
                         },SQLID);
 
@@ -155,6 +155,7 @@ public class GroupActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(GroupActivity.this);
         rvGroupList.setLayoutManager(layoutManager);
         mAdapter = new GroupListRecyclerAdapter(groupList1, GroupActivity.this,movieid,movietitle);
+        Log.d("UHOHLISTINACTIVITY",groupList1.toString());
         rvGroupList.setAdapter(mAdapter);
     }
 }

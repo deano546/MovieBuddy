@@ -65,6 +65,9 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
     Map<String, Double> mapratings = new HashMap<String, Double>();
     List<Movie> movieList = new ArrayList<>();
     String maxormin;
+    Boolean approval;
+
+    String unapproveddate, unapprovedtime;
 
 
 
@@ -72,7 +75,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
 
 
-    final String[] Options = {"One I'd Like", "One different than usual"};
+    final String[] Options = {"One We'd Like", "One different than usual"};
     AlertDialog.Builder window;
 
     @Override
@@ -111,10 +114,6 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             }
         });
 
-
-
-
-
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -132,9 +131,6 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
 
             //Log.d("CHECKIDONMOVIENIGHT",movieid);
-
-
-
             groupname = extras.getString("GROUPNAME");
             tvCurrentGroup.setText(groupname);
 

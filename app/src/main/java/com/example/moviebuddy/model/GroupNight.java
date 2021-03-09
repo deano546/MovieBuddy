@@ -6,9 +6,66 @@ public class GroupNight {
     private String MovieTitle;
     private String Date;
     private String GroupName;
+    private String groupid;
     private String time;
+    private String approval;
+    private String movieid;
+
+    public GroupNight(String id, String movieTitle, String date, String groupName, String groupid, String time, String approval, String movieid) {
+        this.id = id;
+        MovieTitle = movieTitle;
+        Date = date;
+        GroupName = groupName;
+        this.groupid = groupid;
+        this.time = time;
+        this.approval = approval;
+        this.movieid = movieid;
+    }
+
+    public String getGroupid() {
+        return groupid;
+    }
+
+    public void setGroupid(String groupid) {
+        this.groupid = groupid;
+    }
+
+    public String getMovieid() {
+        return movieid;
+    }
+
+    public void setMovieid(String movieid) {
+        this.movieid = movieid;
+    }
+
+    public GroupNight(String id, String movieTitle, String date, String groupName, String time, String approval, String movieid) {
+        this.id = id;
+        MovieTitle = movieTitle;
+        Date = date;
+        GroupName = groupName;
+        this.time = time;
+        this.approval = approval;
+        this.movieid = movieid;
+    }
 
     public GroupNight() {
+    }
+
+    public String getApproval() {
+        return approval;
+    }
+
+    public void setApproval(String approval) {
+        this.approval = approval;
+    }
+
+    public GroupNight(String id, String movieTitle, String date, String groupName, String time, String approval) {
+        this.id = id;
+        MovieTitle = movieTitle;
+        Date = date;
+        GroupName = groupName;
+        this.time = time;
+        this.approval = approval;
     }
 
     public String getTime() {
@@ -43,9 +100,14 @@ public class GroupNight {
     @Override
     public String toString() {
         return "GroupNight{" +
-                "MovieTitle='" + MovieTitle + '\'' +
-                ", DateAndTime='" + Date + '\'' +
+                "id='" + id + '\'' +
+                ", MovieTitle='" + MovieTitle + '\'' +
+                ", Date='" + Date + '\'' +
                 ", GroupName='" + GroupName + '\'' +
+                ", groupid='" + groupid + '\'' +
+                ", time='" + time + '\'' +
+                ", approval='" + approval + '\'' +
+                ", movieid='" + movieid + '\'' +
                 '}';
     }
 
