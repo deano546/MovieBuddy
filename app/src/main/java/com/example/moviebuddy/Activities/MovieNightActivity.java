@@ -204,7 +204,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
                                     Log.d("CHECKRATINGLIST",ratinglist.toString());
 
                                     maxormin = "Max";
-                                    Toast.makeText(MovieNightActivity.this, "0", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(MovieNightActivity.this, "0", Toast.LENGTH_SHORT).show();
                                     genre = breakoutGenres(ratinglist, maxormin);
                                     getSuggestion(genre);
 
@@ -223,7 +223,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
                                     Log.d("CHECKRATINGLIST",ratinglist.toString());
 
                                     maxormin = "Min";
-                                    Toast.makeText(MovieNightActivity.this, "1", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(MovieNightActivity.this, "1", Toast.LENGTH_SHORT).show();
                                     genre = breakoutGenres(ratinglist, maxormin);
                                     getSuggestion(genre);
 
@@ -345,7 +345,6 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         double waraverage = getAverage("War",ratinglist);
         double westernaverage = getAverage("Western",ratinglist);
 
-
         mapratings.put("Action",actionaverage);
         mapratings.put("Adventure",adventureaverage);
         mapratings.put("Animation",animationaverage);
@@ -364,7 +363,6 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         mapratings.put("TV Movie",tvmovieaverage);
         mapratings.put("War",waraverage);
         mapratings.put("Western",westernaverage);
-
 
         Map.Entry<String, Double> maxEntry = null;
         for (Map.Entry<String, Double> entry : mapratings.entrySet()) {
@@ -446,8 +444,6 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             String returnedyear = String.valueOf(year).substring(2,4);
             tvSelectedDate.setText(returneddate + "/" + returnedmonth + "/" + returnedyear);
         }
-
-
     }
 
 public double getAverage(String genre, List<GroupsRatings> Ratings) {
@@ -476,7 +472,6 @@ public double getAverage(String genre, List<GroupsRatings> Ratings) {
 
 
 public Movie getSuggestion(String genre) {
-
         Movie movie2 = new Movie();
 
         JSONParser jsonParser = new JSONParser();
@@ -501,7 +496,6 @@ public Movie getSuggestion(String genre) {
         },genre,groupid,counter);
 
         return movie2;
-
 
 }
 

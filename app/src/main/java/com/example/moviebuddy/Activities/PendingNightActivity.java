@@ -203,6 +203,8 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                                         @Override
                                         public void onError(String message) {
                                             Toast.makeText(PendingNightActivity.this, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
+                                            startActivity(intent);
                                         }
 
                                         @Override

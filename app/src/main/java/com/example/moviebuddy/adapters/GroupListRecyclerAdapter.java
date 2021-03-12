@@ -112,7 +112,13 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                             if (groupList.get(position).getApproval().equals("True")) {
                                 holder.tvDateAndTime.setText(groupList.get(position).getDate() + " " + groupList.get(position).getTime());
                                 holder.tvTitle.setText(movie.getTitle());
-                                holder.btnSuggest.setVisibility(View.INVISIBLE);
+                                holder.btnSuggest.setText("View Upcoming Night");
+                                holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
                             } else if (groupList.get(position).getApproval().equals("False")) {
                                 holder.tvDateAndTime.setText(groupList.get(position).getDate() + " " + groupList.get(position).getTime());
