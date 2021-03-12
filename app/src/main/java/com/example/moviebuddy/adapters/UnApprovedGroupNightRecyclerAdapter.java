@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.GroupNight;
+import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.User;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
     List<GroupNight> groupNights;
     Context context;
     String SQLID;
+    String movietitle;
     int Counter;
     String groupnightid;
 
@@ -68,66 +70,146 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
     public void onBindViewHolder(@NonNull UnApprovedGroupNightRecyclerAdapter.MyViewHolder holder, int position) {
         JSONParser jsonParser = new JSONParser();
 
-        groupnightid = groupNights.get(position).getId();
+        if(Integer.parseInt(groupNights.get(position).getId()) == 0) {
+            holder.tvMovie.setText("No Movie Nights!");
+            holder.tvDateAndTime.setText("");
+            holder.tvGroup.setText("");
+            holder.btnReject.setVisibility(View.INVISIBLE);
+            holder.btnAccept.setVisibility(View.INVISIBLE);
+        }
+        else {
+            groupnightid = groupNights.get(position).getId();
+
+            jsonParser.getMoviebyID(context, new JSONParser.SelectedMovieResponseListener() {
+                @Override
+                public void onError(String message) {
+
+                }
+
+                @Override
+                public void onResponse(Movie movie) {
+                    movietitle = movie.getTitle();
+
+                    holder.tvMovie.setText(movietitle);
+                    holder.tvDateAndTime.setText(groupNights.get(position).getDate() + " " + groupNights.get(position).getTime());
+                    holder.tvGroup.setText(String.valueOf(groupNights.get(position).getGroupName()));
+                }
+            },Integer.parseInt(groupNights.get(position).getMovieid()));
 
 
 
-        holder.btnAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jsonParser.approveGroupNight(context, new JSONParser.approveGroupNightResponseListener() {
-                    @Override
-                    public void onError(String message) {
-                        Toast.makeText(context, "Accepted!", Toast.LENGTH_SHORT).show();
-                        groupNights.remove(position);
-                        notifyItemRemoved(position);
+            holder.btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jsonParser.approveGroupNight(context, new JSONParser.approveGroupNightResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(context, "Accepted!", Toast.LENGTH_SHORT).show();
+                            groupNights.remove(position);
+                            notifyItemRemoved(position);
 
-                        jsonParser.getGroupNightApproval(context, new JSONParser.getGroupNightApprovalResponseListener() {
-                            @Override
-                            public void onError(String message) {
-
-                            }
-
-                            @Override
-                            public void onResponse(List<String> approvallist) {
-
-                                for (String s : approvallist) {
-                                    if(s.equals("True"));
-                                    Counter +=1;
+                            jsonParser.getGroupNightApproval(context, new JSONParser.getGroupNightApprovalResponseListener() {
+                                @Override
+                                public void onError(String message) {
 
                                 }
-                                if(Counter == approvallist.size()) {
 
-                                    jsonParser.fullyApproveGroupNight(context, new JSONParser.fullyApproveGroupNightResponseListener() {
-                                        @Override
-                                        public void onError(String message) {
-                                            Toast.makeText(context, "Fully Approved", Toast.LENGTH_SHORT).show();
-                                        }
+                                @Override
+                                public void onResponse(List<String> approvallist) {
 
-                                        @Override
-                                        public void onResponse(String message) {
+                                    for (String s : approvallist) {
+                                        if(s.equals("True") || s.equals("Declined"));
+                                        Counter +=1;
 
-                                        }
-                                    },groupnightid);
+                                    }
+                                    if(Counter == approvallist.size()) {
+
+                                        jsonParser.fullyApproveGroupNight(context, new JSONParser.fullyApproveGroupNightResponseListener() {
+                                            @Override
+                                            public void onError(String message) {
+                                                Toast.makeText(context, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onResponse(String message) {
+
+                                            }
+                                        },groupnightid);
+
+                                    }
+
+                                }
+                            },groupnightid);
+
+                        }
+
+                        @Override
+                        public void onResponse(String message) {
+
+                        }
+                    },SQLID,groupnightid);
+                }
+            });
+
+
+
+            holder.btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jsonParser.rejectGroupNight(context, new JSONParser.rejectGroupNightResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(context, "Accepted!", Toast.LENGTH_SHORT).show();
+                            groupNights.remove(position);
+                            notifyItemRemoved(position);
+
+                            jsonParser.getGroupNightApproval(context, new JSONParser.getGroupNightApprovalResponseListener() {
+                                @Override
+                                public void onError(String message) {
 
                                 }
 
-                            }
-                        },groupnightid);
+                                @Override
+                                public void onResponse(List<String> approvallist) {
 
-                    }
+                                    for (String s : approvallist) {
+                                        if(s.equals("True") || s.equals("Declined"));
+                                        Counter +=1;
 
-                    @Override
-                    public void onResponse(String message) {
+                                    }
+                                    if(Counter == approvallist.size()) {
 
-                    }
-                },SQLID,groupnightid);
-            }
-        });
+                                        jsonParser.fullyApproveGroupNight(context, new JSONParser.fullyApproveGroupNightResponseListener() {
+                                            @Override
+                                            public void onError(String message) {
+                                                //Toast.makeText(context, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                            }
 
-        holder.tvMovie.setText(groupNights.get(position).getMovieTitle());
-        holder.tvDateAndTime.setText(groupNights.get(position).getDate() + " " + groupNights.get(position).getTime());
-        holder.tvGroup.setText(String.valueOf(groupNights.get(position).getGroupName()));
+                                            @Override
+                                            public void onResponse(String message) {
+
+                                            }
+                                        },groupnightid);
+
+                                    }
+
+                                }
+                            },groupnightid);
+
+                        }
+
+                        @Override
+                        public void onResponse(String message) {
+
+                        }
+                    },SQLID,groupnightid);
+                }
+            });
+        }
+
+
+
+
 
 
     }

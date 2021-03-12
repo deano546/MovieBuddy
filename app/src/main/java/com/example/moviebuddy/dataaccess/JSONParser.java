@@ -13,6 +13,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.moviebuddy.model.Group;
+import com.example.moviebuddy.model.GroupMember;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.GroupsRatings;
 import com.example.moviebuddy.model.Movie;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class JSONParser {
 
     //Lists to use with methods
+    private List<GroupMember> membersfornight = new ArrayList<>();
     private List<Movie> popularmovieList = new ArrayList<>();
     private List<Movie> currentmovieList = new ArrayList<>();
     private List<Movie> searchmovieList = new ArrayList<>();
@@ -1521,10 +1523,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void rejectGroupNight(Context context, rejectGroupNightResponseListener rejectgroupnightResponseListener, String userid, String groupnightid) {
         RequestQueue mQueue = Volley.newRequestQueue(context);
 
-
-        //TODO No rest done for this yet
-
-        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/approvemovienight/" + userid + "?passedgroupid=" + groupnightid;
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/declinemovienight/" + userid + "?passedgroupid=" + groupnightid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
                 new Response.Listener<JSONObject>() {
@@ -1914,16 +1913,6 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                                 suggestedMovieResponseListener.onResponse(movie1);
 
 
-
-
-
-
-
-
-
-
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d("****", String.valueOf(e));
@@ -2008,8 +1997,6 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
         void onResponse(List<GroupNight> groupList);
     }
 
-    //This retrieves a group ID by using the group name
-    //I need to validate each groups name is unique
     public void getUltramovienightbyuserid(Context context, getUltraGroupResponseListener getgroupResponseListener, String id) {
         ultralist.clear();
         RequestQueue mQueue = Volley.newRequestQueue(context);
@@ -2025,6 +2012,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                             if (jsonArray.length() == 0)  {
                                 GroupNight group1 = new GroupNight();
                                 group1.setGroupName("No Groups Yet!");
+                                group1.setApproval("Nope");
                                 ultralist.add(group1);
                                 getgroupResponseListener.onResponse(ultralist);
                             }
@@ -2033,6 +2021,13 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
                                     JSONObject groupnight = jsonArray.getJSONObject(i);
                                     groupNight1 = new GroupNight();
+                                    if(groupnight.isNull("groupnightid")) {
+                                        groupNight1.setId(String.valueOf(0));
+                                    }
+                                    else {
+                                        groupNight1.setId(groupnight.getString("groupnightid"));
+                                    }
+
                                     groupNight1.setGroupName(groupnight.getString("groupname"));
                                     String date = groupnight.getString("groupnightdate");
                                     Log.d("MOVIEDATE2",date);
@@ -2054,6 +2049,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
 
                                     String groupid = groupnight.getString("groupid");
+                                    Log.d("MOVIENIGHTGROUPIDJSON", groupnight.getString("groupid"));
                                     groupNight1.setGroupid(groupid);
 
                                     if(groupnight.isNull("movieid")) {
@@ -2093,6 +2089,74 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     }
 
+
+    public void getGroupMembersforNight(Context context, getGroupMembersforNightResponseListener getgroupratingsResponseListener, String groupid) {
+        membersfornight.clear();
+
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getusersandapprovalsbygroupnightid/" + groupid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+
+                            Log.d("JSONARRAYGMEMBERS",jsonArray.length() + "");
+
+
+                            List<String> newratinglist = new ArrayList<>();
+                            List<List<String>> newgenrelist = new ArrayList<>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject groupRating = jsonArray.getJSONObject(i);
+                                GroupMember groupMember = new GroupMember();
+
+                                //genre.clear();
+                                //GroupsRatings rating;
+
+                                String username = groupRating.getString("username");
+                                groupMember.setUsername(username);
+
+                                String approval = groupRating.getString("approval");
+                                groupMember.setApproval(approval);
+
+                                membersfornight.add(groupMember);
+
+
+                            }
+                            Log.d("MEMBERLISTNIGHT",membersfornight.toString());
+                            getgroupratingsResponseListener.onResponse(membersfornight);
+
+
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupratingsResponseListener.onError("Error");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+    }
+
+    public interface getGroupMembersforNightResponseListener {
+        void onError (String message);
+
+        void onResponse(List<GroupMember> memberlist);
+    }
 
 
 

@@ -70,7 +70,7 @@
         android:id="@+id/btnViewPending"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="View Movie"
         app:layout_constraintBottom_toTopOf="@+id/tvAccepted"
@@ -133,7 +133,7 @@
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSelectedMovieLabel"
         app:layout_constraintTop_toTopOf="@+id/tvSelectedMovieLabel" />
 
     <TextView
@@ -143,9 +143,9 @@
         android:text=""
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tvSelectedTimePending"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSelectedDateLabel"
         app:layout_constraintTop_toBottomOf="@+id/tvSelectedMoviePending" />
 
     <TextView
@@ -155,8 +155,9 @@
         android:text=""
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSelectedTimeLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSelectedTimeLabel"
         app:layout_constraintTop_toBottomOf="@+id/tvSelectedDatePending" />
 
     <Button

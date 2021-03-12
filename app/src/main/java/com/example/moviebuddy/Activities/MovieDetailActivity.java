@@ -69,6 +69,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         //Take the extras from the intent passed from the movie activity as to display movie details here
         Intent intent = getIntent();
         movieid = intent.getIntExtra("id",-1);
+        Log.d("CHECKTHISID",movieid + "");
         onWatchlist = false;
 
         //Assignments

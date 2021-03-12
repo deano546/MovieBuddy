@@ -87,7 +87,9 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                         public void onClick(View v) {
                             //Toast.makeText(context, groupNightList.get(position).getMovieTitle() + "", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(context, MovieNightActivity.class);
-                            intent.putExtra("GROUPID", groupList.get(position).getId());
+                            intent.putExtra("GROUPID", groupList.get(position).getGroupid());
+                            Log.d("MOVIENIGHTGROUPIDADAPTER",groupList.get(position).getGroupid());
+                            intent.putExtra("GROUPNIGHTID", groupList.get(position).getId());
                             intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
                             intent.putExtra("MOVIEID", passedmovieid1);
                             intent.putExtra("MOVIETITLE", passedmovietitle1);
@@ -122,8 +124,9 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                                         Intent intent = new Intent(context, PendingNightActivity.class);
                                         //intent.putExtra("PENDING",groupNight1.getApproval());
                                         //Log.d("CHECKBUTTONEXTRAS1",groupNight1.getApproval());
-                                        intent.putExtra("GROUPID", groupList.get(position).getId());
+                                        intent.putExtra("GROUPNIGHTID", groupList.get(position).getId());
                                         Log.d("CHECKBUTTONEXTRAS2", groupList.get(position).getId() + "");
+                                        intent.putExtra("GROUPID",groupList.get(position).getGroupid());
                                         intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
                                         Log.d("CHECKBUTTONEXTRAS3", groupList.get(position).getGroupName());
                                         intent.putExtra("MOVIEIDP", groupList.get(position).getMovieid());

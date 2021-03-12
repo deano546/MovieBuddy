@@ -33,7 +33,6 @@ import java.util.List;
 
 public class NotifyActivity extends AppCompatActivity {
 
-
     //Declarations
     RecyclerView rvRequestList;
     RecyclerView.Adapter mAdapter;
@@ -82,7 +81,7 @@ public class NotifyActivity extends AppCompatActivity {
                             }
                         },SQLID);
 
-                        jsonParser.getUnapprovedNights(NotifyActivity.this, new JSONParser.getUnapprovedNightsResponseListener() {
+                        jsonParser.getUltramovienightbyuserid(NotifyActivity.this, new JSONParser.getUltraGroupResponseListener() {
                             @Override
                             public void onError(String message) {
 

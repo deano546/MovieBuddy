@@ -133,8 +133,8 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             //Log.d("CHECKIDONMOVIENIGHT",movieid);
             groupname = extras.getString("GROUPNAME");
             tvCurrentGroup.setText(groupname);
-
-            groupid = String.valueOf(extras.getLong("GROUPID"));
+            Log.d("MOVIENIGHTGROUPID",extras.getLong("GROUPID") + "");
+            groupid = extras.getString("GROUPID");
             // and get whatever type user account id is
 
         }
@@ -526,7 +526,7 @@ public String checkifwatched(Movie movie) {
                 tvSelectedMovie.setText(movietitle);
                 etselectedMovie.setText(movietitle);
                 etselectedMovie.setEnabled(false);
-                btnAutoSuggest.setEnabled(false);
+                //btnAutoSuggest.setEnabled(false);
             }
             else {
                 counter += 1;
