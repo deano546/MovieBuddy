@@ -8,10 +8,12 @@
 
     <TextView
         android:id="@+id/tvCreateGroupUsername"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="Gaby G"
+        android:textAlignment="center"
         android:textColor="#70FFFFFF"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/view3"
@@ -32,7 +34,7 @@
 
     <CheckBox
         android:id="@+id/checkBox"
-        android:layout_width="82dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="64dp"
         android:layout_marginTop="8dp"

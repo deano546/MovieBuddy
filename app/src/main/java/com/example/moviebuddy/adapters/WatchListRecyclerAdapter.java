@@ -86,6 +86,14 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
 
     @Override
     public void onBindViewHolder(@NonNull WatchListRecyclerAdapter.MyViewHolder holder, int position) {
+
+
+        Log.d("WATCHLISTSIZE",movieList.size() + "");
+
+        if(movieList.size() == 0) {
+            holder.tvMovieListTitle.setText("No Movies on Your Watchlist!");
+        }
+
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         String ID = auth.getCurrentUser().getUid();

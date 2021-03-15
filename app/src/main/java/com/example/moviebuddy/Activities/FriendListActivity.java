@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -30,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.VISIBLE;
+
 public class FriendListActivity extends AppCompatActivity {
 
     //Declarations
@@ -43,11 +46,15 @@ public class FriendListActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore fStore;
     String SQLID;
+    TextView tvResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
+        tvResults = findViewById(R.id.tvNoResults);
+
+        tvResults.setVisibility(View.INVISIBLE);
 
         //Assignments
         etUserSearch = findViewById(R.id.etUserSearch);
@@ -80,6 +87,7 @@ public class FriendListActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tvResults.setVisibility(View.INVISIBLE);
                 jsonParser.getFriendsbyID(FriendListActivity.this, new JSONParser.GetFriendsResponseListener() {
                     @Override
                     public void onError(String message) {
@@ -110,7 +118,9 @@ public class FriendListActivity extends AppCompatActivity {
 
                                 bList.removeAll(aList);
                                 Log.d("CHECKINGLIST",bList.toString());
-
+                                if(bList.isEmpty()) {
+                                    tvResults.setVisibility(VISIBLE);
+                                }
                                 setupRecycler(bList);
                                 Log.d("CHECKID",SQLID);
 

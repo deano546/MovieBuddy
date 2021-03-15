@@ -32,14 +32,25 @@
 
     <Button
         android:id="@+id/btnSearchUser"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:layout_marginEnd="21dp"
         android:text="Search"
         app:layout_constraintBottom_toTopOf="@+id/rvUsers"
-        app:layout_constraintStart_toEndOf="@id/etUserSearch"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/etUserSearch"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNoResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="No Results!"
+        android:textColor="#70FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rvUsers" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

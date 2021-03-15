@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -44,6 +45,7 @@ public class WatchListActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore fStore;
     String SQLID;
+    TextView tvWatchlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,11 @@ public class WatchListActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         String ID = auth.getCurrentUser().getUid();
+        tvWatchlist = findViewById(R.id.tvWatchlistHeading);
 
         rvMovieList = findViewById(R.id.rvWatchlist);
+
+        Log.d("WATCHLISTSIZE4",movieList.size() + "");
 
         JSONParser jsonParser = new JSONParser();
 
@@ -66,21 +71,30 @@ public class WatchListActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         SQLID = document.get("id").toString();
+                        Log.d("WATCHLISTSIZE5",movieList.size() + "" + SQLID);
 
 
                         //This gets the watchlist of the current user by using their ID
                         jsonParser.getWatchlistbyID(WatchListActivity.this, new JSONParser.WatchListResponseListener() {
                             @Override
                             public void onError(String message) {
+                                Log.d("WATCHLISTSIZE3",movieList.size() + "");
                                 Log.d("TAG",message);
 
                             }
 
                             @Override
                             public void onResponse(List<Movie> movies) {
+                                Log.d("WATCHLISTSIZE2",movieList.size() + "");
                                 //Once list is retrieved, it is displayed in the recycler
-                                movieList = movies;
-                                updateRecycler();
+                                if(movies.size() == 0) {
+                                    tvWatchlist.setText("Watchlist - Empty!");
+                                }
+                                else {
+                                    movieList = movies;
+                                    updateRecycler();
+                                }
+
                             }
                         },Integer.parseInt(SQLID));
 

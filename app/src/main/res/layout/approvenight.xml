@@ -10,6 +10,7 @@
         android:id="@+id/tvGroupforNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#70FFFFFF"
@@ -21,8 +22,9 @@
 
     <TextView
         android:id="@+id/tvMovieforNight"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="#70FFFFFF"
@@ -36,6 +38,7 @@
         android:id="@+id/tvDAndTforNight"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="#70FFFFFF"
@@ -45,7 +48,7 @@
 
     <Button
         android:id="@+id/btnAcceptNight"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="132dp"
         android:text="Accept"
@@ -56,11 +59,12 @@
 
     <Button
         android:id="@+id/btnRejectNight"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="Reject"
         app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintStart_toEndOf="@id/btnAcceptNight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

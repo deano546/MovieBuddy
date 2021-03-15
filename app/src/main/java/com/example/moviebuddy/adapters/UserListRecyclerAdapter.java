@@ -2,6 +2,7 @@ package com.example.moviebuddy.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,31 +63,36 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
 
     @Override
     public void onBindViewHolder(@NonNull UserListRecyclerAdapter.MyViewHolder holder, int position) {
+        Log.d("CANISEETHIS","HI");
 
 
+        if(userList.isEmpty()) {
+            holder.tvUsername.setText("No Results!");
+        }
+        else {
+            JSONParser jsonParser = new JSONParser();
 
+            holder.tvUsername.setText(userList.get(position).getUsername());
+            holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jsonParser.sendFriendRequest(context, new JSONParser.sendFriendRequestResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(context, "Request Sent!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(context, MainActivity.class);
+                            context.startActivity(intent);
+                        }
 
-        JSONParser jsonParser = new JSONParser();
+                        @Override
+                        public void onResponse(String friendRequest) {
 
-        holder.tvUsername.setText(userList.get(position).getUsername());
-        holder.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jsonParser.sendFriendRequest(context, new JSONParser.sendFriendRequestResponseListener() {
-                    @Override
-                    public void onError(String message) {
-                        Toast.makeText(context, "Request Sent!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
-                    }
+                        }
+                    },SQLID,String.valueOf(userList.get(position).getId()));
+                }
+            });
+        }
 
-                    @Override
-                    public void onResponse(String friendRequest) {
-
-                    }
-                },SQLID,String.valueOf(userList.get(position).getId()));
-            }
-        });
     }
 
     @Override

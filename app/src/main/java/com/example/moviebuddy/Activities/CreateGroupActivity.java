@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,11 +54,9 @@ public class CreateGroupActivity extends AppCompatActivity {
         btnCreateGroup = findViewById(R.id.btnCreateGroup);
         etGroupName = findViewById(R.id.etNewGroup);
 
-
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         JSONParser jsonParser = new JSONParser();
-
 
         String ID = auth.getCurrentUser().getUid();
 
@@ -124,9 +123,11 @@ public class CreateGroupActivity extends AppCompatActivity {
                             Log.d("WANNASEE",message);
                             switch (message) {
                                 case "Not Unique":
-                                    Toast.makeText(CreateGroupActivity.this, "This group name is already taken", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CreateGroupActivity.this, "This group name is already taken, please choose a different one", Toast.LENGTH_SHORT).show();
                                     break;
                                 case "Unique":
+                                    //Start dialog box here
+
                                     jsonParser.createGroup(CreateGroupActivity.this, new JSONParser.CreateGroupResponseListener() {
                                         @Override
                                         public void onError(String message) {
@@ -158,6 +159,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                                                     }
                                                     etGroupName.getText().clear();
                                                     Toast.makeText(CreateGroupActivity.this, "Group Created!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(CreateGroupActivity.this,GroupActivity.class);
+                                                    startActivity(intent);
 
                                                 }
                                             },groupname.toUpperCase());
@@ -181,7 +184,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
                 }
                 else {
-                    Toast.makeText(CreateGroupActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateGroupActivity.this, "Error - Please choose Members and Give a Group Name!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -8,10 +8,11 @@
 
     <TextView
         android:id="@+id/tvUsername"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Gaby G"
+        android:textAlignment="center"
         android:textColor="#70FFFFFF"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/view3"
@@ -21,7 +22,7 @@
 
     <Button
         android:id="@+id/btnAddFriend"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Add"

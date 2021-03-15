@@ -452,6 +452,9 @@ public class JSONParser {
 
                         JSONArray jsonArray = response.getJSONArray("items");
                         Log.d("JSONARRAY",jsonArray.length() + "");
+                        if(jsonArray.length() == 0) {
+                            watchListResponseListener.onResponse(watchlist);
+                        }
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject movie = jsonArray.getJSONObject(i);
                             int id = Integer.parseInt(movie.getString("movieid"));

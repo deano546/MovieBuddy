@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnLogOut = findViewById(R.id.btnLogOut);
+        TextView tvCurrentUser = findViewById(R.id.tvCurrentUser);
 
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                          SQLID = document.get("id").toString();
+                         tvCurrentUser.setText(document.get("username").toString());
 
                         //This retrieves any upcoming user nights for the user by passing their ID
                         jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {

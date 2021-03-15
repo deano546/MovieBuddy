@@ -172,6 +172,12 @@ public class LogInActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+                    etEmail.setError("Please enter a valid email");
+                    etEmail.requestFocus();
+                    return;
+                }
+
                 auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
