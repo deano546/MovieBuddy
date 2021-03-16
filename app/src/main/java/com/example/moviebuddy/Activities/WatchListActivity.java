@@ -1,15 +1,26 @@
 package com.example.moviebuddy.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,11 +48,9 @@ import static android.view.View.VISIBLE;
 
 public class WatchListActivity extends AppCompatActivity {
 
-
-
     //Setting up recyclerview, mainly adapted from my IS4447 project
     RecyclerView rvMovieList;
-    RecyclerView.Adapter mAdapter;
+    WatchListRecyclerAdapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
     List<Movie> movieList = new ArrayList<>();
     FirebaseAuth auth;
@@ -53,6 +62,19 @@ public class WatchListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watch_list);
+
+        EditText etSearch = findViewById(R.id.etSearchWatchlist);
+
+
+
+//        ActionBar actionBar;
+//        actionBar = getSupportActionBar();
+//
+//        //setTitle("Watchlist");
+//       actionBar.setBackgroundDrawable(getDrawable(R.drawable.solidblack));
+//       actionBar.setTitle(Html.fromHtml("<font color=\"grey\">" + "Watchlist" + "</font>"));
+//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        actionBar.setCustomView(R.layout.abs_layout);
 
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -97,12 +119,26 @@ public class WatchListActivity extends AppCompatActivity {
                                 else {
                                     movieList = movies;
                                     updateRecycler();
+                                    etSearch.addTextChangedListener(new TextWatcher() {
+                                        @Override
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                        }
+
+                                        @Override
+                                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                            mAdapter.getFilter().filter(s.toString());
+                                        }
+
+                                        @Override
+                                        public void afterTextChanged(Editable s) {
+
+                                        }
+                                    });
                                 }
 
                             }
                         },Integer.parseInt(SQLID));
-
-
 
                     }
                 }
@@ -143,12 +179,6 @@ public class WatchListActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
     }
 
     public void updateRecycler() {
@@ -159,6 +189,28 @@ public class WatchListActivity extends AppCompatActivity {
 
         mAdapter = new WatchListRecyclerAdapter(movieList, WatchListActivity.this);
         rvMovieList.setAdapter(mAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setBackgroundColor(Color.DKGRAY);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
     }
 
 }

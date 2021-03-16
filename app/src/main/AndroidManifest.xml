@@ -32,7 +32,8 @@
         <activity android:name=".Activities.NotifyActivity" />
         <activity android:name=".Activities.MovieActivity" />
         <activity android:name=".Activities.GroupActivity" />
-        <activity android:name=".Activities.WatchListActivity" />
+        <activity android:name=".Activities.WatchListActivity"
+            />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

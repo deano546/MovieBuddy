@@ -1,7 +1,6 @@
 package com.example.moviebuddy.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +18,6 @@ import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.UpcomingNightRecyclerAdapter;
 import com.example.moviebuddy.adapters.UpcomingRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
-import com.example.moviebuddy.dataaccess.MovieDataAccess;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 import com.firebase.ui.auth.AuthUI;
@@ -98,29 +96,49 @@ public class MainActivity extends AppCompatActivity {
                          SQLID = document.get("id").toString();
                          tvCurrentUser.setText(document.get("username").toString());
 
-                        //This retrieves any upcoming user nights for the user by passing their ID
-                        jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
-                            @Override
-                            public void onError(String message) {
-                                Log.d("error1234",message);
-                            }
+                         jsonParser.getapprovedandtruenightbyuserid(MainActivity.this, new JSONParser.getapprovedandtruenightbyuseridResponseListener() {
+                             @Override
+                             public void onError(String message) {
 
-                            @Override
-                            public void onResponse(List<GroupNight> groupNight) {
-                                //Once the data is retrieved, the recycler view is populated
-                                nightsource = groupNight;
-                                Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
-                                nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
-                                NightHorizontalLayout = new LinearLayoutManager(
-                                        MainActivity.this,
-                                        LinearLayoutManager.HORIZONTAL,
-                                        false);
-                                grouprecycler.setLayoutManager(NightHorizontalLayout);
-                                grouprecycler.setAdapter(nightadapter);
+                             }
 
+                             @Override
+                             public void onResponse(List<GroupNight> groupList) {
+                                 nightsource = groupList;
+                                 Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
+                                 nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
+                                 NightHorizontalLayout = new LinearLayoutManager(
+                                         MainActivity.this,
+                                         LinearLayoutManager.HORIZONTAL,
+                                         false);
+                                 grouprecycler.setLayoutManager(NightHorizontalLayout);
+                                 grouprecycler.setAdapter(nightadapter);
+                             }
+                         },SQLID);
 
-                            }
-                        },Integer.parseInt(SQLID));
+//                        //This retrieves any upcoming user nights for the user by passing their ID
+//                        jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
+//                            @Override
+//                            public void onError(String message) {
+//                                Log.d("error1234",message);
+//                            }
+//
+//                            @Override
+//                            public void onResponse(List<GroupNight> groupNight) {
+//                                //Once the data is retrieved, the recycler view is populated
+//                                nightsource = groupNight;
+//                                Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
+//                                nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
+//                                NightHorizontalLayout = new LinearLayoutManager(
+//                                        MainActivity.this,
+//                                        LinearLayoutManager.HORIZONTAL,
+//                                        false);
+//                                grouprecycler.setLayoutManager(NightHorizontalLayout);
+//                                grouprecycler.setAdapter(nightadapter);
+//
+//
+//                            }
+//                        },Integer.parseInt(SQLID));
 
                     }
                 }

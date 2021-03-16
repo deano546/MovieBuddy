@@ -46,7 +46,7 @@ import static android.view.View.VISIBLE;
 
 public class PendingNightActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    Button btnDate, btnTime, btnView, btnAccept, btnDecline, btnSuggest;
+    Button btnDate, btnTime, btnView, btnAccept, btnDecline, btnSuggest, btnDeleteNight;
     TextView tvMovie, tvDate, tvTime, tvAccepted, tvDeclined, tvPending, tvAlreadyAccepted, tvCurrentGroup, tvSuggestDate, tvSuggestTime;
     String movieid, movietitle, date, time, returnedminute, returneddate, returnedmonth, groupid, groupnightid;
     int Counter;
@@ -81,6 +81,9 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         tvPending = findViewById(R.id.tvAccepted3);
         tvAlreadyAccepted = findViewById(R.id.tvalreadyAccepted);
         tvCurrentGroup = findViewById(R.id.tvCurrentGroupPending);
+        btnDeleteNight = findViewById(R.id.btnDeleteNight);
+
+        btnDeleteNight.setVisibility(View.INVISIBLE);
 
         tvAlreadyAccepted.setVisibility(View.INVISIBLE);
         btnSuggest.setAlpha(.5f);
@@ -92,7 +95,24 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
         JSONParser jsonParser = new JSONParser();
 
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            movieid = extras.getString("MOVIEIDP");
+            Log.d("CHECKPENDING",movieid);
+            movietitle = extras.getString("MOVIETITLE");
+            groupid = extras.getString("GROUPID");
+            groupnightid = extras.getString("GROUPNIGHTID");
+            tvMovie.setText(movietitle);
+            date = extras.getString("DATE");
+            time = extras.getString("TIME");
+            tvDate.setText(date);
+            tvTime.setText(time);
+            tvCurrentGroup.setText(extras.getString("GROUPNAME"));
+            Toast.makeText(this, extras.getString("CREATORID"), Toast.LENGTH_SHORT).show();
+//            if(SQLID.matches(extras.getString("CREATORID"))) {
+//                btnDeleteNight.setVisibility(VISIBLE);
+//            }
+        }
 
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -107,6 +127,60 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         SQLID = document.get("id").toString();
+
+                        if(SQLID.matches(extras.getString("CREATORID"))) {
+                            btnDeleteNight.setVisibility(VISIBLE);
+                            btnDeleteNight.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    AlertDialog.Builder alertName = new AlertDialog.Builder(PendingNightActivity.this, R.style.MyDialogTheme);
+                                    // final EditText editTextName1 = new EditText(context);
+                                    // add line after initializing editTextName1
+                                    //editTextName1.setHint("Please Enter your email");
+                                    //editTextName1.setTextColor(Color.GRAY);
+
+                                    alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to delete this movie night?</font>"));
+                                    // titles can be used regardless of a custom layout or not
+                                    // alertName.setView(editTextName1);
+                                    LinearLayout layoutName = new LinearLayout(PendingNightActivity.this);
+                                    layoutName.setOrientation(LinearLayout.VERTICAL);
+                                    //layoutName.addView(editTextName1); // displays the user input bar
+                                    alertName.setView(layoutName);
+
+                                    alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                                            jsonParser.updateGroupNight(PendingNightActivity.this, new JSONParser.updateGroupNightResponseListener() {
+                                        @Override
+                                        public void onError(String message) {
+                                            Toast.makeText(PendingNightActivity.this, "Night Deleted!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
+                                            startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onResponse(String message) {
+
+                                        }
+                                    },groupnightid,"01/01/20","00.00");
+
+                                        }
+                                    });
+
+                                    alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                                        }
+                                    });
+
+
+                                    alertName.show();
+
+                                }
+                            });
+                        }
 
                     }
                 }
@@ -131,21 +205,9 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         });
 
 
-        Bundle extras = getIntent().getExtras();
 
-        if (extras != null) {
-            movieid = extras.getString("MOVIEIDP");
-            Log.d("CHECKPENDING",movieid);
-            movietitle = extras.getString("MOVIETITLE");
-            groupid = extras.getString("GROUPID");
-            groupnightid = extras.getString("GROUPNIGHTID");
-            tvMovie.setText(movietitle);
-            date = extras.getString("DATE");
-            time = extras.getString("TIME");
-            tvDate.setText(date);
-            tvTime.setText(time);
-            tvCurrentGroup.setText(extras.getString("GROUPNAME"));
-        }
+
+
 
 
         btnSuggest.setOnClickListener(new View.OnClickListener() {

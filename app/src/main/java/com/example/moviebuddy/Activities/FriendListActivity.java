@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +60,7 @@ public class FriendListActivity extends AppCompatActivity {
         //Assignments
         etUserSearch = findViewById(R.id.etUserSearch);
         btnSearch = findViewById(R.id.btnSearchUser);
+        Button btnViewFriends = findViewById(R.id.btnViewFriends);
 
 
         auth = FirebaseAuth.getInstance();
@@ -78,6 +80,14 @@ public class FriendListActivity extends AppCompatActivity {
                         SQLID = document.get("id").toString();
                     }
                 }
+            }
+        });
+
+        btnViewFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FriendListActivity.this,CurrentFriendsActivity.class);
+                startActivity(intent);
             }
         });
 

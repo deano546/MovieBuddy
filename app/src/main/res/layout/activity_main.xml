@@ -83,17 +83,18 @@
         android:layout_width="fill_parent"
 
         android:layout_height="1dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvGroupNight"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvGroupNight" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGroupNight"
         android:layout_width="394dp"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         app:layout_constraintBottom_toTopOf="@+id/view4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +118,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
         android:textColor="#70FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btnLogOut"
         app:layout_constraintEnd_toEndOf="@+id/btnLogOut"

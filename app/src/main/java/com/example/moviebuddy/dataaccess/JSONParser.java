@@ -2,6 +2,7 @@ package com.example.moviebuddy.dataaccess;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -25,7 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -399,15 +402,10 @@ public class JSONParser {
                                             Log.d("CHECKINGIF",groupnightList.toString());
                                         }
 
-
-
                                     }
                                 },id);
 
                             }
-
-
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -476,8 +474,6 @@ public class JSONParser {
                                         watchListResponseListener.onResponse(watchlist);
 
                                     }
-
-
 
                                 }
                             },id);
@@ -1174,7 +1170,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     //This sends a friend request
     public void sendFriendRequest(Context context, sendFriendRequestResponseListener sendfriendrequestResponseListener, String senderid, String receiverid) {
-        ;
+
         RequestQueue mQueue = Volley.newRequestQueue(context);
         String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/sendfriendrequest/" + senderid + "?passedrequest=" + receiverid;
 
@@ -2019,21 +2015,6 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
                                     JSONObject groupnight = jsonArray.getJSONObject(i);
                                     groupNight1 = new GroupNight();
-                                    if(groupnight.isNull("groupnightid")) {
-                                        groupNight1.setId(String.valueOf(0));
-                                    }
-                                    else {
-                                        groupNight1.setId(groupnight.getString("groupnightid"));
-                                    }
-
-                                    groupNight1.setGroupName(groupnight.getString("groupname"));
-                                    String date = groupnight.getString("groupnightdate");
-                                    Log.d("MOVIEDATE2",date);
-                                    groupNight1.setDate(date);
-
-                                    String time = groupnight.getString("groupnighttime");
-                                    groupNight1.setTime(time);
-                                    Log.d("MOVIETIME3",time);
 
                                     if(groupnight.isNull("fullapproval")) {
                                         groupNight1.setApproval("Nope");
@@ -2044,24 +2025,70 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                                         groupNight1.setApproval(approval);
                                     }
 
+                                    if(groupnight.isNull("groupnightid")) {
+                                        groupNight1.setId(String.valueOf(0));
+                                    }
+                                    else {
+                                        groupNight1.setId(groupnight.getString("groupnightid"));
+                                    }
 
-
+                                    groupNight1.setGroupName(groupnight.getString("groupname"));
                                     String groupid = groupnight.getString("groupid");
                                     Log.d("MOVIENIGHTGROUPIDJSON", groupnight.getString("groupid"));
                                     groupNight1.setGroupid(groupid);
 
-                                    if(groupnight.isNull("movieid")) {
+                                    String date = groupnight.getString("groupnightdate");
+                                    Log.d("DATELENGTH",date);
+                                    if(!groupnight.isNull("groupnightdate")) {
+                                        String daydate = date.substring(0,2);
+                                        String monthdate = date.substring(3,5);
+                                        String selectedyear = "20" + date.substring(6,8);
+
+                                        Calendar c = Calendar.getInstance();
+                                        c.set(Calendar.YEAR, Integer.parseInt(selectedyear));
+                                        c.set(Calendar.MONTH, Integer.parseInt(monthdate));
+                                        c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(daydate));
+                                        String currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(c.getTime());
+
+                                        if(c.getTimeInMillis() < System.currentTimeMillis() - 10000) {
+                                            groupNight1.setId(String.valueOf(0));
+                                            groupNight1.setApproval("Nope");
+                                            ultralist.add(groupNight1);
+                                            continue;
+                                        }
+                                        else {
+                                            Log.d("MOVIEDATE2",date);
+                                            groupNight1.setDate(date);
+
+                                            String time = groupnight.getString("groupnighttime");
+                                            groupNight1.setTime(time);
+                                            Log.d("MOVIETIME3",time);
+
+
+                                            if(groupnight.isNull("movieid")) {
+                                                ultralist.add(groupNight1);
+                                                continue;
+                                            }
+                                            else {
+                                                Movieid = Integer.parseInt(groupnight.getString("movieid"));
+                                                Log.d("MOVIEIDJSON5",Movieid + "");
+                                                groupNight1.setMovieid(String.valueOf(Movieid));
+                                                String creatorid = groupnight.getString("creatorid");
+                                                groupNight1.setCreatorid(creatorid);
+                                            }
+
+                                            Log.d("UHOHLIST2",ultralist.toString());
+                                            ultralist.add(groupNight1);
+                                    }
+
+                                    }
+                                    else {
+                                        groupNight1.setId(String.valueOf(0));
+                                        groupNight1.setApproval("Nope");
                                         ultralist.add(groupNight1);
                                         continue;
                                     }
-                                    else {
-                                        Movieid = Integer.parseInt(groupnight.getString("movieid"));
-                                        Log.d("MOVIEIDJSON5",Movieid + "");
-                                        groupNight1.setMovieid(String.valueOf(Movieid));
-                                    }
 
-                                    Log.d("UHOHLIST2",ultralist.toString());
-                                    ultralist.add(groupNight1);
 
                                 }
 
@@ -2250,6 +2277,165 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
         void onError(String message);
 
         void onResponse(String message);
+    }
+
+    //Updates a record in the user movie table and adds a rating
+    public void deleteFriend(Context context, deleteFriendResponseListener rejectfriendrequestResponseListener, int userid, int senderid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String rejectrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deltefriend/" + userid + "?secondid=" + senderid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, rejectrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        rejectfriendrequestResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                rejectfriendrequestResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface deleteFriendResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public interface getapprovedandtruenightbyuseridResponseListener {
+        void onError (String message);
+
+        void onResponse(List<GroupNight> groupList);
+    }
+
+    public void getapprovedandtruenightbyuserid(Context context, getapprovedandtruenightbyuseridResponseListener getgroupResponseListener, String id) {
+        ultralist.clear();
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+        String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/approvedandtruegroupnightsbyuserid/" + id;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("items");
+
+                            if (jsonArray.length() == 0)  {
+                                GroupNight group1 = new GroupNight();
+                                group1.setGroupName("No Groups Yet!");
+                                group1.setApproval("Nope");
+                                ultralist.add(group1);
+                                getgroupResponseListener.onResponse(ultralist);
+                            }
+                            else {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+
+                                    JSONObject groupnight = jsonArray.getJSONObject(i);
+                                    groupNight1 = new GroupNight();
+
+                                    if(groupnight.isNull("fullapproval")) {
+                                        groupNight1.setApproval("Nope");
+                                    }
+                                    else {
+                                        String approval = groupnight.getString("fullapproval");
+                                        Log.d("approvalJSON4",approval);
+                                        groupNight1.setApproval(approval);
+                                    }
+
+                                    if(groupnight.isNull("groupnightid")) {
+                                        groupNight1.setId(String.valueOf(0));
+                                    }
+                                    else {
+                                        groupNight1.setId(groupnight.getString("groupnightid"));
+                                    }
+
+                                    groupNight1.setGroupName(groupnight.getString("groupname"));
+                                    String groupid = groupnight.getString("groupid");
+                                    Log.d("MOVIENIGHTGROUPIDJSON", groupnight.getString("groupid"));
+                                    groupNight1.setGroupid(groupid);
+
+                                    String date = groupnight.getString("groupnightdate");
+                                    Log.d("DATELENGTH",date);
+                                    if(!groupnight.isNull("groupnightdate")) {
+                                        String daydate = date.substring(0,2);
+                                        String monthdate = date.substring(3,5);
+                                        String selectedyear = "20" + date.substring(6,8);
+
+                                        Calendar c = Calendar.getInstance();
+                                        c.set(Calendar.YEAR, Integer.parseInt(selectedyear));
+                                        c.set(Calendar.MONTH, Integer.parseInt(monthdate));
+                                        c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(daydate));
+                                        String currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(c.getTime());
+
+                                        if(c.getTimeInMillis() < System.currentTimeMillis() - 10000) {
+                                            groupNight1.setId(String.valueOf(0));
+                                            groupNight1.setApproval("Nope");
+                                            ultralist.add(groupNight1);
+                                            continue;
+                                        }
+                                        else {
+                                            Log.d("MOVIEDATE2",date);
+                                            groupNight1.setDate(date);
+
+                                            String time = groupnight.getString("groupnighttime");
+                                            groupNight1.setTime(time);
+                                            Log.d("MOVIETIME3",time);
+
+
+                                            if(groupnight.isNull("movieid")) {
+                                                ultralist.add(groupNight1);
+                                                continue;
+                                            }
+                                            else {
+                                                Movieid = Integer.parseInt(groupnight.getString("movieid"));
+                                                Log.d("MOVIEIDJSON5",Movieid + "");
+                                                groupNight1.setMovieid(String.valueOf(Movieid));
+                                                String creatorid = groupnight.getString("creatorid");
+                                                groupNight1.setCreatorid(creatorid);
+                                            }
+
+                                            Log.d("UHOHLIST2",ultralist.toString());
+                                            ultralist.add(groupNight1);
+                                        }
+
+                                    }
+                                    else {
+                                        groupNight1.setId(String.valueOf(0));
+                                        groupNight1.setApproval("Nope");
+                                        ultralist.add(groupNight1);
+                                        continue;
+                                    }
+
+
+                                }
+
+                                getgroupResponseListener.onResponse(ultralist);
+                            }
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("****", String.valueOf(e));
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getgroupResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
     }
 
 

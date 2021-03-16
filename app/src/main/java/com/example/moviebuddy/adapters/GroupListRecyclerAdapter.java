@@ -94,6 +94,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                             intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
                             intent.putExtra("MOVIEID", passedmovieid1);
                             intent.putExtra("MOVIETITLE", passedmovietitle1);
+                            intent.putExtra("CREATORID",groupList.get(position).getCreatorid());
                             context.startActivity(intent);
                         }
                     });
@@ -129,6 +130,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                                         Log.d("CHECKBUTTONEXTRAS5", title);
                                         intent.putExtra("DATE", groupList.get(position).getDate());
                                         intent.putExtra("TIME", groupList.get(position).getTime());
+                                        intent.putExtra("CREATORID",groupList.get(position).getCreatorid());
                                         context.startActivity(intent);
                                     }
                                 });
@@ -154,6 +156,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                                         Log.d("CHECKBUTTONEXTRAS5", title);
                                         intent.putExtra("DATE", groupList.get(position).getDate());
                                         intent.putExtra("TIME", groupList.get(position).getTime());
+                                        intent.putExtra("CREATORID",groupList.get(position).getCreatorid());
                                         context.startActivity(intent);
                                     }
                                 });

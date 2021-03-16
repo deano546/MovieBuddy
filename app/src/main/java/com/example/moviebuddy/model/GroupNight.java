@@ -10,6 +10,7 @@ public class GroupNight {
     private String time;
     private String approval;
     private String movieid;
+    private String creatorid;
 
     public GroupNight(String id, String movieTitle, String date, String groupName, String groupid, String time, String approval, String movieid) {
         this.id = id;
@@ -20,6 +21,26 @@ public class GroupNight {
         this.time = time;
         this.approval = approval;
         this.movieid = movieid;
+    }
+
+    public GroupNight(String id, String movieTitle, String date, String groupName, String groupid, String time, String approval, String movieid, String creatorid) {
+        this.id = id;
+        MovieTitle = movieTitle;
+        Date = date;
+        GroupName = groupName;
+        this.groupid = groupid;
+        this.time = time;
+        this.approval = approval;
+        this.movieid = movieid;
+        this.creatorid = creatorid;
+    }
+
+    public String getCreatorid() {
+        return creatorid;
+    }
+
+    public void setCreatorid(String creatorid) {
+        this.creatorid = creatorid;
     }
 
     public String getGroupid() {
@@ -108,6 +129,7 @@ public class GroupNight {
                 ", time='" + time + '\'' +
                 ", approval='" + approval + '\'' +
                 ", movieid='" + movieid + '\'' +
+                ", creatorid='" + creatorid + '\'' +
                 '}';
     }
 

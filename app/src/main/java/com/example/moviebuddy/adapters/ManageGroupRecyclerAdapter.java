@@ -1,11 +1,15 @@
 package com.example.moviebuddy.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviebuddy.Activities.AddtoGroupActivity;
+import com.example.moviebuddy.Activities.CreateGroupActivity;
 import com.example.moviebuddy.Activities.GroupActivity;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
@@ -69,6 +74,24 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
             holder.btnLeaveGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
+                    // final EditText editTextName1 = new EditText(context);
+                    // add line after initializing editTextName1
+                    //editTextName1.setHint("Please Enter your email");
+                    //editTextName1.setTextColor(Color.GRAY);
+
+                    alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to leave " + groupList.get(position).getGroupname() + "?</font>"));
+                    // titles can be used regardless of a custom layout or not
+                    // alertName.setView(editTextName1);
+                    LinearLayout layoutName = new LinearLayout(context);
+                    layoutName.setOrientation(LinearLayout.VERTICAL);
+                    //layoutName.addView(editTextName1); // displays the user input bar
+                    alertName.setView(layoutName);
+
+                    alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
                     jsonParser.deleteUserGroup(context, new JSONParser.deleteUserGroupResponseListener() {
                         @Override
                         public void onError(String message) {
@@ -82,6 +105,22 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
 
                         }
                     },userID,String.valueOf(groupList.get(position).getId()));
+
+                        }
+                    });
+
+                    alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                        }
+                    });
+
+
+                    alertName.show();
+
+
+
                 }
             });
 

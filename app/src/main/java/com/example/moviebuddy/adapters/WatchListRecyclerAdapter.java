@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -36,17 +38,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecyclerAdapter.MyViewHolder> {
+public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecyclerAdapter.MyViewHolder> implements Filterable {
 
     //This adapter is used in the watch list activity
     //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
     List<Movie> movieList;
+    List<Movie> movieListFull;
     Context context;
     String SQLID;
     FirebaseAuth auth;
@@ -55,6 +59,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
     public WatchListRecyclerAdapter(List<Movie> movieList, Context context) {
         this.movieList = movieList;
         this.context = context;
+        movieListFull = new ArrayList<>(movieList);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -173,6 +178,47 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
     public int getItemCount() {
         return movieList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Movie> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(movieListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Movie movie : movieListFull) {
+                    if (movie.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(movie);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            movieList.clear();
+            movieList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+
+
+    };
+
+
+
+
+
+
+
 
 
 }

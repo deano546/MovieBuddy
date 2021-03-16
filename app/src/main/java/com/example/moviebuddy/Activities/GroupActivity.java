@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.GroupListRecyclerAdapter;
 import com.example.moviebuddy.dataaccess.JSONParser;
-import com.example.moviebuddy.dataaccess.MovieDataAccess;
-import com.example.moviebuddy.model.Group;
 import com.example.moviebuddy.model.GroupNight;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
