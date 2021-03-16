@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    tools:context=".Activities.UpcomingNightActivity">
+
+    <TextView
+        android:id="@+id/tvCurrentGroupApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="OG BIS"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#70FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnViewApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="View Movie"
+        app:layout_constraintBottom_toTopOf="@+id/tvAcceptedApproved"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectedTimeApproved" />
+
+    <Button
+        android:id="@+id/btnSuggestChangeInvis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suggest Change"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnViewApproved" />
+
+    <TextView
+        android:id="@+id/tvSelectedMovieLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="Movie"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvSelectedDateLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCurrentGroupApproved" />
+
+    <TextView
+        android:id="@+id/tvSelectedDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Date"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvSelectedTimeLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectedMovieLabel" />
+
+    <TextView
+        android:id="@+id/tvSelectedTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Time"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectedDateLabel"
+        app:layout_constraintBottom_toTopOf="@id/btnViewApproved"/>
+
+    <TextView
+        android:id="@+id/tvSelectedMovieApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSelectedMovieLabel"
+        app:layout_constraintTop_toTopOf="@+id/tvSelectedMovieLabel" />
+
+    <TextView
+        android:id="@+id/tvSelectedDateApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/tvSelectedTimeApproved"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSelectedDateLabel"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectedMovieApproved" />
+
+    <TextView
+        android:id="@+id/tvSelectedTimeApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSelectedTimeLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSelectedTimeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectedDateApproved" />
+
+    <TextView
+        android:id="@+id/tvAcceptedApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="6dp"
+        android:text="Accepted By:"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSuggestChangeInvis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectedTimeLabel" />
+
+    <TextView
+        android:id="@+id/tvDeclinedApproved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Declined By:"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAcceptedApproved" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

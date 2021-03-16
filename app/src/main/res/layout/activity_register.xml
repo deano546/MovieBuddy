@@ -28,8 +28,10 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="#70FFFFFF"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         app:layout_constraintBottom_toTopOf="@id/btnRegisterNew"
         app:layout_constraintEnd_toEndOf="parent"
+        android:maxLength="30"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/etregisteremail"
         app:layout_constraintTop_toBottomOf="@+id/etregisterpassword" />
@@ -58,6 +60,7 @@
         android:ems="10"
         android:inputType="textWebEmailAddress"
         android:textColor="#70FFFFFF"
+        android:maxLength="30"
         app:layout_constraintBottom_toTopOf="@id/etregisterpassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvCurrentGroup"

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviebuddy.Activities.MovieNightActivity;
 import com.example.moviebuddy.Activities.PendingNightActivity;
+import com.example.moviebuddy.Activities.UpcomingNightActivity;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.Group;
@@ -116,7 +117,19 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                                 holder.btnSuggest.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(context, UpcomingNightActivity.class);
+                                        intent.putExtra("GROUPNIGHTID", groupList.get(position).getId());
+                                        Log.d("CHECKBUTTONEXTRAS2", groupList.get(position).getId() + "");
+                                        intent.putExtra("GROUPID",groupList.get(position).getGroupid());
+                                        intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
+                                        Log.d("CHECKBUTTONEXTRAS3", groupList.get(position).getGroupName());
+                                        intent.putExtra("MOVIEIDP", groupList.get(position).getMovieid());
+                                        Log.d("CHECKBUTTONEXTRAS4", groupList.get(position).getMovieid());
+                                        intent.putExtra("MOVIETITLE", title);
+                                        Log.d("CHECKBUTTONEXTRAS5", title);
+                                        intent.putExtra("DATE", groupList.get(position).getDate());
+                                        intent.putExtra("TIME", groupList.get(position).getTime());
+                                        context.startActivity(intent);
                                     }
                                 });
 

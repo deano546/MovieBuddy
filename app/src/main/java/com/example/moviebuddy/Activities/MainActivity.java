@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     String SQLID;
 
     Button btnLogOut;
+    Button btnCredits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +72,21 @@ public class MainActivity extends AppCompatActivity {
 
         btnLogOut = findViewById(R.id.btnLogOut);
         TextView tvCurrentUser = findViewById(R.id.tvCurrentUser);
+        btnCredits = findViewById(R.id.btnCredits);
 
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         JSONParser jsonParser = new JSONParser();
 
         String ID = auth.getCurrentUser().getUid();
+
+        btnCredits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,CreditsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Search Users"
+        android:inputType="textPersonName"
         android:textColor="#70FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/rvUsers"
         app:layout_constraintEnd_toStartOf="@+id/btnSearchUser"
@@ -25,6 +25,7 @@
         android:id="@+id/rvUsers"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +33,11 @@
 
     <Button
         android:id="@+id/btnSearchUser"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginTop="3dp"
-        android:text="Search"
+        android:layout_marginBottom="48dp"
+        app:icon="@drawable/ic_baseline_search_24"
         app:layout_constraintBottom_toTopOf="@+id/rvUsers"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/etUserSearch"
@@ -52,5 +54,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rvUsers" />
+
+    <Button
+        android:id="@+id/btnViewFriends"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="View Friend List"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etUserSearch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

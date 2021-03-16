@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="56dp"
+        android:maxLength="30"
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="#70FFFFFF"

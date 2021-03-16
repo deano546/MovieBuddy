@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.VISIBLE;
 
 
 public class WatchListActivity extends AppCompatActivity {
@@ -45,7 +47,7 @@ public class WatchListActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore fStore;
     String SQLID;
-    TextView tvWatchlist;
+    TextView tvWatchlist, tvEmptyWatchlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class WatchListActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         String ID = auth.getCurrentUser().getUid();
         tvWatchlist = findViewById(R.id.tvWatchlistHeading);
+        tvEmptyWatchlist = findViewById(R.id.tvEmptyWatchlist);
+        tvEmptyWatchlist.setVisibility(View.INVISIBLE);
 
         rvMovieList = findViewById(R.id.rvWatchlist);
 
@@ -88,7 +92,7 @@ public class WatchListActivity extends AppCompatActivity {
                                 Log.d("WATCHLISTSIZE2",movieList.size() + "");
                                 //Once list is retrieved, it is displayed in the recycler
                                 if(movies.size() == 0) {
-                                    tvWatchlist.setText("Watchlist - Empty!");
+                                    tvEmptyWatchlist.setVisibility(VISIBLE);
                                 }
                                 else {
                                     movieList = movies;

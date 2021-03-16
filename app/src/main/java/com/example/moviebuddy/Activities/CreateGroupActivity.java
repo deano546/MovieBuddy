@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -92,10 +96,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         //This button calls 3 methods. The first creates a group in my group table, then, it retrieves the ID of the newly created group, lastly, it takes that ID and each of the selected users and inserts them
         //into my usergroup table
         btnCreateGroup.setOnClickListener(new View.OnClickListener() {
@@ -127,53 +127,84 @@ public class CreateGroupActivity extends AppCompatActivity {
                                     break;
                                 case "Unique":
                                     //Start dialog box here
+                                    AlertDialog.Builder alertName = new AlertDialog.Builder(CreateGroupActivity.this, R.style.MyDialogTheme);
+                                    // final EditText editTextName1 = new EditText(context);
+                                    // add line after initializing editTextName1
+                                    //editTextName1.setHint("Please Enter your email");
+                                    //editTextName1.setTextColor(Color.GRAY);
 
-                                    jsonParser.createGroup(CreateGroupActivity.this, new JSONParser.CreateGroupResponseListener() {
-                                        @Override
-                                        public void onError(String message) {
-                                            Log.d("TAG",message);
+                                    alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to Create a Group with the selected users?</font>"));
+                                    // titles can be used regardless of a custom layout or not
+                                    // alertName.setView(editTextName1);
+                                    LinearLayout layoutName = new LinearLayout(CreateGroupActivity.this);
+                                    layoutName.setOrientation(LinearLayout.VERTICAL);
+                                    //layoutName.addView(editTextName1); // displays the user input bar
+                                    alertName.setView(layoutName);
 
-                                            jsonParser.getGroup(CreateGroupActivity.this, new JSONParser.getGroupIDResponseListener() {
+                                    alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                                            jsonParser.createGroup(CreateGroupActivity.this, new JSONParser.CreateGroupResponseListener() {
                                                 @Override
                                                 public void onError(String message) {
+                                                    Log.d("TAG",message);
+
+                                                    jsonParser.getGroup(CreateGroupActivity.this, new JSONParser.getGroupIDResponseListener() {
+                                                        @Override
+                                                        public void onError(String message) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onResponse(int groupid) {
+
+                                                            for (int i=0; i<selectedfriends.size(); i++)
+                                                            {
+
+                                                                jsonParser.createUserGroup(CreateGroupActivity.this, new JSONParser.CreateUserGroupResponseListener() {
+                                                                    @Override
+                                                                    public void onError(String message) {
+                                                                        Log.d("TAG",message);
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onResponse(String message) {
+                                                                        Log.d("TAG",message);
+                                                                    }
+                                                                },groupid,selectedfriends.get(i).getId());
+                                                            }
+                                                            etGroupName.getText().clear();
+                                                            Toast.makeText(CreateGroupActivity.this, "Group Created!", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(CreateGroupActivity.this,GroupActivity.class);
+                                                            startActivity(intent);
+
+                                                        }
+                                                    },groupname.toUpperCase());
+
+
 
                                                 }
 
                                                 @Override
-                                                public void onResponse(int groupid) {
-
-                                                    for (int i=0; i<selectedfriends.size(); i++)
-                                                    {
-
-                                                        jsonParser.createUserGroup(CreateGroupActivity.this, new JSONParser.CreateUserGroupResponseListener() {
-                                                            @Override
-                                                            public void onError(String message) {
-                                                                Log.d("TAG",message);
-                                                            }
-
-                                                            @Override
-                                                            public void onResponse(String message) {
-                                                                Log.d("TAG",message);
-                                                            }
-                                                        },groupid,selectedfriends.get(i).getId());
-                                                    }
-                                                    etGroupName.getText().clear();
-                                                    Toast.makeText(CreateGroupActivity.this, "Group Created!", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(CreateGroupActivity.this,GroupActivity.class);
-                                                    startActivity(intent);
-
+                                                public void onResponse(String message) {
+                                                    Log.d("TAG",message);
                                                 }
                                             },groupname.toUpperCase());
 
+                                        }
+                                    });
 
+                                    alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            dialog.cancel(); // closes dialog alertName.show() // display the dialog
 
                                         }
+                                    });
 
-                                        @Override
-                                        public void onResponse(String message) {
-                                            Log.d("TAG",message);
-                                        }
-                                    },groupname.toUpperCase());
+
+                                    alertName.show();
+
+
                                     break;
                             }
 

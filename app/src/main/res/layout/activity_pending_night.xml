@@ -71,11 +71,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:text="View Movie"
         app:layout_constraintBottom_toTopOf="@+id/tvAccepted"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvSelectedMoviePending"
+        app:layout_constraintStart_toStartOf="@+id/tvSelectedMoviePending"
         app:layout_constraintTop_toBottomOf="@+id/tvSelectedTimePending" />
 
     <Button
@@ -87,14 +87,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSelectedTimePending" />
+        app:layout_constraintTop_toBottomOf="@id/btnViewPending" />
 
     <TextView
         android:id="@+id/tvSelectedMovieLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="Movie"
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
@@ -168,7 +168,8 @@
         android:text="Accept"
         app:layout_constraintEnd_toStartOf="@+id/btnDecline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSuggestNightChange" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSuggestNightChange"
+        app:layout_constraintBottom_toTopOf="@id/tvSuggestDate"/>
 
     <Button
         android:id="@+id/btnDecline"
@@ -178,13 +179,15 @@
         android:text="Decline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btnAccept"
-        app:layout_constraintTop_toBottomOf="@+id/btnSuggestNightChange" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSuggestNightChange"
+        app:layout_constraintBottom_toTopOf="@id/tvSuggestDate"/>
 
     <TextView
         android:id="@+id/tvAccepted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="6dp"
         android:text="Accepted By:"
         android:textColor="#70FFFFFF"
@@ -198,6 +201,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:text="Declined By:"
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
@@ -222,11 +226,36 @@
         android:id="@+id/tvalreadyAccepted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Already Accepted!"
+        android:textColor="#70FFFFFF"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnSuggestNightChange" />
+
+    <TextView
+        android:id="@+id/tvSuggestDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Your suggested Date:"
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="@+id/btnSuggestNightChange" />
+        app:layout_constraintBottom_toTopOf="@id/tvSuggestTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAccept" />
+
+    <TextView
+        android:id="@+id/tvSuggestTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Your suggested Time:"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSuggestDate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

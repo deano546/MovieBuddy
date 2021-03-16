@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -38,10 +42,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static android.view.View.VISIBLE;
+
 public class PendingNightActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     Button btnDate, btnTime, btnView, btnAccept, btnDecline, btnSuggest;
-    TextView tvMovie, tvDate, tvTime, tvAccepted, tvDeclined, tvPending, tvAlreadyAccepted, tvCurrentGroup;
+    TextView tvMovie, tvDate, tvTime, tvAccepted, tvDeclined, tvPending, tvAlreadyAccepted, tvCurrentGroup, tvSuggestDate, tvSuggestTime;
     String movieid, movietitle, date, time, returnedminute, returneddate, returnedmonth, groupid, groupnightid;
     int Counter;
     FirebaseAuth auth;
@@ -51,12 +57,16 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
     private List<String> approvedusers = new ArrayList<>();
     private List<String> declinedusers = new ArrayList<>();
     private List<String> pendingusers = new ArrayList<>();
+    boolean timeselected, dateselected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_night);
-
+        timeselected =false;
+        dateselected = false;
+        tvSuggestDate = findViewById(R.id.tvSuggestDate);
+        tvSuggestTime = findViewById(R.id.tvSuggestTime);
         btnDate = findViewById(R.id.btnSelectDatePending);
         btnTime = findViewById(R.id.btnSelectTimePending);
         btnView = findViewById(R.id.btnViewPending);
@@ -71,6 +81,14 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         tvPending = findViewById(R.id.tvAccepted3);
         tvAlreadyAccepted = findViewById(R.id.tvalreadyAccepted);
         tvCurrentGroup = findViewById(R.id.tvCurrentGroupPending);
+
+        tvAlreadyAccepted.setVisibility(View.INVISIBLE);
+        btnSuggest.setAlpha(.5f);
+        btnSuggest.setClickable(false);
+
+
+        tvSuggestTime.setVisibility(View.INVISIBLE);
+        tvSuggestDate.setVisibility(View.INVISIBLE);
 
         JSONParser jsonParser = new JSONParser();
 
@@ -129,6 +147,97 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             tvCurrentGroup.setText(extras.getString("GROUPNAME"));
         }
 
+
+        btnSuggest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dateselected && timeselected) {
+
+                    AlertDialog.Builder alertName = new AlertDialog.Builder(PendingNightActivity.this, R.style.MyDialogTheme);
+                    // final EditText editTextName1 = new EditText(context);
+                    // add line after initializing editTextName1
+                    //editTextName1.setHint("Please Enter your email");
+                    //editTextName1.setTextColor(Color.GRAY);
+
+                    alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to suggest this change?</font>"));
+                    // titles can be used regardless of a custom layout or not
+                    // alertName.setView(editTextName1);
+                    LinearLayout layoutName = new LinearLayout(PendingNightActivity.this);
+                    layoutName.setOrientation(LinearLayout.VERTICAL);
+                    //layoutName.addView(editTextName1); // displays the user input bar
+                    alertName.setView(layoutName);
+
+                    alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            String date = tvSuggestDate.getText().toString();
+                            int datecounter = date.length();
+                            String passeddate = date.substring(21,datecounter);
+                            String time = tvSuggestTime.getText().toString();
+                            int timecounter = time.length();
+                            String passedtime = time.substring(21,timecounter);
+
+
+                            jsonParser.updateGroupNight(PendingNightActivity.this, new JSONParser.updateGroupNightResponseListener() {
+                                @Override
+                                public void onError(String message) {
+                                    Toast.makeText(PendingNightActivity.this, "Date/Time Updated", Toast.LENGTH_SHORT).show();
+                                    jsonParser.setapprovalsafterchange(PendingNightActivity.this, new JSONParser.setapprovalsafterchangeResponseListener() {
+                                        @Override
+                                        public void onError(String message) {
+                                            jsonParser.approveGroupNight(PendingNightActivity.this, new JSONParser.approveGroupNightResponseListener() {
+                                                @Override
+                                                public void onError(String message) {
+                                                    Intent intent = new Intent(PendingNightActivity.this,GroupActivity.class);
+                                                    startActivity(intent);
+                                                }
+
+                                                @Override
+                                                public void onResponse(String message) {
+
+                                                }
+                                            },SQLID,groupnightid);
+                                        }
+
+                                        @Override
+                                        public void onResponse(String message) {
+
+                                        }
+                                    },groupnightid);
+                                }
+
+                                @Override
+                                public void onResponse(String message) {
+
+                                }
+                            },groupnightid,passeddate,passedtime);
+
+                        }
+                    });
+
+                    alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                        }
+                    });
+
+
+                    alertName.show();
+
+
+                }
+                else{
+                    Toast.makeText(PendingNightActivity.this, "Please choose both a date and time to suggest", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+
+
+
         jsonParser.getGroupMembersforNight(PendingNightActivity.this, new JSONParser.getGroupMembersforNightResponseListener() {
             @Override
             public void onError(String message) {
@@ -141,12 +250,42 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                 for(GroupMember gmember: groupMemberList) {
                     if(gmember.getApproval().equals("True")) {
                         approvedusers.add(gmember.getUsername());
+                        Log.d("CHECKMEMBERS",gmember.toString());
+                        Log.d("CHECKCURRENTID",SQLID);
+                        if(gmember.getId().equals(SQLID)) {
+                            tvAlreadyAccepted.setVisibility(VISIBLE);
+                            btnSuggest.setEnabled(false);
+                            btnAccept.setAlpha(.5f);
+                            btnAccept.setClickable(false);
+                            btnDecline.setAlpha(.5f);
+                            btnDecline.setClickable(false);
+                            btnDate.setAlpha(.5f);
+                            btnDate.setClickable(false);
+                            btnTime.setAlpha(.5f);
+                            btnTime.setClickable(false);
+
+
+                        }
+
                     }
                     else if(gmember.getApproval().equals("False")) {
                         pendingusers.add(gmember.getUsername());
                     }
                     else if(gmember.getApproval().equals("Declined")) {
                         declinedusers.add(gmember.getUsername());
+                        if(gmember.getId().equals(SQLID)) {
+                            tvAlreadyAccepted.setText("Already Declined!");
+                            tvAlreadyAccepted.setVisibility(VISIBLE);
+                            btnSuggest.setEnabled(false);
+                            btnDecline.setAlpha(.5f);
+                            btnDecline.setClickable(false);
+                            btnDate.setAlpha(.5f);
+                            btnDate.setClickable(false);
+                            btnTime.setAlpha(.5f);
+                            btnTime.setClickable(false);
+
+
+                        }
                     }
                 }
                 //Add to activity
@@ -172,7 +311,25 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
             @Override
             public void onClick(View v) {
-                jsonParser.approveGroupNight(PendingNightActivity.this, new JSONParser.approveGroupNightResponseListener() {
+
+                AlertDialog.Builder alertName = new AlertDialog.Builder(PendingNightActivity.this, R.style.MyDialogTheme);
+                // final EditText editTextName1 = new EditText(context);
+                // add line after initializing editTextName1
+                //editTextName1.setHint("Please Enter your email");
+                //editTextName1.setTextColor(Color.GRAY);
+
+                alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to Accept this Movie Night?</font>"));
+                // titles can be used regardless of a custom layout or not
+                // alertName.setView(editTextName1);
+                LinearLayout layoutName = new LinearLayout(PendingNightActivity.this);
+                layoutName.setOrientation(LinearLayout.VERTICAL);
+                //layoutName.addView(editTextName1); // displays the user input bar
+                alertName.setView(layoutName);
+
+                alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        jsonParser.approveGroupNight(PendingNightActivity.this, new JSONParser.approveGroupNightResponseListener() {
                     @Override
                     public void onError(String message) {
                         Toast.makeText(PendingNightActivity.this, "Accepted!", Toast.LENGTH_SHORT).show();
@@ -180,7 +337,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                         jsonParser.getGroupNightApproval(PendingNightActivity.this, new JSONParser.getGroupNightApprovalResponseListener() {
                             @Override
                             public void onError(String message) {
-
                             }
 
                             @Override
@@ -214,6 +370,10 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                                     },groupnightid);
 
                                 }
+                                else{
+                                    Intent intent = new Intent(PendingNightActivity.this,GroupActivity.class);
+                                    startActivity(intent);
+                                }
 
                             }
                         },groupnightid);
@@ -225,16 +385,50 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
                     }
                 },SQLID,groupnightid);
+
+                    }
+                });
+
+                alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                    }
+                });
+
+
+                alertName.show();
+
+
+
             }
         });
 
         btnDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jsonParser.rejectGroupNight(PendingNightActivity.this, new JSONParser.rejectGroupNightResponseListener() {
+
+                AlertDialog.Builder alertName = new AlertDialog.Builder(PendingNightActivity.this, R.style.MyDialogTheme);
+                // final EditText editTextName1 = new EditText(context);
+                // add line after initializing editTextName1
+                //editTextName1.setHint("Please Enter your email");
+                //editTextName1.setTextColor(Color.GRAY);
+
+                alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to Decline this Movie Night?</font>"));
+                // titles can be used regardless of a custom layout or not
+                // alertName.setView(editTextName1);
+                LinearLayout layoutName = new LinearLayout(PendingNightActivity.this);
+                layoutName.setOrientation(LinearLayout.VERTICAL);
+                //layoutName.addView(editTextName1); // displays the user input bar
+                alertName.setView(layoutName);
+
+                alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        jsonParser.rejectGroupNight(PendingNightActivity.this, new JSONParser.rejectGroupNightResponseListener() {
                     @Override
                     public void onError(String message) {
-                        Toast.makeText(PendingNightActivity.this, "Accepted!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PendingNightActivity.this, "Rejected!", Toast.LENGTH_SHORT).show();
 
                         jsonParser.getGroupNightApproval(PendingNightActivity.this, new JSONParser.getGroupNightApprovalResponseListener() {
                             @Override
@@ -245,7 +439,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                             @Override
                             public void onResponse(List<String> approvallist) {
                                 Counter = 0;
-
 
                                 for (String s : approvallist) {
 
@@ -260,19 +453,24 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                                     jsonParser.fullyApproveGroupNight(PendingNightActivity.this, new JSONParser.fullyApproveGroupNightResponseListener() {
                                         @Override
                                         public void onError(String message) {
-                                            Toast.makeText(PendingNightActivity.this, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(PendingNightActivity.this, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
+                                            startActivity(intent);
                                         }
 
                                         @Override
                                         public void onResponse(String message) {
 
                                         }
-                                    },groupid);
+                                    },groupnightid);
 
+                                }else{
+                                    Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
+                                    startActivity(intent);
                                 }
 
                             }
-                        },groupid);
+                        },groupnightid);
 
                     }
 
@@ -280,7 +478,23 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                     public void onResponse(String message) {
 
                     }
-                },SQLID,groupid);
+                },SQLID,groupnightid);
+
+                    }
+                });
+
+                alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                    }
+                });
+
+
+                alertName.show();
+
+
+
             }
         });
 
@@ -315,7 +529,11 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
             //Show only the last two digits of the year, eg 2021 is shown as 21
             String returnedyear = String.valueOf(year).substring(2, 4);
-            tvDate.setText(returneddate + "/" + returnedmonth + "/" + returnedyear);
+            tvSuggestDate.append(" " + returneddate + "/" + returnedmonth + "/" + returnedyear);
+            tvSuggestDate.setVisibility(VISIBLE);
+            btnSuggest.setAlpha(1f);
+            btnSuggest.setClickable(true);
+            dateselected = true;
         }
     }
 
@@ -323,14 +541,26 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(minute > 1 && minute < 10 ) {
             returnedminute = "0" + minute;
-            tvTime.setText(hourOfDay + "." + returnedminute);
+            tvSuggestTime.append(" " +hourOfDay + "." + returnedminute);
+            tvSuggestTime.setVisibility(VISIBLE);
+            btnSuggest.setAlpha(1f);
+            btnSuggest.setClickable(true);
+            timeselected = true;
         }
         else if(minute == 0) {
             returnedminute = "00";
-            tvTime.setText(hourOfDay + "." + returnedminute);
+            tvSuggestTime.append(" " +hourOfDay + "." + returnedminute);
+            tvSuggestTime.setVisibility(VISIBLE);
+            btnSuggest.setAlpha(1f);
+            btnSuggest.setClickable(true);
+            timeselected = true;
         }
         else {
-            tvTime.setText(hourOfDay + "." + minute);
+            tvSuggestTime.append(" " +hourOfDay + "." + minute);
+            tvSuggestTime.setVisibility(VISIBLE);
+            btnSuggest.setAlpha(1f);
+            btnSuggest.setClickable(true);
+            timeselected = true;
         }
     }
         }

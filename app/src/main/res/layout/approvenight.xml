@@ -27,6 +27,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textAlignment="center"
         android:textColor="#70FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/tvDAndTforNight"
@@ -48,23 +49,20 @@
 
     <Button
         android:id="@+id/btnAcceptNight"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="132dp"
-        android:text="Accept"
+        android:layout_width="53dp"
+        android:layout_height="48dp"
+        app:icon="@drawable/ic_baseline_check_24"
         app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintEnd_toStartOf="@id/btnRejectNight"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRejectNight" />
 
     <Button
         android:id="@+id/btnRejectNight"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="Reject"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintStart_toEndOf="@id/btnAcceptNight"
+        android:layout_width="53dp"
+        android:layout_height="48dp"
+
+        android:layout_marginTop="8dp"
+        app:icon="@drawable/ic_baseline_close_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

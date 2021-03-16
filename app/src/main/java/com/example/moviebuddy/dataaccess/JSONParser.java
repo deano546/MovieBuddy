@@ -272,8 +272,6 @@ public class JSONParser {
     //Retrive a single movie form the API using the movieid
     public void getMoviebyID(Context context, SelectedMovieResponseListener selectedMovieResponseListener, int movieid) {
 
-
-
         RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movieurl = "https://api.themoviedb.org/3/movie/" + movieid + "?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US";
@@ -485,9 +483,6 @@ public class JSONParser {
                             },id);
 
                         }
-
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -2126,6 +2121,9 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                                 String approval = groupRating.getString("approval");
                                 groupMember.setApproval(approval);
 
+                                String id = groupRating.getString("userid");
+                                groupMember.setId(id);
+
                                 membersfornight.add(groupMember);
 
 
@@ -2160,6 +2158,101 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
         void onResponse(List<GroupMember> memberlist);
     }
+
+    public void updateGroupNight(Context context, updateGroupNightResponseListener fullyapprovegroupnightResponseListener, String groupnightid, String passeddate, String passedtime) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updatemovienight/"  + groupnightid + "?passeddate=" + passeddate + "&passedtime=" + passedtime ;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        fullyapprovegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                fullyapprovegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface updateGroupNightResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public void setapprovalsafterchange(Context context, setapprovalsafterchangeResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/setapprovalstofalse/"  + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        fullyapprovegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                fullyapprovegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface setapprovalsafterchangeResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public void deleteUserGroup(Context context, deleteUserGroupResponseListener fullyapprovegroupnightResponseListener, String userid, String groupid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deleteusergroup/"  + userid + "?groupid=" + groupid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        fullyapprovegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                fullyapprovegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface deleteUserGroupResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+
 
 
 

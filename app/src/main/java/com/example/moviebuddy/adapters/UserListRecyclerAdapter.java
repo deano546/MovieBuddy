@@ -1,13 +1,20 @@
 package com.example.moviebuddy.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,12 +22,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moviebuddy.Activities.LogInActivity;
 import com.example.moviebuddy.Activities.MainActivity;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.GroupNight;
 import com.example.moviebuddy.model.Movie;
 import com.example.moviebuddy.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -76,19 +86,54 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
             holder.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jsonParser.sendFriendRequest(context, new JSONParser.sendFriendRequestResponseListener() {
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(context, "Request Sent!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(context, MainActivity.class);
-                            context.startActivity(intent);
-                        }
 
-                        @Override
-                        public void onResponse(String friendRequest) {
+                    AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
+                   // final EditText editTextName1 = new EditText(context);
+                    // add line after initializing editTextName1
+                    //editTextName1.setHint("Please Enter your email");
+                    //editTextName1.setTextColor(Color.GRAY);
+
+                    alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to send a Friend Request to " + userList.get(position).getUsername() + "?</font>"));
+                    // titles can be used regardless of a custom layout or not
+                   // alertName.setView(editTextName1);
+                    LinearLayout layoutName = new LinearLayout(context);
+                    layoutName.setOrientation(LinearLayout.VERTICAL);
+                    //layoutName.addView(editTextName1); // displays the user input bar
+                    alertName.setView(layoutName);
+
+                    alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            jsonParser.sendFriendRequest(context, new JSONParser.sendFriendRequestResponseListener() {
+                                @Override
+                                public void onError(String message) {
+                                    Toast.makeText(context, "Request Sent!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context, MainActivity.class);
+                                    context.startActivity(intent);
+                                }
+
+                                @Override
+                                public void onResponse(String friendRequest) {
+
+                                }
+                            },SQLID,String.valueOf(userList.get(position).getId()));
 
                         }
-                    },SQLID,String.valueOf(userList.get(position).getId()));
+                    });
+
+                    alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                        }
+                    });
+
+
+                    alertName.show();
+
+
+
+
                 }
             });
         }

@@ -34,8 +34,7 @@ public class LogInActivity extends AppCompatActivity {
 
     //Allows the user to sign in
     //Adapted from https://github.com/bikashthapa01/firebase-authentication-android/blob/master/app/src/main/java/net/smallacademy/authenticatorapp/Login.java
-
-
+    
     Button btnSignin, btnRegister;
     EditText etEmail, etPassword;
     TextView tvforgotPassword;

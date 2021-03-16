@@ -73,6 +73,9 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 jsonParser.acceptFriendRequest(context, new JSONParser.acceptFriendRequestResponseListener() {
                     @Override
                     public void onError(String message) {

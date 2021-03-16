@@ -11,7 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieBuddy">
-        <activity android:name=".Activities.PendingNightActivity"></activity>
+        <activity android:name=".Activities.CurrentFriendsActivity"></activity>
+        <activity android:name=".Activities.AddtoGroupActivity" />
+        <activity android:name=".Activities.ManageGroupsActivity" />
+        <activity android:name=".Activities.CreditsActivity" />
+        <activity android:name=".Activities.UpcomingNightActivity" />
+        <activity android:name=".Activities.PendingNightActivity" />
         <activity android:name=".Activities.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

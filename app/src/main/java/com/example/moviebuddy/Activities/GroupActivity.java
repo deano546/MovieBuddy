@@ -64,6 +64,7 @@ public class GroupActivity extends AppCompatActivity {
 
         //Assignments
         Button btnFriendList = findViewById(R.id.btnFriendList);
+        Button btnManageGroups = findViewById(R.id.btnViewGroups);
         ImageView imgAddGroup = findViewById(R.id.imgAddGroup);
         rvGroupList = findViewById(R.id.rvGroupList);
         JSONParser jsonParser = new JSONParser();
@@ -93,6 +94,14 @@ public class GroupActivity extends AppCompatActivity {
 
                     }
                 }
+            }
+        });
+
+        btnManageGroups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupActivity.this,ManageGroupsActivity.class);
+                startActivity(intent);
             }
         });
 
