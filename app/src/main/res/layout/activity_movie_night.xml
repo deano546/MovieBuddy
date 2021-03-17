@@ -83,8 +83,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Auto-Suggest"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Suggest a Movie"
+        app:layout_constraintEnd_toStartOf="@id/btnViewThismovie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSelectedMovieforNight" />
 
@@ -169,5 +169,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvSelectedTimeLabel"
         app:layout_constraintTop_toBottomOf="@+id/tvSelectedDate" />
+
+    <Button
+        android:id="@+id/btnViewThismovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="8dp"
+        android:text="View Movie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnAutoSuggest"
+        app:layout_constraintTop_toBottomOf="@+id/etSelectedMovieforNight" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

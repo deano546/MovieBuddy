@@ -40,7 +40,6 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvGroupName;
         Button btnAddMember;
         Button btnLeaveGroup;
@@ -53,7 +52,6 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
         }
     }
 
-
     @NonNull
     @Override
     public ManageGroupRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,7 +63,6 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
 
     @Override
     public void onBindViewHolder(@NonNull ManageGroupRecyclerAdapter.MyViewHolder holder, int position) {
-
 
             holder.tvGroupName.setText(groupList.get(position).getGroupname());
 
@@ -95,9 +92,21 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
                     jsonParser.deleteUserGroup(context, new JSONParser.deleteUserGroupResponseListener() {
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(context, "You have left the Group", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(context, GroupActivity.class);
-                            context.startActivity(intent);
+
+                            jsonParser.leavingrejectGroupNight(context, new JSONParser.leavingrejectGroupNightResponseListener() {
+                                @Override
+                                public void onError(String message) {
+                                    Toast.makeText(context, "You have left the Group", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context, GroupActivity.class);
+                                    context.startActivity(intent);
+                                }
+
+                                @Override
+                                public void onResponse(String message) {
+
+                                }
+                            },userID,String.valueOf(groupList.get(position).getId()));
+
                         }
 
                         @Override
@@ -112,31 +121,24 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
                     alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             dialog.cancel(); // closes dialog alertName.show() // display the dialog
-
                         }
                     });
 
-
                     alertName.show();
-
-
 
                 }
             });
 
-
             holder.btnAddMember.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Add someone to " + groupList.get(position).getGroupname(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Add someone to " + groupList.get(position).getGroupname(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, AddtoGroupActivity.class);
                     intent.putExtra("GROUPID",groupList.get(position).getId());
                     intent.putExtra("GROUPNAME",groupList.get(position).getGroupname());
                     context.startActivity(intent);
                 }
             });
-
-
 
     }
 

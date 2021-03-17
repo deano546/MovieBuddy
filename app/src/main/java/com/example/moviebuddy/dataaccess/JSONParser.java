@@ -1731,9 +1731,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                         try {
                             JSONArray jsonArray = response.getJSONArray("items");
 
-
                             Log.d("JSONARRAYGMEMBERS",jsonArray.length() + "");
-
 
                             List<String> newratinglist = new ArrayList<>();
                             List<List<String>> newgenrelist = new ArrayList<>();
@@ -1761,7 +1759,6 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                             }
                             Log.d("LETSTEST",ratingsList.toString());
                             getgroupratingsResponseListener.onResponse(ratingsList);
-
 
                         }
 
@@ -1894,14 +1891,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                                     year = Integer.parseInt(movie.getString("release_date").substring(0, 4));
                                 }
 
-                                //JSONArray genres = movie.getJSONArray("genres");
-                                //Log.d("Check getting the array", genres.toString());
+//                                JSONArray genres = movie.getJSONArray("genres");
+//                                //Log.d("Check getting the array", genres.toString());
+//
+//
+//                                JSONObject jsongenre = genres.getJSONObject(0);
+//                                String moviegenre = jsongenre.getString("name");
 
-
-                                //JSONObject jsongenre = genres.getJSONObject(0);
-                                //String moviegenre = jsongenre.getString("name");
-
-                                //Log.d("Lets Check Genre", moviegenre);
+                                //Log.d("Lets Check GenreSuggest", moviegenre);
                                 Movie movie1 = new Movie(Integer.parseInt(id),title,poster,runtime,overview,year);
 
                                 suggestedMovieResponseListener.onResponse(movie1);
@@ -2436,6 +2433,128 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
         mQueue.add(request);
 
 
+    }
+
+    public void deleteGroupNightpart1(Context context, deleteGroupNightpart1ResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deletegroupnightapproval/"  + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        fullyapprovegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                fullyapprovegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface deleteGroupNightpart1ResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public void deleteGroupNightpart2(Context context, deleteGroupNightpart2ResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deletegroupnight/"  + groupnightid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        fullyapprovegroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                fullyapprovegroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface deleteGroupNightpart2ResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public void leavingrejectGroupNight(Context context, leavingrejectGroupNightResponseListener rejectgroupnightResponseListener, String userid, String groupid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/declinemovienightwhenleaving/" + userid + "?passedgroupid=" + groupid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        rejectgroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                rejectgroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface leavingrejectGroupNightResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
+    }
+
+    public void deletefromWatchlist(Context context, deletefromWatchlistResponseListener rejectgroupnightResponseListener, String userid, String movieid) {
+        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deletefromwatchlist/" + userid + "?passedmovieid=" + movieid;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, acceptrequesturl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        rejectgroupnightResponseListener.onResponse(response + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                rejectgroupnightResponseListener.onError(error + "");
+                Log.d("****", String.valueOf(error));
+            }
+        });
+        mQueue.add(request);
+
+
+    }
+
+    public interface deletefromWatchlistResponseListener {
+        void onError(String message);
+
+        void onResponse(String message);
     }
 
 

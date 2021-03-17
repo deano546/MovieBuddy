@@ -49,6 +49,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
     Button btnDate;
     Button btnCreateNight;
     Button btnAutoSuggest;
+    Button btnViewMovie;
     TextView tvSelectedDate, tvSelectedTime, tvSelectedMovie, tvCurrentGroup;
     EditText etselectedMovie;
     String returnedminute;
@@ -65,6 +66,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
     Map<String, Double> mapratings = new HashMap<String, Double>();
     List<Movie> movieList = new ArrayList<>();
     String maxormin;
+    String moviegenre;
     Boolean approval;
 
     String unapproveddate, unapprovedtime;
@@ -93,6 +95,10 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         etselectedMovie = findViewById((R.id.etSelectedMovieforNight));
         btnAutoSuggest = findViewById(R.id.btnAutoSuggest);
         tvCurrentGroup = findViewById(R.id.tvCurrentGroup);
+        btnViewMovie = findViewById(R.id.btnViewThismovie);
+        btnViewMovie.setClickable(false);
+        btnViewMovie.setAlpha(.5f);
+        etselectedMovie.setEnabled(false);
 
         btnCreateNight.setEnabled(false);
 
@@ -118,13 +124,17 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
         if (extras != null) {
             if(extras.containsKey("MOVIEID")) {
-                Toast.makeText(this, "Yeah", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Yeah", Toast.LENGTH_SHORT).show();
                 movieid = extras.getString("MOVIEID");
                 movietitle = extras.getString("MOVIETITLE");
+                genre = extras.getString("GENRE");
                 tvSelectedMovie.setText(movietitle);
                 etselectedMovie.setText(movietitle);
                 etselectedMovie.setEnabled(false);
-                btnAutoSuggest.setEnabled(false);
+                //btnAutoSuggest.setEnabled(false);
+                btnViewMovie.setClickable(true);
+                btnViewMovie.setAlpha(1f);
+
             }
 
             //Log.d("Worked",extras.toString());
@@ -141,6 +151,15 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         else {
             Log.d("Did not work","lame");
         }
+
+        btnViewMovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MovieNightActivity.this, MovieDetailActivity.class);
+                intent.putExtra("id", Integer.parseInt(movieid));
+                startActivity(intent);
+            }
+        });
 
 
         //adapted from https://www.youtube.com/watch?v=33BFCdL0Di0
@@ -206,6 +225,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
                                     maxormin = "Max";
                                     //Toast.makeText(MovieNightActivity.this, "0", Toast.LENGTH_SHORT).show();
                                     genre = breakoutGenres(ratinglist, maxormin);
+                                    Log.d("Whats here?",genre);
                                     getSuggestion(genre);
 
                                 }
@@ -225,6 +245,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
                                     maxormin = "Min";
                                     //Toast.makeText(MovieNightActivity.this, "1", Toast.LENGTH_SHORT).show();
                                     genre = breakoutGenres(ratinglist, maxormin);
+                                    Log.d("Whats here?",genre);
                                     getSuggestion(genre);
 
                                 }
@@ -238,14 +259,6 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
                 });
 
                 window.show();
-
-
-
-
-
-
-
-
             }
         });
 
@@ -289,6 +302,20 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
                                                 @Override
                                                 public void onError(String message) {
                                                     Log.d("OnError",message);
+
+                                                    jsonParser.addtoWatchlist(MovieNightActivity.this, new JSONParser.addtoWatchlistResponseListener() {
+                                                        @Override
+                                                        public void onError(String message) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onResponse(String message) {
+
+                                                        }
+                                                    },Integer.parseInt(SQLID),Integer.parseInt(movieid),genre);
+
+
                                                 }
 
                                                 @Override
@@ -491,16 +518,19 @@ public Movie getSuggestion(String genre) {
                 //Toast.makeText(MovieNightActivity.this, movie.toString(), Toast.LENGTH_SHORT).show();
             //}
 
-
             }
         },genre,groupid,counter);
+
+        movieid = String.valueOf(movie2.getId());
+        //moviegenre = String.valueOf(movie2.getGenre());
+        btnViewMovie.setAlpha(1f);
+        btnViewMovie.setClickable(true);
 
         return movie2;
 
 }
 
 public String checkifwatched(Movie movie) {
-
 
         JSONParser jsonParser = new JSONParser();
 
@@ -514,7 +544,7 @@ public String checkifwatched(Movie movie) {
         public void onResponse(String message) {
 
             if(message.equals("No")) {
-                Toast.makeText(MovieNightActivity.this, movie.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MovieNightActivity.this, movie.toString(), Toast.LENGTH_SHORT).show();
                 movieid = String.valueOf(movie.getId());
                 movietitle = movie.getTitle();
                 tvSelectedMovie.setText(movietitle);
@@ -532,8 +562,6 @@ public String checkifwatched(Movie movie) {
     },groupid,String.valueOf(movie.getId()));
 
     return check;
-
-
 }
 
 

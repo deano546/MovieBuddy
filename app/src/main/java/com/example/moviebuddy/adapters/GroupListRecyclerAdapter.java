@@ -34,13 +34,15 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     List<GroupNight> groupList;
     Context context;
     GroupNight groupNight1;
-    String passedmovieid1, passedmovietitle1;
+    String passedmovieid1, passedmovietitle1, passedgenre;
+    String pendinggenre;
 
-    public GroupListRecyclerAdapter(List<GroupNight> groupList, Context context, String passedmovieid, String passedmovietitle) {
+    public GroupListRecyclerAdapter(List<GroupNight> groupList, Context context, String passedmovieid, String passedmovietitle, String passedgenre) {
         this.groupList = groupList;
         this.context = context;
-        passedmovieid1 = passedmovieid;
-        passedmovietitle1 = passedmovietitle;
+        this.passedmovieid1 = passedmovieid;
+        this.passedmovietitle1 = passedmovietitle;
+        this.passedgenre = passedgenre;
 
     }
 
@@ -94,7 +96,8 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                             intent.putExtra("GROUPNAME", groupList.get(position).getGroupName());
                             intent.putExtra("MOVIEID", passedmovieid1);
                             intent.putExtra("MOVIETITLE", passedmovietitle1);
-                            intent.putExtra("CREATORID",groupList.get(position).getCreatorid());
+                            intent.putExtra("GENRE", passedgenre);
+                            //intent.putExtra("CREATORID",groupList.get(position).getCreatorid());
                             context.startActivity(intent);
                         }
                     });
@@ -111,6 +114,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                         @Override
                         public void onResponse(Movie movie) {
                             String title = movie.getTitle();
+                            pendinggenre = movie.getGenre();
                             if (groupList.get(position).getApproval().equals("True")) {
                                 holder.tvDateAndTime.setText(groupList.get(position).getDate() + " " + groupList.get(position).getTime());
                                 holder.tvTitle.setText(movie.getTitle());
@@ -157,6 +161,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                                         intent.putExtra("DATE", groupList.get(position).getDate());
                                         intent.putExtra("TIME", groupList.get(position).getTime());
                                         intent.putExtra("CREATORID",groupList.get(position).getCreatorid());
+                                        intent.putExtra("GENRE",pendinggenre);
                                         context.startActivity(intent);
                                     }
                                 });

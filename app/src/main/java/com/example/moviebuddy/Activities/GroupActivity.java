@@ -40,7 +40,7 @@ public class GroupActivity extends AppCompatActivity {
     List<GroupNight> groupList1 = new ArrayList<>();
     FirebaseAuth auth;
     FirebaseFirestore fStore;
-    String SQLID, movieid, movietitle;
+    String SQLID, movieid, movietitle, moviegenre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class GroupActivity extends AppCompatActivity {
         if (extras != null) {
             movieid = String.valueOf(extras.getInt("MOVIEID"));
             movietitle = extras.getString("MOVIETITLE");
-            // and get whatever type user account id is
+            moviegenre = extras.getString("GENRE");
         }
 
 
@@ -84,6 +84,7 @@ public class GroupActivity extends AppCompatActivity {
 
                             @Override
                             public void onResponse(List<GroupNight> groupList) {
+                                Log.d("SUPERMARIORPG",groupList.toString());
                                 groupList1 = groupList;
                                 setUpRecycler();
 
@@ -161,7 +162,7 @@ public class GroupActivity extends AppCompatActivity {
         rvGroupList.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(GroupActivity.this);
         rvGroupList.setLayoutManager(layoutManager);
-        mAdapter = new GroupListRecyclerAdapter(groupList1, GroupActivity.this,movieid,movietitle);
+        mAdapter = new GroupListRecyclerAdapter(groupList1, GroupActivity.this,movieid,movietitle,moviegenre);
         Log.d("UHOHLISTINACTIVITY",groupList1.toString());
         rvGroupList.setAdapter(mAdapter);
     }

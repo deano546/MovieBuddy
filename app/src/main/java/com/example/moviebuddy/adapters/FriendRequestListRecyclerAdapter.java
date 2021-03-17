@@ -2,6 +2,7 @@ package com.example.moviebuddy.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,58 +60,62 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
     @Override
     public void onBindViewHolder(@NonNull FriendRequestListRecyclerAdapter.MyViewHolder holder, int position) {
 
-        if(userList.size() == 0)
+        if(userList.isEmpty())
         {
+            Toast.makeText(context, "Yes", Toast.LENGTH_SHORT).show();
             holder.tvUsername.setText("No Friend Requests!");
+        }
+        else {
+            //Toast.makeText(context, "No", Toast.LENGTH_SHORT).show();
+            Log.d("HELLO","ISTHISWORKINGFORTHELOVEOFHECK");
+            JSONParser jsonParser = new JSONParser();
+
+            holder.tvUsername.setText(userList.get(position).getUsername());
+
+            holder.btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+                    jsonParser.acceptFriendRequest(context, new JSONParser.acceptFriendRequestResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(context, "Accepted!", Toast.LENGTH_SHORT).show();
+                            userList.remove(position);
+                            notifyItemRemoved(position);
+                        }
+
+                        @Override
+                        public void onResponse(String message) {
+
+                        }
+                    },Integer.parseInt(SQLID),userList.get(position).getId());
+                }
+            });
+
+
+            holder.btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jsonParser.rejectFriendRequest(context, new JSONParser.rejectFriendRequestResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(context, "Rejected!", Toast.LENGTH_SHORT).show();
+                            userList.remove(position);
+                            notifyItemRemoved(position);
+                        }
+
+                        @Override
+                        public void onResponse(String message) {
+
+                        }
+                    },Integer.parseInt(SQLID),userList.get(position).getId());
+                }
+            });
         }
 
 
-
-        JSONParser jsonParser = new JSONParser();
-
-        holder.tvUsername.setText(userList.get(position).getUsername());
-
-        holder.btnAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-
-                jsonParser.acceptFriendRequest(context, new JSONParser.acceptFriendRequestResponseListener() {
-                    @Override
-                    public void onError(String message) {
-                        Toast.makeText(context, "Accepted!", Toast.LENGTH_SHORT).show();
-                        userList.remove(position);
-                        notifyItemRemoved(position);
-                    }
-
-                    @Override
-                    public void onResponse(String message) {
-
-                    }
-                },Integer.parseInt(SQLID),userList.get(position).getId());
-            }
-        });
-
-
-        holder.btnReject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jsonParser.rejectFriendRequest(context, new JSONParser.rejectFriendRequestResponseListener() {
-                    @Override
-                    public void onError(String message) {
-                        Toast.makeText(context, "Rejected!", Toast.LENGTH_SHORT).show();
-                        userList.remove(position);
-                        notifyItemRemoved(position);
-                    }
-
-                    @Override
-                    public void onResponse(String message) {
-
-                    }
-                },Integer.parseInt(SQLID),userList.get(position).getId());
-            }
-        });
 
 
     }

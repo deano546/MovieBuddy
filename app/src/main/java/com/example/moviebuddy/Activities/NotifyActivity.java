@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.adapters.FriendRequestListRecyclerAdapter;
@@ -31,11 +33,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.VISIBLE;
+
 public class NotifyActivity extends AppCompatActivity {
 
     //Declarations
     RecyclerView rvRequestList;
-    RecyclerView.Adapter mAdapter;
+    FriendRequestListRecyclerAdapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView rvMovieNights;
     RecyclerView.Adapter mAdapterNights;
@@ -50,6 +54,8 @@ public class NotifyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
+        TextView tvNoFriendRequests = findViewById(R.id.tvNoFriendRequests);
+        tvNoFriendRequests.setVisibility(View.INVISIBLE);
 
         rvRequestList = findViewById(R.id.rvFriendRequests);
         rvMovieNights = findViewById(R.id.rvMovieNights);
@@ -71,13 +77,19 @@ public class NotifyActivity extends AppCompatActivity {
                         jsonParser.getFriendRequests(NotifyActivity.this, new JSONParser.getFriendRequestsResponseListener() {
                             @Override
                             public void onError(String message) {
-
+                                Log.d("IWANNASEE2",message);
                             }
 
                             @Override
                             public void onResponse(List<User> userlist) {
                                 userList1 = userlist;
-                                setUpRecycler();
+                                if(userlist.isEmpty()) {
+                                    tvNoFriendRequests.setVisibility(VISIBLE);
+                                }
+                                else {
+                                    setUpRecycler();
+                                }
+
                             }
                         },SQLID);
 

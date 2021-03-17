@@ -71,7 +71,7 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
         JSONParser jsonParser = new JSONParser();
 
         if(Integer.parseInt(groupNights.get(position).getId()) == 0) {
-            holder.tvMovie.setText("No Movie Nights!");
+            holder.tvMovie.setText("         No Movie Night Requests!");
             holder.tvDateAndTime.setText("");
             holder.tvGroup.setText("");
             holder.btnReject.setVisibility(View.INVISIBLE);

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviebuddy.R;
@@ -38,6 +39,7 @@ public class MovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie);
         Button btnSearch = findViewById(R.id.btnSearch);
         EditText etMovieSearch = findViewById(R.id.etMovieSearch);
+
 
         Log.d("Before", ":" + movieList.toString());
 

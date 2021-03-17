@@ -70,7 +70,7 @@
 
     <EditText
         android:id="@+id/etSearchWatchlist"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="44dp"
         android:layout_marginTop="80dp"
         android:ems="10"

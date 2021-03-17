@@ -11,7 +11,7 @@
         android:id="@+id/imWatchlistPoster"
         android:layout_width="125dp"
         android:layout_height="114dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@id/view3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,15 +19,16 @@
 
     <TextView
         android:id="@+id/tvWatchlistTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#70FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@id/rbWatchlist"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintStart_toEndOf="@+id/imWatchlistPoster"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,12 +36,13 @@
         android:id="@+id/btnMarkWatched"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:text="Mark as Watched"
         app:layout_constraintBottom_toTopOf="@+id/view3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.746"
-        app:layout_constraintTop_toBottomOf="@id/rbWatchlist"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rbWatchlist" />
 
     <View
         android:id="@+id/view3"
@@ -56,9 +58,10 @@
 
     <RatingBar
         android:id="@+id/rbWatchlist"
-        android:layout_width="243dp"
-        android:layout_height="52dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="239dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:progressBackgroundTint="#FFFFFF"
         android:stepSize="1"
         app:layout_constraintBottom_toTopOf="@+id/btnMarkWatched"
@@ -66,5 +69,20 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/imWatchlistPoster"
         app:layout_constraintTop_toBottomOf="@+id/tvWatchlistTitle" />
+
+    <Button
+        android:id="@+id/btnDeleteFromWatchlist"
+        android:layout_width="56dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="12dp"
+        android:textAlignment="center"
+        app:icon="@drawable/ic_baseline_delete_forever_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btnMarkWatched"
+        app:layout_constraintTop_toBottomOf="@+id/rbWatchlist"
+        app:layout_constraintVertical_bias="0.384" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

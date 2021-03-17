@@ -202,6 +202,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Log.d("MDETAILID",String.valueOf(movieid));
                 intent.putExtra("MOVIEID",movieid);
                 intent.putExtra("MOVIETITLE",currentmovie.getTitle());
+                intent.putExtra("GENRE",currentmovie.getGenre());
                 startActivity(intent);
             }
         });

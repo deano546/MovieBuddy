@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Requests"
+        android:text="Friend Requests"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#70FFFFFF"
         android:textSize="24sp"
@@ -65,5 +65,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvFriendRequests" />
+
+    <TextView
+        android:id="@+id/tvNoFriendRequests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="No Friend Requests!"
+        android:textColor="#70FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNotifications" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

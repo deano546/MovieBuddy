@@ -117,19 +117,29 @@ public class UpcomingNightActivity extends AppCompatActivity {
                                     alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                                            jsonParser.updateGroupNight(UpcomingNightActivity.this, new JSONParser.updateGroupNightResponseListener() {
+                                            jsonParser.deleteGroupNightpart1(UpcomingNightActivity.this, new JSONParser.deleteGroupNightpart1ResponseListener() {
                                                 @Override
                                                 public void onError(String message) {
-                                                    Toast.makeText(UpcomingNightActivity.this, "Night Deleted!", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(UpcomingNightActivity.this,MainActivity.class);
-                                                    startActivity(intent);
+                                                    jsonParser.deleteGroupNightpart2(UpcomingNightActivity.this, new JSONParser.deleteGroupNightpart2ResponseListener() {
+                                                        @Override
+                                                        public void onError(String message) {
+                                                            Toast.makeText(UpcomingNightActivity.this, "Movie Night Deleted!", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(UpcomingNightActivity.this,GroupActivity.class);
+                                                            startActivity(intent);
+                                                        }
+
+                                                        @Override
+                                                        public void onResponse(String message) {
+
+                                                        }
+                                                    },groupnightid);
                                                 }
 
                                                 @Override
                                                 public void onResponse(String message) {
 
                                                 }
-                                            },groupnightid,"01/01/20","00.00");
+                                            },groupnightid);
 
                                         }
                                     });

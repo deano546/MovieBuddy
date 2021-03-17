@@ -1,8 +1,11 @@
 package com.example.moviebuddy.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.service.controls.templates.TemperatureControlTemplate;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,6 +15,7 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.moviebuddy.Activities.CreateGroupActivity;
 import com.example.moviebuddy.Activities.MainActivity;
 import com.example.moviebuddy.Activities.MovieDetailActivity;
 import com.example.moviebuddy.Activities.WatchListActivity;
@@ -43,6 +48,7 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.valueOf;
 
 public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecyclerAdapter.MyViewHolder> implements Filterable {
 
@@ -67,6 +73,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
         TextView tvMovieListTitle;
         Button btnMark;
         RatingBar rbWatchlist;
+        Button btnDelete;
         ConstraintLayout parentLayout;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -75,6 +82,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
             tvMovieListTitle = itemView.findViewById(R.id.tvWatchlistTitle);
             btnMark = itemView.findViewById(R.id.btnMarkWatched);
             rbWatchlist = itemView.findViewById(R.id.rbWatchlist);
+            btnDelete = itemView.findViewById(R.id.btnDeleteFromWatchlist);
             parentLayout = itemView.findViewById(R.id.onewatchrow);
         }
     }
@@ -91,7 +99,6 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
 
     @Override
     public void onBindViewHolder(@NonNull WatchListRecyclerAdapter.MyViewHolder holder, int position) {
-
 
         Log.d("WATCHLISTSIZE",movieList.size() + "");
 
@@ -116,9 +123,6 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
             }
         });
 
-
-
-
         Glide.with(this.context).load("https://image.tmdb.org/t/p/w300/" + movieList.get(position).getImageurl()).into(holder.imMovieList);
         holder.tvMovieListTitle.setText(movieList.get(position).getTitle());
 
@@ -138,6 +142,45 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
                     holder.btnMark.setAlpha(1f);
                 }
                 return false;
+
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
+                // final EditText editTextName1 = new EditText(context);
+                // add line after initializing editTextName1
+                //editTextName1.setHint("Please Enter your email");
+                //editTextName1.setTextColor(Color.GRAY);
+
+                alertName.setTitle( Html.fromHtml("<font color='#70FFFFFF'>Are you sure you want to Delete " + movieList.get(position).getTitle() + " from your Watchlist?</font>"));
+                // titles can be used regardless of a custom layout or not
+                // alertName.setView(editTextName1);
+                LinearLayout layoutName = new LinearLayout(context);
+                layoutName.setOrientation(LinearLayout.VERTICAL);
+                //layoutName.addView(editTextName1); // displays the user input bar
+                alertName.setView(layoutName);
+
+                alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        removeItem2(position,Integer.parseInt(SQLID));
+
+                    }
+                });
+
+                alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel(); // closes dialog alertName.show() // display the dialog
+
+                    }
+                });
+
+                alertName.show();
+
 
             }
         });
@@ -172,6 +215,30 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
                 Toast.makeText(context, "Marked as watched", Toast.LENGTH_SHORT).show();
             }
         },id,movieList.get(position).getId(),rating);
+    }
+
+    //This method allows a movie to be removed from the watchlist when the user marks it as watched
+    public void removeItem2(int position, int id) {
+
+        JSONParser jsonParser = new JSONParser();
+        jsonParser.deletefromWatchlist(context, new JSONParser.deletefromWatchlistResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+
+                //Delete record from recycler https://stackoverflow.com/a/35819233
+                movieList.remove(position);
+                notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onResponse(String message) {
+
+            }
+        },String.valueOf(id),String.valueOf(movieList.get(position).getId()));
+
+
+
     }
 
     @Override

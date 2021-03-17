@@ -56,7 +56,6 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
         }
     }
 
-
     @NonNull
     @Override
     public UpcomingNightRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -67,9 +66,9 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
     }
 
 
-
     @Override
     public void onBindViewHolder(@NonNull UpcomingNightRecyclerAdapter.MyViewHolder holder, int position) {
+
         Log.d("CHECKLISTSIZE1234",groupNightList.size() + "");
         Log.d("CHECKLISTSIZE1234",groupNightList.toString() + "");
 
@@ -81,6 +80,13 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
             holder.tvDateAndTime.setText("");
             holder.tvGroup.setText((""));
             holder.tvMovieNight.setText(groupNightList.get(position).getMovieTitle());
+        }
+        else if(groupNightList.size() == 1 && groupNightList.get(0).getApproval().matches("Nope")) {
+            holder.tvTitle.setText("No Movie Nights Yet!");
+            holder.tvDateAndTime.setText("");
+            holder.tvGroup.setText((""));
+            holder.tvMovieNight.setText(groupNightList.get(position).getMovieTitle());
+            holder.btnCalendar.setVisibility(View.INVISIBLE);
         }
         else {
             jsonParser.getMoviebyID(context, new JSONParser.SelectedMovieResponseListener() {
@@ -133,10 +139,22 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
                                     cal.set(Calendar.MONTH, Integer.parseInt(monthdate)- 1);
                                     cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(daydate));
 
+                                    int passedruntime = 0;
+                                    String runtime = movie.getRuntime();
+                                    int length = runtime.length();
+                                    if(length == 8) {
+                                        passedruntime = Integer.parseInt(runtime.substring(0,3));
+                                    }
+                                    else if(length == 7) {
+                                        passedruntime = Integer.parseInt(runtime.substring(0,2));
+                                    }
+                                    Log.d("RUNTIME",runtime);
+                                    Log.d("INTRUN",passedruntime + "");
+
 
                                     startTime = cal.getTimeInMillis();
-                                    endTime = startTime + 30 * 60 * 1000 * 4;
-                                    String title= groupNightList.get(position).getMovieTitle() + " w/ " + groupNightList.get(position).getGroupName();
+                                    endTime = startTime + (passedruntime * 60000);
+                                    String title= movie.getTitle() + " w/ " + groupNightList.get(position).getGroupName();
 
                                     long event_id = (startTime+endTime)/10000;
 
@@ -168,12 +186,6 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
             },Integer.parseInt(groupNightList.get(position).getMovieid()));
 
         }
-
-
-
-
-
-
 
     }
 

@@ -48,7 +48,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
     Button btnDate, btnTime, btnView, btnAccept, btnDecline, btnSuggest, btnDeleteNight;
     TextView tvMovie, tvDate, tvTime, tvAccepted, tvDeclined, tvPending, tvAlreadyAccepted, tvCurrentGroup, tvSuggestDate, tvSuggestTime;
-    String movieid, movietitle, date, time, returnedminute, returneddate, returnedmonth, groupid, groupnightid;
+    String movieid, movietitle, date, time, returnedminute, returneddate, returnedmonth, groupid, groupnightid, genre;
     int Counter;
     FirebaseAuth auth;
     FirebaseFirestore fStore;
@@ -105,10 +105,11 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             tvMovie.setText(movietitle);
             date = extras.getString("DATE");
             time = extras.getString("TIME");
+            genre = extras.getString("GENRE");
             tvDate.setText(date);
             tvTime.setText(time);
             tvCurrentGroup.setText(extras.getString("GROUPNAME"));
-            Toast.makeText(this, extras.getString("CREATORID"), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, extras.getString("CREATORID"), Toast.LENGTH_SHORT).show();
 //            if(SQLID.matches(extras.getString("CREATORID"))) {
 //                btnDeleteNight.setVisibility(VISIBLE);
 //            }
@@ -151,19 +152,29 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                                     alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                                            jsonParser.updateGroupNight(PendingNightActivity.this, new JSONParser.updateGroupNightResponseListener() {
+                                            jsonParser.deleteGroupNightpart1(PendingNightActivity.this, new JSONParser.deleteGroupNightpart1ResponseListener() {
                                         @Override
                                         public void onError(String message) {
-                                            Toast.makeText(PendingNightActivity.this, "Night Deleted!", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
-                                            startActivity(intent);
+                                            jsonParser.deleteGroupNightpart2(PendingNightActivity.this, new JSONParser.deleteGroupNightpart2ResponseListener() {
+                                                @Override
+                                                public void onError(String message) {
+                                                    Toast.makeText(PendingNightActivity.this, "Movie Night Deleted!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(PendingNightActivity.this,GroupActivity.class);
+                                                    startActivity(intent);
+                                                }
+
+                                                @Override
+                                                public void onResponse(String message) {
+
+                                                }
+                                            },groupnightid);
                                         }
 
                                         @Override
                                         public void onResponse(String message) {
 
                                         }
-                                    },groupnightid,"01/01/20","00.00");
+                                    },groupnightid);
 
                                         }
                                     });
@@ -171,13 +182,9 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                                     alertName.setNegativeButton("No", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
                                             dialog.cancel(); // closes dialog alertName.show() // display the dialog
-
                                         }
                                     });
-
-
                                     alertName.show();
-
                                 }
                             });
                         }
@@ -186,7 +193,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                 }
             }
         });
-
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,12 +209,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                 timePicker.show(getSupportFragmentManager(), "time picker");
             }
         });
-
-
-
-
-
-
 
         btnSuggest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,7 +238,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                             String time = tvSuggestTime.getText().toString();
                             int timecounter = time.length();
                             String passedtime = time.substring(21,timecounter);
-
 
                             jsonParser.updateGroupNight(PendingNightActivity.this, new JSONParser.updateGroupNightResponseListener() {
                                 @Override
@@ -270,7 +269,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
                                 @Override
                                 public void onResponse(String message) {
-
                                 }
                             },groupnightid,passeddate,passedtime);
 
@@ -284,10 +282,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                         }
                     });
 
-
                     alertName.show();
-
-
                 }
                 else{
                     Toast.makeText(PendingNightActivity.this, "Please choose both a date and time to suggest", Toast.LENGTH_SHORT).show();
@@ -295,15 +290,9 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
         });
 
-
-
-
-
-
         jsonParser.getGroupMembersforNight(PendingNightActivity.this, new JSONParser.getGroupMembersforNightResponseListener() {
             @Override
             public void onError(String message) {
-
             }
 
             @Override
@@ -325,10 +314,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                             btnDate.setClickable(false);
                             btnTime.setAlpha(.5f);
                             btnTime.setClickable(false);
-
-
                         }
-
                     }
                     else if(gmember.getApproval().equals("False")) {
                         pendingusers.add(gmember.getUsername());
@@ -345,8 +331,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                             btnDate.setClickable(false);
                             btnTime.setAlpha(.5f);
                             btnTime.setClickable(false);
-
-
                         }
                     }
                 }
@@ -366,8 +350,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                 startActivity(intent);
             }
         });
-
-
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
 
@@ -413,16 +395,26 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                                         Counter +=1;
                                     }
 
-
                                 }
                                 if(Counter == approvallist.size()) {
 
                                     jsonParser.fullyApproveGroupNight(PendingNightActivity.this, new JSONParser.fullyApproveGroupNightResponseListener() {
                                         @Override
                                         public void onError(String message) {
-                                            Toast.makeText(PendingNightActivity.this, "Fully Approved", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
-                                            startActivity(intent);
+                                            jsonParser.addtoWatchlist(PendingNightActivity.this, new JSONParser.addtoWatchlistResponseListener() {
+                                                @Override
+                                                public void onError(String message) {
+                                                    Toast.makeText(PendingNightActivity.this, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
+                                                    startActivity(intent);
+                                                }
+
+                                                @Override
+                                                public void onResponse(String message) {
+
+                                                }
+                                            },Integer.parseInt(SQLID),Integer.parseInt(movieid),genre);
+
                                         }
 
                                         @Override
@@ -433,8 +425,19 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
                                 }
                                 else{
-                                    Intent intent = new Intent(PendingNightActivity.this,GroupActivity.class);
-                                    startActivity(intent);
+                                    jsonParser.addtoWatchlist(PendingNightActivity.this, new JSONParser.addtoWatchlistResponseListener() {
+                                        @Override
+                                        public void onError(String message) {
+                                            //Toast.makeText(PendingNightActivity.this, "Fully Approved", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(PendingNightActivity.this,MainActivity.class);
+                                            startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onResponse(String message) {
+
+                                        }
+                                    },Integer.parseInt(SQLID),Integer.parseInt(movieid),genre);
                                 }
 
                             }
@@ -457,12 +460,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
                     }
                 });
-
-
                 alertName.show();
-
-
-
             }
         });
 
@@ -551,17 +549,9 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
                     }
                 });
-
-
                 alertName.show();
-
-
-
             }
         });
-
-
-
     }
 
     @Override
@@ -624,5 +614,9 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             btnSuggest.setClickable(true);
             timeselected = true;
         }
+
     }
-        }
+
+
+
+}
