@@ -1546,13 +1546,10 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
 
     public void getUnapprovedNights(Context context, getUnapprovedNightsResponseListener getunapprovednightsResponseListener, String userid) {
-
         nightstoapprove.clear();
-
-
         RequestQueue mQueue = Volley.newRequestQueue(context);
 
-        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getunapprovednights/" + userid;
+        String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getunapprovednightsfornotify/" + userid;
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getmemberrequesturl, null,
@@ -1565,43 +1562,40 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
                             Log.d("JSONARRAYcheckapprove",jsonArray.length() + "");
 
+                            if (jsonArray.length() == 0)  {
+                                GroupNight group1 = new GroupNight();
+                                group1.setGroupName("No Pending Movie Nights!");
+                                group1.setId("0");
+                                nightstoapprove.add(group1);
+                                getunapprovednightsResponseListener.onResponse(nightstoapprove);
+                            }
+
+
+
+
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject groupnight = jsonArray.getJSONObject(i);
+                                GroupNight groupNight = new GroupNight();
                                 String date = groupnight.getString("groupnightdate");
                                 Log.d("MOVIEDATE", date);
+                                groupNight.setDate(date);
                                 Log.d("***********", String.valueOf(response));
                                 String time = groupnight.getString("groupnighttime");
                                 Log.d("MOVIETIME", time);
+                                groupNight.setTime(time);
                                 String groupname = groupnight.getString("groupname");
                                 Log.d("GROUPNAME", groupname);
+                                groupNight.setGroupName(groupname);
                                 String groupnightid = groupnight.getString("groupnightid");
+                                groupNight.setId(groupnightid);
+                                String groupid = groupnight.getString("groupid");
+                                groupNight.setGroupid(groupid);
+                                String movieid = groupnight.getString("movieid");
+                                groupNight.setMovieid(movieid);
+                                nightstoapprove.add(groupNight);
 
-
-                                int id = Integer.parseInt(groupnight.getString("movieid"));
-                                Log.d("GROUPID", id + "");
-
-
-                                getMoviebyID(context, new SelectedMovieResponseListener() {
-                                    @Override
-                                    public void onError(String message) {
-                                        Log.d("TAG", message);
-                                    }
-
-                                    @Override
-                                    public void onResponse(Movie movie) {
-                                        String title = movie.getTitle();
-                                        Log.d("TitleNIGHT", title);
-                                        GroupNight groupNight = new GroupNight(groupnightid, title, date, groupname, time);
-                                        Log.d("NIGHTTOSTRING", groupNight.toString());
-                                        nightstoapprove.add(groupNight);
-                                        if (nightstoapprove.size() == jsonArray.length()) {
-                                            getunapprovednightsResponseListener.onResponse(nightstoapprove);
-                                            Log.d("CHECKINGIF", nightstoapprove.toString());
-                                        }
-
-                                    }
-                                }, id);
                             }
+                            getunapprovednightsResponseListener.onResponse(nightstoapprove);
 
 
 

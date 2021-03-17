@@ -93,7 +93,21 @@ public class NotifyActivity extends AppCompatActivity {
                             }
                         },SQLID);
 
-                        jsonParser.getUltramovienightbyuserid(NotifyActivity.this, new JSONParser.getUltraGroupResponseListener() {
+//                        jsonParser.getUltramovienightbyuserid(NotifyActivity.this, new JSONParser.getUltraGroupResponseListener() {
+//                            @Override
+//                            public void onError(String message) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onResponse(List<GroupNight> approvallist) {
+//                                groupNights = approvallist;
+//                                Log.d("56CheckGroupString",groupNights.toString());
+//                                setUpSecondRecycler();
+//                            }
+//                        },SQLID);
+
+                        jsonParser.getUnapprovedNights(NotifyActivity.this, new JSONParser.getUnapprovedNightsResponseListener() {
                             @Override
                             public void onError(String message) {
 

@@ -70,7 +70,14 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
     public void onBindViewHolder(@NonNull UnApprovedGroupNightRecyclerAdapter.MyViewHolder holder, int position) {
         JSONParser jsonParser = new JSONParser();
 
-        if(Integer.parseInt(groupNights.get(position).getId()) == 0) {
+        if(groupNights.isEmpty()) {
+            holder.tvMovie.setText("         No Movie Night Requests!");
+            holder.tvDateAndTime.setText("");
+            holder.tvGroup.setText("");
+            holder.btnReject.setVisibility(View.INVISIBLE);
+            holder.btnAccept.setVisibility(View.INVISIBLE);
+        }
+        else if (groupNights.size() == 1 && groupNights.get(position).getId().matches("0")) {
             holder.tvMovie.setText("         No Movie Night Requests!");
             holder.tvDateAndTime.setText("");
             holder.tvGroup.setText("");
