@@ -63,18 +63,9 @@ public class WatchListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watch_list);
 
+
+        //Assignments
         EditText etSearch = findViewById(R.id.etSearchWatchlist);
-
-
-
-//        ActionBar actionBar;
-//        actionBar = getSupportActionBar();
-//
-//        //setTitle("Watchlist");
-//       actionBar.setBackgroundDrawable(getDrawable(R.drawable.solidblack));
-//       actionBar.setTitle(Html.fromHtml("<font color=\"grey\">" + "Watchlist" + "</font>"));
-//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        actionBar.setCustomView(R.layout.abs_layout);
 
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -88,6 +79,7 @@ public class WatchListActivity extends AppCompatActivity {
         Log.d("WATCHLISTSIZE4",movieList.size() + "");
 
         JSONParser jsonParser = new JSONParser();
+
 
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -119,6 +111,8 @@ public class WatchListActivity extends AppCompatActivity {
                                 else {
                                     movieList = movies;
                                     updateRecycler();
+
+                                    //This calls the filter created in the adapter using a listener for the edit text
                                     etSearch.addTextChangedListener(new TextWatcher() {
                                         @Override
                                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

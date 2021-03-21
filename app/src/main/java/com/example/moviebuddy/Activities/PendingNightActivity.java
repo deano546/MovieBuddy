@@ -46,6 +46,7 @@ import static android.view.View.VISIBLE;
 
 public class PendingNightActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
+    //Declarations
     Button btnDate, btnTime, btnView, btnAccept, btnDecline, btnSuggest, btnDeleteNight;
     TextView tvMovie, tvDate, tvTime, tvAccepted, tvDeclined, tvPending, tvAlreadyAccepted, tvCurrentGroup, tvSuggestDate, tvSuggestTime;
     String movieid, movietitle, date, time, returnedminute, returneddate, returnedmonth, groupid, groupnightid, genre;
@@ -63,6 +64,8 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_night);
+
+        //Assignments
         timeselected =false;
         dateselected = false;
         tvSuggestDate = findViewById(R.id.tvSuggestDate);
@@ -95,6 +98,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
         JSONParser jsonParser = new JSONParser();
 
+        //Getting extras on the intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             movieid = extras.getString("MOVIEIDP");
@@ -109,10 +113,6 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             tvDate.setText(date);
             tvTime.setText(time);
             tvCurrentGroup.setText(extras.getString("GROUPNAME"));
-            //Toast.makeText(this, extras.getString("CREATORID"), Toast.LENGTH_SHORT).show();
-//            if(SQLID.matches(extras.getString("CREATORID"))) {
-//                btnDeleteNight.setVisibility(VISIBLE);
-//            }
         }
 
         auth = FirebaseAuth.getInstance();
@@ -120,6 +120,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
 
         String ID = auth.getCurrentUser().getUid();
 
+        //Check if the current user is the creator of the movie night, if they are, they can delete it
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -134,6 +135,8 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                             btnDeleteNight.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+
+                                    //Dialog box
 
                                     AlertDialog.Builder alertName = new AlertDialog.Builder(PendingNightActivity.this, R.style.MyDialogTheme);
                                     // final EditText editTextName1 = new EditText(context);
@@ -193,7 +196,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
                 }
             }
         });
-
+        //https://www.youtube.com/watch?v=33BFCdL0Di0
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,6 +205,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
         });
 
+        //adapted from https://www.youtube.com/watch?v=QMwaNN_aM3U
         btnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,11 +214,13 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
         });
 
+        //Suggest a change to the date/time of the movie night, this set the other users to unapproved
         btnSuggest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(dateselected && timeselected) {
 
+                    //Dialog Box
                     AlertDialog.Builder alertName = new AlertDialog.Builder(PendingNightActivity.this, R.style.MyDialogTheme);
                     // final EditText editTextName1 = new EditText(context);
                     // add line after initializing editTextName1
@@ -290,6 +296,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
         });
 
+        //Displaying which users have accepted the movie night, which have declined, and which have not responded yet
         jsonParser.getGroupMembersforNight(PendingNightActivity.this, new JSONParser.getGroupMembersforNightResponseListener() {
             @Override
             public void onError(String message) {
@@ -342,6 +349,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         },groupnightid);
 
 
+        //View details of the movie
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -351,6 +359,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
         });
 
+        //Accept the movie night
         btnAccept.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -464,6 +473,8 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
             }
         });
 
+
+        //Decline attending the movie night
         btnDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -554,6 +565,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         });
     }
 
+    //https://www.youtube.com/watch?v=33BFCdL0Di0
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar c = Calendar.getInstance();
@@ -589,6 +601,7 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         }
     }
 
+    //adapted from https://www.youtube.com/watch?v=QMwaNN_aM3U
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(minute > 1 && minute < 10 ) {
@@ -616,7 +629,5 @@ public class PendingNightActivity extends AppCompatActivity implements DatePicke
         }
 
     }
-
-
 
 }

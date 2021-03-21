@@ -127,13 +127,7 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
 
                         }
                     });
-
-
                     alertName.show();
-
-
-
-
                 }
             });
         }

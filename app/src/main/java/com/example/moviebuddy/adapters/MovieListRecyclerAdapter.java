@@ -50,7 +50,6 @@ public class MovieListRecyclerAdapter extends RecyclerView.Adapter<MovieListRecy
     }
 
 
-
     @NonNull
     @Override
     public MovieListRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

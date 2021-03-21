@@ -34,7 +34,7 @@ import static android.view.View.VISIBLE;
 
 public class UpcomingNightActivity extends AppCompatActivity {
 
-
+    //Declarations
     TextView tvGroup, tvMovie, tvDate, tvTime, tvApproved, tvDeclined;
     Button btnViewMovie, btnInvis;
     String movieid, movietitle, date, time, returnedminute, returneddate, returnedmonth, groupid, groupnightid;
@@ -49,6 +49,8 @@ public class UpcomingNightActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Assignments
         setContentView(R.layout.activity_upcoming_night);
         tvGroup = findViewById(R.id.tvCurrentGroupApproved);
         tvMovie = findViewById(R.id.tvSelectedMovieApproved);
@@ -66,6 +68,7 @@ public class UpcomingNightActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
+        //Get extras on the intent
         if (extras != null) {
             movieid = extras.getString("MOVIEIDP");
             Log.d("CHECKPENDING",movieid);
@@ -86,6 +89,7 @@ public class UpcomingNightActivity extends AppCompatActivity {
 
         String ID = auth.getCurrentUser().getUid();
 
+        //Check if the current user is the creator, if they are, the delete button is shown
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -164,8 +168,7 @@ public class UpcomingNightActivity extends AppCompatActivity {
 
 
 
-
-
+        //Show the status of each user in the group
         jsonParser.getGroupMembersforNight(UpcomingNightActivity.this, new JSONParser.getGroupMembersforNightResponseListener() {
             @Override
             public void onError(String message) {
@@ -196,6 +199,7 @@ public class UpcomingNightActivity extends AppCompatActivity {
         },groupnightid);
 
 
+        //View details of the movie
         btnViewMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,9 +208,6 @@ public class UpcomingNightActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
 
     }
 }

@@ -46,11 +46,13 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-
+        //Assignments
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         String ID = auth.getCurrentUser().getUid();
 
+
+        //Get extras on the intent
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -67,6 +69,7 @@ public class GroupActivity extends AppCompatActivity {
         rvGroupList = findViewById(R.id.rvGroupList);
         JSONParser jsonParser = new JSONParser();
 
+        //Get movie nights using current users ID
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -96,6 +99,8 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
 
+
+        //Launch manage groups activity
         btnManageGroups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +163,7 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
+    //Display recycler
     private void setUpRecycler() {
         rvGroupList.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(GroupActivity.this);

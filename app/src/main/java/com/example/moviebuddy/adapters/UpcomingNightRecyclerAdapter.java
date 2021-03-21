@@ -165,8 +165,6 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
                                     intent.putExtra("title", title);
                                     intent.putExtra(CalendarContract.Events.DESCRIPTION,"Created With MovieBuddy!");
                                     context.startActivity(intent);
-
-
                                 }
                             });
 

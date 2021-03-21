@@ -10,6 +10,7 @@ import com.example.moviebuddy.R;
 
 public class CreditsActivity extends AppCompatActivity {
 
+    //This activity shows the two sources I have used which require attribution
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

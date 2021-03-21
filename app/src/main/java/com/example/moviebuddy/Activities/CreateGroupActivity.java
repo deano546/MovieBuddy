@@ -66,6 +66,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         DocumentReference docRef = fStore.collection("Users").document(ID);
 
+        //Get friends of current user
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

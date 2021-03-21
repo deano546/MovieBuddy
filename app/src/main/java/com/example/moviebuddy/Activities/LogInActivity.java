@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.moviebuddy.PrefManager;
 import com.example.moviebuddy.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,6 +49,7 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        //Assignments
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         btnSignin = findViewById(R.id.btnSignin);
@@ -56,7 +58,7 @@ public class LogInActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etsigninpassword);
         tvforgotPassword = findViewById(R.id.tvforgotPW);
 
-
+        //This creates a dialog box, and if the user enters an email, the forgot password function is called
         tvforgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +76,7 @@ public class LogInActivity extends AppCompatActivity {
                 layoutName.setOrientation(LinearLayout.VERTICAL);
                 layoutName.addView(editTextName1); // displays the user input bar
                 alertName.setView(layoutName);
+
 
                 alertName.setPositiveButton("Reset Password", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -100,8 +103,6 @@ public class LogInActivity extends AppCompatActivity {
                                     });
                         }
 
-
-
                     }
                 });
 
@@ -111,13 +112,7 @@ public class LogInActivity extends AppCompatActivity {
 
                     }
                 });
-
-
                 alertName.show();
-
-
-
-
             }
         });
 
@@ -133,7 +128,6 @@ public class LogInActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
 
-
                         //This determines whether the user is sent to the regular section or the admin section
                         Intent intent = new Intent(LogInActivity.this,MainActivity.class);
                         startActivity(intent);
@@ -145,7 +139,6 @@ public class LogInActivity extends AppCompatActivity {
                 }
             });
         }
-
 
 
         //Passes the email and password to firebase auth, which then determines if the details are correct

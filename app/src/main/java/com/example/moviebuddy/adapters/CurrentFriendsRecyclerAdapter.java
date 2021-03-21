@@ -45,10 +45,8 @@ public class CurrentFriendsRecyclerAdapter extends RecyclerView.Adapter<CurrentF
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvUsername = itemView.findViewById(R.id.tvCurrentFriendUsername);
             btnDelete = itemView.findViewById(R.id.btnDeleteFriend);
-
 
         }
     }
@@ -112,12 +110,9 @@ public class CurrentFriendsRecyclerAdapter extends RecyclerView.Adapter<CurrentF
                     }
                 });
 
-
                 alertName.show();
             }
         });
-
-
 
     }
 

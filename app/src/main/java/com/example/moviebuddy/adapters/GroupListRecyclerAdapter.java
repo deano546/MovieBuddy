@@ -74,7 +74,6 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
     }
 
 
-
     @Override
     public void onBindViewHolder(@NonNull GroupListRecyclerAdapter.MyViewHolder holder, int position) {
 
@@ -104,7 +103,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                 }
 
                 else {
-
+                    //Gets the movie title from the api
                     jsonParser.getMoviebyID(context, new JSONParser.SelectedMovieResponseListener() {
                         @Override
                         public void onError(String message) {
@@ -169,21 +168,11 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
                         }
                     },Integer.parseInt(groupList.get(position).getMovieid()));
 
-
-
-
                 }
-
-
-
 
         if(groupList.get(position).getGroupName().equals("No Groups Yet!")) {
             holder.btnSuggest.setVisibility(View.INVISIBLE);
         }
-
-
-
-
 
     }
 

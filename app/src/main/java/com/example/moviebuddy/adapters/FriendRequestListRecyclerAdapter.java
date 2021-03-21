@@ -60,6 +60,7 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
     @Override
     public void onBindViewHolder(@NonNull FriendRequestListRecyclerAdapter.MyViewHolder holder, int position) {
 
+
         if(userList.isEmpty())
         {
             Toast.makeText(context, "Yes", Toast.LENGTH_SHORT).show();
@@ -75,9 +76,6 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
             holder.btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
                     jsonParser.acceptFriendRequest(context, new JSONParser.acceptFriendRequestResponseListener() {
                         @Override
                         public void onError(String message) {
@@ -114,9 +112,6 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
                 }
             });
         }
-
-
-
 
     }
 

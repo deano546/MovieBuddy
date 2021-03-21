@@ -42,8 +42,6 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
             super(itemView);
             imMovie = itemView.findViewById(R.id.imgview);
             parentLayout = itemView.findViewById(R.id.cardview);
-
-
         }
     }
 

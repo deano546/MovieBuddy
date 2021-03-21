@@ -11,18 +11,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieBuddy">
-        <activity android:name=".Activities.CurrentFriendsActivity"></activity>
+        <activity android:name=".Activities.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.CurrentFriendsActivity" />
         <activity android:name=".Activities.AddtoGroupActivity" />
         <activity android:name=".Activities.ManageGroupsActivity" />
         <activity android:name=".Activities.CreditsActivity" />
         <activity android:name=".Activities.UpcomingNightActivity" />
         <activity android:name=".Activities.PendingNightActivity" />
         <activity android:name=".Activities.RegisterActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".Activities.LogInActivity" />
         <activity android:name=".Activities.MovieNightActivity" />
@@ -32,14 +39,13 @@
         <activity android:name=".Activities.NotifyActivity" />
         <activity android:name=".Activities.MovieActivity" />
         <activity android:name=".Activities.GroupActivity" />
-        <activity android:name=".Activities.WatchListActivity"
-            />
+        <activity android:name=".Activities.WatchListActivity" />
         <activity android:name=".Activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 

@@ -96,6 +96,8 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         btnAutoSuggest = findViewById(R.id.btnAutoSuggest);
         tvCurrentGroup = findViewById(R.id.tvCurrentGroup);
         btnViewMovie = findViewById(R.id.btnViewThismovie);
+
+        //Disable buttons to ensure the user has chosen a date and time before creating a movie night
         btnViewMovie.setClickable(false);
         btnViewMovie.setAlpha(.5f);
         etselectedMovie.setEnabled(false);
@@ -107,6 +109,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
         String ID = auth.getCurrentUser().getUid();
 
+        //Assign the current user's ID to a variable
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -121,7 +124,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         });
 
         Bundle extras = getIntent().getExtras();
-
+        //Get extras on the intent
         if (extras != null) {
             if(extras.containsKey("MOVIEID")) {
                 //Toast.makeText(this, "Yeah", Toast.LENGTH_SHORT).show();
@@ -141,6 +144,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
 
             //Log.d("CHECKIDONMOVIENIGHT",movieid);
+            //Set the name of the current group tp the top of the activity
             groupname = extras.getString("GROUPNAME");
             tvCurrentGroup.setText(groupname);
             Log.d("MOVIENIGHTGROUPID",extras.getLong("GROUPID") + "");
@@ -152,6 +156,8 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             Log.d("Did not work","lame");
         }
 
+
+        //This allows the user to view details of the movie they are suggesting
         btnViewMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +192,7 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
         JSONParser jsonParser = new JSONParser();
 
+        //Getting the members of the group the group night is for
         jsonParser.getGroupMembers(MovieNightActivity.this, new JSONParser.getGroupMembersResponseListener() {
             @Override
             public void onError(String message) {
@@ -200,18 +207,19 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             }
         },groupid);
 
-
+        //Clicking this button is the first step of suggesting a movie to the user
         btnAutoSuggest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
+                //Dialog box asking if the user wants a movie they will like, or one different than they usaully watch
                 window = new AlertDialog.Builder(MovieNightActivity.this);
                 window.setTitle("Pick please");
                 window.setItems(Options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(which == 0){
+                            //Get all the reviews from each member of the group
                             jsonParser.getGroupRatings(MovieNightActivity.this, new JSONParser.getGroupRatingsResponseListener() {
                                 @Override
                                 public void onError(String message) {
@@ -224,14 +232,17 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
                                     maxormin = "Max";
                                     //Toast.makeText(MovieNightActivity.this, "0", Toast.LENGTH_SHORT).show();
+                                    //Getting the groups favourite genre
                                     genre = breakoutGenres(ratinglist, maxormin);
                                     Log.d("Whats here?",genre);
+                                    //Passing the genre to the getsuggestion method
                                     getSuggestion(genre);
 
                                 }
                             },groupid);
 
                         }else if(which == 1){
+                            //Same as above, just gets least favourite genre instead
                             jsonParser.getGroupRatings(MovieNightActivity.this, new JSONParser.getGroupRatingsResponseListener() {
                                 @Override
                                 public void onError(String message) {
@@ -262,7 +273,9 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
             }
         });
 
-
+        //Creates the movie night based on the chosen movie, date and time
+        //After its created, I then get the ID of the movie night,
+        //and then set the creator to approved
         btnCreateNight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -351,6 +364,10 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
 
     }
 
+
+
+    //This takes a list of movie ratings and their genres, it gets the average of each, puts each genre and its average in hashmap,
+    //and then determines the highest and lowest rated genres
     private String breakoutGenres(List<GroupsRatings> ratinglist, String decider) {
 
         double actionaverage = getAverage("Action",ratinglist);
@@ -473,6 +490,10 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
+
+
+
+    //This function calculates the average for each genre
 public double getAverage(String genre, List<GroupsRatings> Ratings) {
 
         int genreCounter = 0;
@@ -498,6 +519,7 @@ public double getAverage(String genre, List<GroupsRatings> Ratings) {
 }
 
 
+    //This function takes the required genre, gets the most popular movie of that genre
 public Movie getSuggestion(String genre) {
         Movie movie2 = new Movie();
 
@@ -530,6 +552,7 @@ public Movie getSuggestion(String genre) {
 
 }
 
+//This function ensures no one in the group has watched the suggested movie before returning it
 public String checkifwatched(Movie movie) {
 
         JSONParser jsonParser = new JSONParser();

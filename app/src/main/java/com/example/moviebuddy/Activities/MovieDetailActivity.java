@@ -193,7 +193,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-
+        //Passes this movie and its detail as on extra on the intent to allow the user to manually suggest it to their group
         btnDetailSuggest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,9 +252,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
 
 
         //I determine if the user already has a record in the usermovie table associated with the current movie

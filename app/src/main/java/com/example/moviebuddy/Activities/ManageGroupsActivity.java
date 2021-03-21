@@ -27,6 +27,7 @@ import java.util.List;
 
 public class ManageGroupsActivity extends AppCompatActivity {
 
+    //Declarations
     RecyclerView rvManageGroups;
     List<Group> groupsource;
     FirebaseAuth auth;
@@ -47,6 +48,8 @@ public class ManageGroupsActivity extends AppCompatActivity {
         JSONParser jsonParser = new JSONParser();
         String ID = auth.getCurrentUser().getUid();
 
+
+        //Uses the current users ID to display the groups they are in
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -55,7 +58,6 @@ public class ManageGroupsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         SQLID = document.get("id").toString();
-
 
                         jsonParser.getGroupbyUser(ManageGroupsActivity.this, new JSONParser.getGroupResponseListener() {
                             @Override

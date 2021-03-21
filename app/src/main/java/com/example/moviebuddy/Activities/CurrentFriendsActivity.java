@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CurrentFriendsActivity extends AppCompatActivity {
 
+    //Declarations
     List<User> userList = new ArrayList<>();
     FirebaseAuth auth;
     RecyclerView rvcurrentfriends;
@@ -39,8 +40,8 @@ public class CurrentFriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_friends);
 
+        //Assignments
         rvcurrentfriends = findViewById(R.id.rvCurrentFriends);
-
         auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         JSONParser jsonParser = new JSONParser();
@@ -48,7 +49,7 @@ public class CurrentFriendsActivity extends AppCompatActivity {
         String ID = auth.getCurrentUser().getUid();
 
         DocumentReference docRef = fStore.collection("Users").document(ID);
-
+        //Show the friends of the current user
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -80,9 +81,8 @@ public class CurrentFriendsActivity extends AppCompatActivity {
         });
         
     }
-
+    //Display Recycler View
     private void setUpRecycler() {
-
         rvcurrentfriends.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(CurrentFriendsActivity.this);
         rvcurrentfriends.setLayoutManager(layoutManager);

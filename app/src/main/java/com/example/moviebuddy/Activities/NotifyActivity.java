@@ -54,6 +54,8 @@ public class NotifyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
+
+        //Assignments
         TextView tvNoFriendRequests = findViewById(R.id.tvNoFriendRequests);
         tvNoFriendRequests.setVisibility(View.INVISIBLE);
 
@@ -65,6 +67,7 @@ public class NotifyActivity extends AppCompatActivity {
         String ID = auth.getCurrentUser().getUid();
         JSONParser jsonParser = new JSONParser();
 
+        //Getting any pending friend requests for the current user
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -93,20 +96,8 @@ public class NotifyActivity extends AppCompatActivity {
                             }
                         },SQLID);
 
-//                        jsonParser.getUltramovienightbyuserid(NotifyActivity.this, new JSONParser.getUltraGroupResponseListener() {
-//                            @Override
-//                            public void onError(String message) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onResponse(List<GroupNight> approvallist) {
-//                                groupNights = approvallist;
-//                                Log.d("56CheckGroupString",groupNights.toString());
-//                                setUpSecondRecycler();
-//                            }
-//                        },SQLID);
 
+                        //Gets any movie nights the user has not responded to
                         jsonParser.getUnapprovedNights(NotifyActivity.this, new JSONParser.getUnapprovedNightsResponseListener() {
                             @Override
                             public void onError(String message) {
@@ -159,6 +150,8 @@ public class NotifyActivity extends AppCompatActivity {
         });
     }
 
+
+    //Display the two recycler views
     public void setUpRecycler() {
         rvRequestList.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(NotifyActivity.this);

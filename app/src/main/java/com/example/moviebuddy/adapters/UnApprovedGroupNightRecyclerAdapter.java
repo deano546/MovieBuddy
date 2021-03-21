@@ -31,7 +31,6 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
     int Counter;
     String groupnightid;
 
-
     public UnApprovedGroupNightRecyclerAdapter(List<GroupNight> groupNights, Context context, String userid) {
         this.groupNights = groupNights;
         this.context = context;
@@ -52,8 +51,6 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
             tvMovie = itemView.findViewById(R.id.tvMovieforNight);
             tvGroup = itemView.findViewById(R.id.tvGroupforNight);
             tvDateAndTime = itemView.findViewById(R.id.tvDAndTforNight);
-
-
         }
     }
 
@@ -103,8 +100,6 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
                 }
             },Integer.parseInt(groupNights.get(position).getMovieid()));
 
-
-
             holder.btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -127,7 +122,6 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
                                     for (String s : approvallist) {
                                         if(s.equals("True") || s.equals("Declined"));
                                         Counter +=1;
-
                                     }
                                     if(Counter == approvallist.size()) {
 
@@ -157,8 +151,6 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
                     },SQLID,groupnightid);
                 }
             });
-
-
 
             holder.btnReject.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -213,11 +205,6 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
                 }
             });
         }
-
-
-
-
-
 
     }
 

@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">MovieBuddy</string>
     <string name="forgotpassword"><u>Forgot your password?</u></string>
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Welcome to MovieBuddy</string>
+    <string name="slide_1_desc">We take the hassle out of watching movies with your buddies!</string>
+
+    <string name="slide_2_title">Friends and Groups</string>
+    <string name="slide_2_desc">Be sure to add friends and create groups with them!</string>
+
+    <string name="slide_3_title">Rate Movies</string>
+    <string name="slide_3_desc">Rate as many movies as you can to improve your recommendations!</string>
+
+    <string name="slide_4_title">Movie Nights</string>
+    <string name="slide_4_desc">Organise a Movie Night with your group and enjoy!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
 </resources>

@@ -70,6 +70,7 @@ public class FriendListActivity extends AppCompatActivity {
 
         JSONParser jsonParser = new JSONParser();
 
+        //Assigning the ID of the current user to a variable
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

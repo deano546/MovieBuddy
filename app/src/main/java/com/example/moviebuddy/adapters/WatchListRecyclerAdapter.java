@@ -178,10 +178,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
 
                     }
                 });
-
                 alertName.show();
-
-
             }
         });
 
@@ -276,16 +273,6 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
             movieList.addAll((List) results.values);
             notifyDataSetChanged();
         }
-
-
     };
-
-
-
-
-
-
-
-
 
 }

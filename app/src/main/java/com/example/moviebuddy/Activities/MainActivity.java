@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //This uses the ID of the currrent user to check if they have any upcoming movie nights, if they do, they are displayed in the recycler
         DocumentReference docRef = fStore.collection("Users").document(ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -116,30 +118,6 @@ public class MainActivity extends AppCompatActivity {
                              }
                          },SQLID);
 
-//                        //This retrieves any upcoming user nights for the user by passing their ID
-//                        jsonParser.getMovieNightsbyID(MainActivity.this, new JSONParser.MovieNightResponseListener() {
-//                            @Override
-//                            public void onError(String message) {
-//                                Log.d("error1234",message);
-//                            }
-//
-//                            @Override
-//                            public void onResponse(List<GroupNight> groupNight) {
-//                                //Once the data is retrieved, the recycler view is populated
-//                                nightsource = groupNight;
-//                                Log.d("CHECKINGNIGHTSOURCE",nightsource.toString());
-//                                nightadapter = new UpcomingNightRecyclerAdapter(nightsource,MainActivity.this);
-//                                NightHorizontalLayout = new LinearLayoutManager(
-//                                        MainActivity.this,
-//                                        LinearLayoutManager.HORIZONTAL,
-//                                        false);
-//                                grouprecycler.setLayoutManager(NightHorizontalLayout);
-//                                grouprecycler.setAdapter(nightadapter);
-//
-//
-//                            }
-//                        },Integer.parseInt(SQLID));
-
                     }
                 }
             }
@@ -150,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         NightRecyclerManager = new LinearLayoutManager(getApplicationContext());
         grouprecycler.setLayoutManager(NightRecyclerManager);
 
-
+        //Logs the user out
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,9 +202,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         //Declare bottom nav, and set correct option as selected, adapted from https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.page_1);
@@ -258,8 +233,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
 
     }
 

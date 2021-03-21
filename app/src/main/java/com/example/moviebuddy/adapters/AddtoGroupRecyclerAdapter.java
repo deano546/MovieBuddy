@@ -81,6 +81,8 @@ public class AddtoGroupRecyclerAdapter extends RecyclerView.Adapter<AddtoGroupRe
                     @Override
                     public void onClick(View v) {
 
+                        //Dialog Box
+
                         AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
                         // final EditText editTextName1 = new EditText(context);
                         // add line after initializing editTextName1
@@ -122,10 +124,7 @@ public class AddtoGroupRecyclerAdapter extends RecyclerView.Adapter<AddtoGroupRe
                             }
                         });
 
-
                         alertName.show();
-
-
                     }
                 });
 
@@ -142,11 +141,8 @@ public class AddtoGroupRecyclerAdapter extends RecyclerView.Adapter<AddtoGroupRe
                     Toast.makeText(context, "All your friends are in this group!", Toast.LENGTH_SHORT).show();
                 }
 
-
-
             }
         },GroupID);
-
 
     }
 

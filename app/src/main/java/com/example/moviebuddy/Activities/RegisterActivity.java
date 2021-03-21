@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.moviebuddy.PrefManager;
 import com.example.moviebuddy.R;
 import com.example.moviebuddy.dataaccess.JSONParser;
 import com.example.moviebuddy.model.User;
@@ -36,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     //This activity allows a user to register
     //Based on https://github.com/bikashthapa01/firebase-authentication-android/blob/master/app/src/main/java/net/smallacademy/authenticatorapp/Register.java
 
-    Button btnRegister, btnLogin;
+    Button btnRegister, btnLogin, btnIntro;
     EditText etEmail, etName, etPassword;
     FirebaseAuth auth;
     FirebaseFirestore fStore;
@@ -54,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etregisteremail);
         etName = findViewById(R.id.etName);
         etPassword = findViewById(R.id.etregisterpassword);
+        btnIntro = findViewById(R.id.btnIntro);
 
         //If the user is already signed in, send them to the main activity
         if(auth.getCurrentUser() != null) {
@@ -78,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
             });
         }
 
+        //Launches login activity
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +89,22 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //Show intro slides
+        btnIntro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Code based on: IS4407 Lecture Material, Gleeson Michael
+                //Code from: Microsoft Team -> Teams -> IS4447 Tutorial Series -> File -> Bonus - Happy Christmas
+                PrefManager PrefManagerActivity = new PrefManager(getApplicationContext());
+                // make first time launch TRUE
+                PrefManagerActivity.setFirstTimeLaunch(true);
+                startActivity(new Intent(RegisterActivity.this, WelcomeActivity.class));
+                finish();
+                //End Code
+            }
+        });
 
+        //Validate the user has entered details, then send them to firestore
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +133,6 @@ public class RegisterActivity extends AppCompatActivity {
             etPassword.setError("Password Must be >= 6 Characters");
             return;
         }
-
 
 
         //Creating a user with firebase auth, I also create a user object in the Cloud Firestore so I have a corresponding table there
@@ -172,18 +189,12 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String username) {
 
-
-
                         }
                     }, email, fullName);
-
-
                 }
                 else {
                     Toast.makeText(RegisterActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
     }

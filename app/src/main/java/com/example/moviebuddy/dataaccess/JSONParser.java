@@ -70,9 +70,6 @@ public class JSONParser {
     //some code was adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
 
-
-
-
     //https://stackoverflow.com/questions/33535435/how-to-create-a-proper-volley-listener-for-cross-class-volley-method-calling
     public interface VolleyResponseListener {
         void onError(String message);

@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddtoGroupActivity extends AppCompatActivity {
-
-
+    //Declarations
     TextView tvAddtoGroup;
     String groupid;
     RecyclerView rvUsersAddtoGroup;
@@ -46,9 +45,12 @@ public class AddtoGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addto_group);
+        //Assignments
         rvUsersAddtoGroup = findViewById(R.id.rvAddtoGroupList);
         tvAddtoGroup = findViewById(R.id.tvAddtoGroup);
         JSONParser jsonParser = new JSONParser();
+
+        //Get extras on the intent
         Intent intent = getIntent();
         if(intent.hasExtra("GROUPID")) {
             tvAddtoGroup.setText(intent.getExtras().getString("GROUPNAME"));
@@ -61,6 +63,7 @@ public class AddtoGroupActivity extends AppCompatActivity {
 
         DocumentReference docRef = fStore.collection("Users").document(ID);
 
+        //Get friends list of current user
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -93,7 +96,7 @@ public class AddtoGroupActivity extends AppCompatActivity {
 
 
     }
-
+    //Displaying the recycler view
     private void setUpRecycler() {
         rvUsersAddtoGroup.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(AddtoGroupActivity.this);
