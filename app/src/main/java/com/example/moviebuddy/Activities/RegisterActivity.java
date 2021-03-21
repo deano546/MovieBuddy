@@ -123,14 +123,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
 
                     JSONParser jsonParser= new JSONParser();
 
                     jsonParser.createUser(RegisterActivity.this, new JSONParser.CreateUserResponseListener() {
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(RegisterActivity.this, "Error - CreateUser", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RegisterActivity.this, "Error - CreateUser", Toast.LENGTH_SHORT).show();
 
                             jsonParser.SearchUsers(RegisterActivity.this, new JSONParser.SearchUsersResponseListener() {
                                 @Override

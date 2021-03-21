@@ -217,7 +217,7 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
         },id,movieList.get(position).getId(),rating);
     }
 
-    //This method allows a movie to be removed from the watchlist when the user marks it as watched
+    //This method allows a movie to be removed from the watchlist when the user clicks delete
     public void removeItem2(int position, int id) {
 
         JSONParser jsonParser = new JSONParser();
