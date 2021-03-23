@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentFriendsRecyclerAdapter extends RecyclerView.Adapter<CurrentFriendsRecyclerAdapter.MyViewHolder> {
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
     List<User> userList;
     Context context;
@@ -69,6 +70,7 @@ public class CurrentFriendsRecyclerAdapter extends RecyclerView.Adapter<CurrentF
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //https://stackoverflow.com/questions/43513919/android-alert-dialog-with-one-two-and-three-buttons/43513920#43513920
                 AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
                 // final EditText editTextName1 = new EditText(context);
                 // add line after initializing editTextName1

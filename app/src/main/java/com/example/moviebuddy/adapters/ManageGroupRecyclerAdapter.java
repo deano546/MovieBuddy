@@ -27,6 +27,7 @@ import com.example.moviebuddy.model.GroupNight;
 import java.util.List;
 
 public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroupRecyclerAdapter.MyViewHolder> {
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
     List<Group> groupList;
     Context context;
@@ -68,10 +69,13 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
 
         JSONParser jsonParser = new JSONParser();
 
+
+        //This deletes the user form the selected group, it also rejects any pending group night
             holder.btnLeaveGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    //https://stackoverflow.com/questions/43513919/android-alert-dialog-with-one-two-and-three-buttons/43513920#43513920
                     AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
                     // final EditText editTextName1 = new EditText(context);
                     // add line after initializing editTextName1
@@ -129,6 +133,7 @@ public class ManageGroupRecyclerAdapter extends RecyclerView.Adapter<ManageGroup
                 }
             });
 
+            //Launches the add member activity
             holder.btnAddMember.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

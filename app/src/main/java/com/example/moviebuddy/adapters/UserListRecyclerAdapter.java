@@ -83,6 +83,8 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
             JSONParser jsonParser = new JSONParser();
 
             holder.tvUsername.setText(userList.get(position).getUsername());
+
+            //Sends a friend request to the selected user
             holder.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

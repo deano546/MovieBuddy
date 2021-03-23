@@ -243,6 +243,9 @@ public class WatchListRecyclerAdapter extends RecyclerView.Adapter<WatchListRecy
         return movieList.size();
     }
 
+    //Filter allows search of the list in the recycler
+    //adapted from https://codinginflow.com/tutorials/android/searchview-recyclerview
+
     @Override
     public Filter getFilter() {
         return exampleFilter;

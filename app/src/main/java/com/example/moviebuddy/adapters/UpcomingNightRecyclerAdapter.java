@@ -29,6 +29,7 @@ import java.util.List;
 
 public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingNightRecyclerAdapter.MyViewHolder> {//Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
     //This is displayed on the main activity, and shows any upcoming movie nights for the current user
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
     List<GroupNight> groupNightList;
     Context context;
@@ -100,6 +101,9 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
                     holder.tvTitle.setText(movie.getTitle());
                     holder.tvDateAndTime.setText(groupNightList.get(position).getDate() + " " + groupNightList.get(position).getTime());
                     holder.tvGroup.setText(String.valueOf(groupNightList.get(position).getGroupName()));
+
+                    //Adds the event to the users calendar
+                    //adapted from https://www.youtube.com/watch?v=NK_-phxyIAM
                     holder.btnCalendar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

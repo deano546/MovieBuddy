@@ -63,6 +63,8 @@ public class JSONParser {
     private String moviegenre;
     private String checkifwatched;
     private boolean breaknow = false;
+    private RequestQueue requestQueue;// Declare
+
 
 
     //These are all methods that interface with my database (through rest services created with oracle apex)
@@ -81,7 +83,12 @@ public class JSONParser {
     //A list of movies is retrieved and inserted into an array list
     //The array list is returned using the Response Listener
     public void getPopularMoviez(Context context, VolleyResponseListener volleyResponseListener) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
+
+
+
+
+
         Log.d("hello","something");
         String popularurl = "https://api.themoviedb.org/3/movie/popular?api_key=641b5efff7ea9e0f5b33575963cf62ec";
 
@@ -126,7 +133,12 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
 
 
 
@@ -140,7 +152,7 @@ public class JSONParser {
 
     //Similar to last method, this gets a different list from the API, listed in their documentation as "Upcoming"
     public void getCurrentMovies(Context context,CurrentMovieResponseListener currentMovieResponseListener) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String currenturl = "https://api.themoviedb.org/3/movie/upcoming?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US&page=1";
 
@@ -187,7 +199,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -202,7 +221,7 @@ public class JSONParser {
     //Calling the search on the movie database API, and return the resulting list
     public void SearchMovies(Context context, SearchMovieResponseListener searchMovieResponseListener, String searchquery) {
         searchmovieList.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String searchurl = "https://api.themoviedb.org/3/search/movie?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US&query=" + searchquery + "&page=1&include_adult=false";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, searchurl, null,
@@ -258,7 +277,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -272,7 +298,7 @@ public class JSONParser {
     //Retrive a single movie form the API using the movieid
     public void getMoviebyID(Context context, SelectedMovieResponseListener selectedMovieResponseListener, int movieid) {
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movieurl = "https://api.themoviedb.org/3/movie/" + movieid + "?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US";
 
@@ -327,7 +353,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -344,7 +377,7 @@ public class JSONParser {
     //I call the get movie by ID method in this so I can also retrieve the movie details from the API
     public void getMovieNightsbyID(Context context, MovieNightResponseListener selectedMovieResponseListener, int userid) {
         groupnightList.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmovienightbyuserid/" + userid;
 
@@ -419,7 +452,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
     }
 
 
@@ -433,7 +473,7 @@ public class JSONParser {
     //it also calls the get movie by id method so the details of the movies can be displayed also
     public void getWatchlistbyID(Context context, WatchListResponseListener watchListResponseListener, int userid) {
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String watchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getwatchlistbyid/" + userid;
 
@@ -492,12 +532,19 @@ public class JSONParser {
             Log.d("****", String.valueOf(error));
         }
     });
-    mQueue.add(request);
-}
+    //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
+    }
     //This marks a movie on a user's watchlist as watched
     //Returns an error but works, possible solution here but not quite sure how to implement it https://stackoverflow.com/a/32105391
     public void markAsWatched(Context context, MarkWatchedResponseListener markWatchedResponseListener, int userid, int movieid, int rating) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String markwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updatewatchlist/" + userid + "?movieid=" + movieid + "&rating=" + rating ;
         Log.d("CHECKURL",markwatchlisturl);
@@ -516,8 +563,15 @@ public class JSONParser {
             Log.d("****", String.valueOf(error));
         }
     });
-    mQueue.add(request);
-}
+    //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
+    }
 
     public interface MarkWatchedResponseListener {
         void onError(String message);
@@ -529,7 +583,7 @@ public class JSONParser {
     //Gets the current user's friend list
     public void getFriendsbyID(Context context, GetFriendsResponseListener getfriendsResponseListener, int userid) {
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String url = "https://apex.oracle.com/pls/apex/gdeane545/gr/getfriendsbyid/" + userid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -560,7 +614,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
     }
 
 
@@ -574,7 +635,7 @@ public class JSONParser {
     //I pass the id of the user performing the search so they can be excluded
     public void SearchUsers(Context context, SearchUsersResponseListener searchusersResponseListener, String searchquery, int userid) {
         searchuserlist.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String searchuserurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getallusers/" + userid + "?username=" + searchquery;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, searchuserurl, null,
@@ -607,7 +668,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -621,7 +689,7 @@ public class JSONParser {
     //This creates a new group
     public void createGroup(Context context, CreateGroupResponseListener creategroupResponseListener, String groupname) {
         searchuserlist.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String creategroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/creategroup/" + groupname;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, creategroupurl, null,
@@ -638,7 +706,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -659,7 +734,7 @@ public class JSONParser {
     //I need to validate each groups name is unique
     public void getGroup(Context context, getGroupIDResponseListener getgroupidResponseListener, String groupname) {
         searchuserlist.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getgroupidbyname/" + groupname;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
@@ -689,7 +764,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -697,7 +779,7 @@ public class JSONParser {
     //This adds records to the UserGroup table of the user and group ids
     public void createUserGroup(Context context, CreateUserGroupResponseListener createusergroupResponseListener, int groupid, int id) {
         searchuserlist.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String createusergroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/addusergroup/" + id + "?passedgroupid=" + groupid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createusergroupurl, null,
@@ -714,7 +796,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -731,7 +820,7 @@ public class JSONParser {
     public void getUserMovie(Context context, GetUserMovieResponseListener getusermovieResponseListener, int userid, int movieid) {
         usermovielist.clear();
         UserMovie usermovie1 = new UserMovie();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String getusermovieurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getusermovie/" + userid + "?movieid=" + movieid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getusermovieurl, null,
@@ -798,7 +887,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -812,7 +908,7 @@ public class JSONParser {
 
     //Creates a record in the usermovie table and adds a rating
     public void createMovieRating(Context context, CreateMovieRatingResponseListener createmovieratingResponseListener, int userid, int movieid,int rating, String genre) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
         String createratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newrating/" + userid + "?passedmovieid=" + movieid + "&passedrating=" + rating + "&passedgenre=" + genre;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, createratingurl, null,
@@ -832,7 +928,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
     }
 
     public interface CreateMovieRatingResponseListener {
@@ -843,7 +946,7 @@ public class JSONParser {
 
     //Updates a record in the user movie table and adds a rating
     public void updateMovieRating(Context context, UpdateMovieRatingResponseListener updatemovieratingResponseListener, int userid, int movieid,int rating) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String updateratingurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updaterating/" + userid + "?rating=" + rating + "&passedmovieid=" + movieid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, updateratingurl, null,
@@ -860,7 +963,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -874,7 +984,7 @@ public class JSONParser {
 
     //This adds a movie to a users watchlist
     public void addtoWatchlist(Context context, addtoWatchlistResponseListener addtowatchlistResponseListener, int userid, int movieid, String genre) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String addwatchlisturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/newwatchlist/" + userid + "?passedmovieid=" + movieid + "&passedgenre=" + genre;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, addwatchlisturl, null,
@@ -891,7 +1001,14 @@ public class JSONParser {
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
     }
 
     public interface addtoWatchlistResponseListener {
@@ -901,7 +1018,7 @@ public class JSONParser {
     }
 
 public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener verifyuniquegroupresponselistener, String groupname) {
-    RequestQueue mQueue = Volley.newRequestQueue(context);
+    //RequestQueue mQueue = Volley.newRequestQueue(context);
     String checkuniqueurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/checkgroupname/" + groupname;
 
     JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, checkuniqueurl, null,
@@ -935,7 +1052,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
             Log.d("****", String.valueOf(error));
         }
     });
-    mQueue.add(request);
+    //mQueue.add(request);
+    if (requestQueue == null) {
+        requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(request);
+    } else {
+        requestQueue.add(request);
+    }
+
 
 
 
@@ -949,8 +1073,8 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     //This creates a new group
     public void createUser(Context context, CreateUserResponseListener createuserResponseListener, String email, String username) {
-        ;
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String createuserurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/createuser/" + email + "?username=" + username;
 
 
@@ -968,7 +1092,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -989,7 +1120,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     //I need to validate each groups name is unique
     public void getGroupbyUser(Context context, getGroupResponseListener getgroupResponseListener, String id) {
         groupList.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getgroupnamebyuserid/" + id;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
@@ -1035,7 +1166,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1044,7 +1182,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
         groupnightListbygroup.clear();
         Log.d("Checking group id", id);
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmovienightbygroupid/" + id;
 
@@ -1123,7 +1261,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1135,8 +1280,8 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     //This creates a new group
     public void createMovieNight(Context context, CreateMovieNightResponseListener createmovienightResponseListener, String groupid, String movieid, String date, String time, String userid) {
-        ;
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
         String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/addmovienight/" + groupid + "?movieid=" + movieid + "&passeddate=" + date + "&passedtime=" + time + "&passeduserid=" + userid;
 
 
@@ -1154,7 +1299,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1168,7 +1320,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     //This sends a friend request
     public void sendFriendRequest(Context context, sendFriendRequestResponseListener sendfriendrequestResponseListener, String senderid, String receiverid) {
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/sendfriendrequest/" + senderid + "?passedrequest=" + receiverid;
 
 
@@ -1186,7 +1338,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1200,7 +1359,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void getFriendRequests(Context context, getFriendRequestsResponseListener getfriendsrequestsResponseListener, String id) {
         friendrequestlist.clear();
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String friendrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getfriendrequests/" + id;
 
@@ -1251,7 +1410,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1263,7 +1429,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     //Updates a record in the user movie table and adds a rating
     public void acceptFriendRequest(Context context, acceptFriendRequestResponseListener acceptfriendrequestResponseListener, int userid, int senderid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/acceptfriendrequest/" + userid + "?senderid=" + senderid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, acceptrequesturl, null,
@@ -1280,7 +1446,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1294,7 +1467,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     //Updates a record in the user movie table and adds a rating
     public void rejectFriendRequest(Context context, rejectFriendRequestResponseListener rejectfriendrequestResponseListener, int userid, int senderid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String rejectrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/rejectfriendrequest/" + userid + "?senderid=" + senderid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, rejectrequesturl, null,
@@ -1311,7 +1484,15 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1325,7 +1506,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void getGroupMembers(Context context, getGroupMembersResponseListener getgroupmembersResponseListener, String groupid) {
         groupMemberList.clear();
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getmembersbygroupid/" + groupid;
 
@@ -1378,7 +1559,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1393,7 +1581,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     public void insertGroupApproval(Context context, insertGroupApprovalResponseListener insertgroupapprovalResponseListener, String groupnightid, String userid) {
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String createmovienighturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/insertintogroupnightapproval/" + groupnightid + "?userid=" + userid;
 
 
@@ -1412,7 +1600,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("Inserted", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1427,7 +1622,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
 
     public void approveGroupNight(Context context, approveGroupNightResponseListener approvegroupnightResponseListener, String userid, String groupnightid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/approvemovienight/" + userid + "?passedgroupid=" + groupnightid;
 
@@ -1445,7 +1640,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1460,7 +1662,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void getGroupNightApproval(Context context, getGroupNightApprovalResponseListener getgroupnightapprovalResponseListener, String groupnightid) {
         approvalList.clear();
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getgroupapproval/" + groupnightid;
 
@@ -1501,7 +1703,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1512,7 +1721,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void rejectGroupNight(Context context, rejectGroupNightResponseListener rejectgroupnightResponseListener, String userid, String groupnightid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/declinemovienight/" + userid + "?passedgroupid=" + groupnightid;
 
@@ -1530,7 +1739,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1544,7 +1760,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     public void getUnapprovedNights(Context context, getUnapprovedNightsResponseListener getunapprovednightsResponseListener, String userid) {
         nightstoapprove.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getunapprovednightsfornotify/" + userid;
 
@@ -1613,7 +1829,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1627,7 +1850,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     public void getSpecificNight(Context context, getSpecificNightResponseListener getspecificnightResponseListener, String groupid, String movieid) {
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getspecificgroupnight/" + groupid + "?movieid=" + movieid;
 
@@ -1667,7 +1890,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1678,7 +1908,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void fullyApproveGroupNight(Context context, fullyApproveGroupNightResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/fullyapprovenight/" + groupnightid;
@@ -1697,7 +1927,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1711,7 +1948,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void getGroupRatings(Context context, getGroupRatingsResponseListener getgroupratingsResponseListener, String groupid) {
         ratingsList.clear();
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/groupsusermovies/" + groupid;
 
@@ -1768,7 +2005,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1854,7 +2098,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
 
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String movieurl = "https://api.themoviedb.org/3/discover/movie?api_key=641b5efff7ea9e0f5b33575963cf62ec&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=" + genreid ;
 
@@ -1910,7 +2154,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -1919,7 +2170,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void checkifGroupWatched(Context context, checkifGroupWatchedResponseListener checkifgroupwatchedResponseListener, String groupid, String movieid) {
         ratingsList.clear();
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/checkifwatchedbygroup/" + groupid +  "?movieid=" + movieid;
 
@@ -1962,7 +2213,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -1981,7 +2239,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     public void getUltramovienightbyuserid(Context context, getUltraGroupResponseListener getgroupResponseListener, String id) {
         ultralist.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
         String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/ultramovienightbyuserid/" + id;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
@@ -2097,7 +2355,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -2106,7 +2371,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     public void getGroupMembersforNight(Context context, getGroupMembersforNightResponseListener getgroupratingsResponseListener, String groupid) {
         membersfornight.clear();
 
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String getmemberrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/getusersandapprovalsbygroupnightid/" + groupid;
 
@@ -2164,7 +2429,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
     }
 
@@ -2175,7 +2447,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void updateGroupNight(Context context, updateGroupNightResponseListener fullyapprovegroupnightResponseListener, String groupnightid, String passeddate, String passedtime) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/updatemovienight/"  + groupnightid + "?passeddate=" + passeddate + "&passedtime=" + passedtime ;
@@ -2194,7 +2466,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -2206,7 +2485,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void setapprovalsafterchange(Context context, setapprovalsafterchangeResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/setapprovalstofalse/"  + groupnightid;
@@ -2225,7 +2504,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -2237,7 +2523,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void deleteUserGroup(Context context, deleteUserGroupResponseListener fullyapprovegroupnightResponseListener, String userid, String groupid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deleteusergroup/"  + userid + "?groupid=" + groupid;
@@ -2256,7 +2542,15 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -2269,7 +2563,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     //Updates a record in the user movie table and adds a rating
     public void deleteFriend(Context context, deleteFriendResponseListener rejectfriendrequestResponseListener, int userid, int senderid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
         String rejectrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deltefriend/" + userid + "?secondid=" + senderid;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, rejectrequesturl, null,
@@ -2286,7 +2580,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
 
 
     }
@@ -2305,7 +2599,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
 
     public void getapprovedandtruenightbyuserid(Context context, getapprovedandtruenightbyuseridResponseListener getgroupResponseListener, String id) {
         ultralist.clear();
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
         String getgroupurl = "https://apex.oracle.com/pls/apex/gdeane545/gr/approvedandtruegroupnightsbyuserid/" + id;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getgroupurl, null,
@@ -2421,13 +2715,20 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
 
     public void deleteGroupNightpart1(Context context, deleteGroupNightpart1ResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
 
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deletegroupnightapproval/"  + groupnightid;
@@ -2446,7 +2747,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+        //mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -2458,7 +2766,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void deleteGroupNightpart2(Context context, deleteGroupNightpart2ResponseListener fullyapprovegroupnightResponseListener, String groupnightid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
 
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deletegroupnight/"  + groupnightid;
@@ -2477,7 +2785,13 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
 
 
     }
@@ -2489,7 +2803,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void leavingrejectGroupNight(Context context, leavingrejectGroupNightResponseListener rejectgroupnightResponseListener, String userid, String groupid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+        //RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/declinemovienightwhenleaving/" + userid + "?passedgroupid=" + groupid;
 
@@ -2507,7 +2821,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }
@@ -2519,7 +2840,7 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
     }
 
     public void deletefromWatchlist(Context context, deletefromWatchlistResponseListener rejectgroupnightResponseListener, String userid, String movieid) {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+       // RequestQueue mQueue = Volley.newRequestQueue(context);
 
         String acceptrequesturl = "https://apex.oracle.com/pls/apex/gdeane545/gr/deletefromwatchlist/" + userid + "?passedmovieid=" + movieid;
 
@@ -2537,7 +2858,14 @@ public void verifyUniqueGroup(Context context, verifyUniqueGroupResponseListener
                 Log.d("****", String.valueOf(error));
             }
         });
-        mQueue.add(request);
+       // mQueue.add(request);
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
+            requestQueue.add(request);
+        } else {
+            requestQueue.add(request);
+        }
+
 
 
     }

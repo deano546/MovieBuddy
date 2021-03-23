@@ -100,6 +100,8 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
                 }
             },Integer.parseInt(groupNights.get(position).getMovieid()));
 
+
+            //Accepts the movie night
             holder.btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -152,6 +154,7 @@ public class UnApprovedGroupNightRecyclerAdapter extends RecyclerView.Adapter<Un
                 }
             });
 
+            //Reject the movie night
             holder.btnReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

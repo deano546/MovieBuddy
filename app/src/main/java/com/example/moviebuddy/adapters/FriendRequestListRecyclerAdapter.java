@@ -73,6 +73,7 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
 
             holder.tvUsername.setText(userList.get(position).getUsername());
 
+            //Accept the friend request
             holder.btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -93,6 +94,7 @@ public class FriendRequestListRecyclerAdapter extends RecyclerView.Adapter<Frien
             });
 
 
+            //Reject the friend request
             holder.btnReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

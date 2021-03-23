@@ -82,6 +82,7 @@ public class GroupListRecyclerAdapter extends RecyclerView.Adapter<GroupListRecy
 
                 holder.tvGroupName.setText(String.valueOf(groupList.get(position).getGroupName()));
 
+                //This checks if the list is empty
                 if(groupList.get(position).getApproval().equals("Nope")) {
                     holder.tvTitle.setText("No Movie Night Yet!");
                     holder.btnSuggest.setOnClickListener(new View.OnClickListener() {

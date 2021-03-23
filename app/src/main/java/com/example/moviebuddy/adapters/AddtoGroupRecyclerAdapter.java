@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddtoGroupRecyclerAdapter extends RecyclerView.Adapter<AddtoGroupRecyclerAdapter.MyViewHolder> {
+    //Mostly adapted from https://www.youtube.com/watch?v=FFCpjZkqfb0
 
     List<User> userList;
     List<User> selecteduserList;
@@ -82,6 +83,7 @@ public class AddtoGroupRecyclerAdapter extends RecyclerView.Adapter<AddtoGroupRe
                     public void onClick(View v) {
 
                         //Dialog Box
+                        //https://stackoverflow.com/questions/43513919/android-alert-dialog-with-one-two-and-three-buttons/43513920#43513920
 
                         AlertDialog.Builder alertName = new AlertDialog.Builder(context, R.style.MyDialogTheme);
                         // final EditText editTextName1 = new EditText(context);
