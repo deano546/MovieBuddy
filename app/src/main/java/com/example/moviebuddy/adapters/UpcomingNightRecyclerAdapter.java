@@ -124,6 +124,7 @@ public class UpcomingNightRecyclerAdapter extends RecyclerView.Adapter<UpcomingN
 
                             alertName.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
+                                    //adapted from https://www.youtube.com/watch?v=NK_-phxyIAM
                                     Calendar cal = Calendar.getInstance();
                                     long endTime;
                                     long startTime;
