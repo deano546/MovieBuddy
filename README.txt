@@ -10,7 +10,6 @@ https://github.com/google/volley
 https://github.com/google/volley/blob/master/LICENSE
 In AndroidManifest.xml
 
-
 Glide, bumptech,
 https://github.com/bumptech/glide
 https://github.com/bumptech/glide/blob/master/LICENSE
@@ -18,7 +17,6 @@ https://github.com/bumptech/glide/blob/master/LICENSE
 Firebase, Google,
 https://firebase.google.com/
 https://firebase.google.com/terms
-
 
 Oracle Apex, Oracle
 https://apex.oracle.com/en/
@@ -30,4 +28,83 @@ https://www.themoviedb.org/documentation/api/terms-of-use
 
 
 MODIFIED THIRD PARTY FILES
-N/A
+
+Bottom Nav
+https://suragch.medium.com/how-to-add-a-bottom-navigation-bar-in-android-958ed728ef6c
+
+Making an option on the bottom nav appear selected
+https://stackoverflow.com/questions/40202294/set-selected-item-in-android-bottomnavigationview
+
+Login with firebase auth
+https://github.com/bikashthapa01/firebase-authentication-android/blob/master/app/src/main/java/net/smallacademy/authenticatorapp/Login.java
+
+Firebase forgot password
+https://firebase.google.com/docs/auth/android/manage-users
+
+Register with firebase auth
+https://github.com/bikashthapa01/firebase-authentication-android/blob/master/app/src/main/java/net/smallacademy/authenticatorapp/Register.java
+
+Log Out
+https://firebase.google.com/docs/auth/android/password-auth
+
+Horizontal Recycler View
+https://www.geeksforgeeks.org/android-horizontal-recyclerview-with-examples/
+
+Make textview scrollable
+https://stackoverflow.com/a/50234924
+
+Date Picker
+https://www.youtube.com/watch?v=33BFCdL0Di0
+
+Time Picker
+https://www.youtube.com/watch?v=QMwaNN_aM3U
+
+Dialog Alert
+https://stackoverflow.com/questions/43513919/android-alert-dialog-with-one-two-and-three-buttons/43513920#43513920
+
+Getting highest value in a hashmap
+https://stackoverflow.com/questions/5911174/finding-key-associated-with-max-value-in-a-java-map
+
+Intro slider
+https://www.androidhive.info/2016/05/android-build-intro-slider-app/
+
+Recycler Views
+https://www.youtube.com/watch?v=FFCpjZkqfb0
+
+Capturing what checkboxes are ticked in a recycler
+https://github.com/lingamworks/recyclerview-Multiselect-Checkboxes
+
+Adding events to calendar
+https://www.youtube.com/watch?v=NK_-phxyIAM
+
+Rating Bar - increments in whole numbers
+https://stackoverflow.com/questions/14218029/how-to-allow-full-values-integers-only-in-ratingbars
+
+Rating Bar - Detecting Rating on touch
+https://stackoverflow.com/a/4010379
+
+Greying out buttons
+https://stackoverflow.com/a/27116948
+
+Delete from recycler
+https://stackoverflow.com/a/35819233
+
+Search the recycler
+https://codinginflow.com/tutorials/android/searchview-recyclerview
+
+JSON Parsing with Volley
+https://www.youtube.com/watch?v=FFCpjZkqfb0
+
+Creating a listener for volley
+https://stackoverflow.com/questions/33535435/how-to-create-a-proper-volley-listener-for-cross-class-volley-method-calling
+
+
+
+
+
+
+
+
+
+
+

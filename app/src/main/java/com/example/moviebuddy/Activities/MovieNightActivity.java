@@ -408,6 +408,8 @@ public class MovieNightActivity extends AppCompatActivity implements DatePickerD
         mapratings.put("War",waraverage);
         mapratings.put("Western",westernaverage);
 
+        //Find highest value
+        //adapted from https://stackoverflow.com/questions/5911174/finding-key-associated-with-max-value-in-a-java-map
         Map.Entry<String, Double> maxEntry = null;
         for (Map.Entry<String, Double> entry : mapratings.entrySet()) {
             if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
